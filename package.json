@@ -1,0 +1,15 @@
+{
+  "name": "moviemunch",
+  "version": "1.0.0",
+  "description": "a platform to match movies and recipes with users for a unique experience.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "MovieMunch"
+  },
+  "author": "Jesse, Jacco, Gylianto, Tolga and Robin",
+  "license": "ISC"
+}
