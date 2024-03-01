@@ -44,6 +44,5 @@ app.use((err, req, res) => {
 
 // Start the webserver and listen for HTTP requests at specified port
 app.listen(process.env.PORT, () => {
-  console.log(`I did not change this message and now my webserver is listening at port ${process.env.PORT}`)
+  console.log(`I did change this message and now my webserver is listening at port ${process.env.PORT}`)
 })
-
