@@ -11,5 +11,9 @@
     "url": "MovieMunch"
   },
   "author": "Jesse, Jacco, Gylianto, Tolga and Robin",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.3",
+    "mongodb": "^6.4.0"
+  }
 }

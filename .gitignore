@@ -1,0 +1,7 @@
+# .gitignore
+ 
+# Ignore environment variables file
+.env
+ 
+# Ignore Mac system files
+.DS_Store
