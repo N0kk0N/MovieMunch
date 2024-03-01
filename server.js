@@ -1,38 +1,25 @@
-// Add info from .env file to process.env
-require('dotenv').config() 
+const express = require('express');
+const MongoClient = require('mongodb').MongoClient;
 
-// Initialise Express webserver
-const express = require('express')
-const app = express()
+const dotenv = require('dotenv');
+dotenv.config();
 
+const app = express();
 app
   .use(express.urlencoded({extended: true})) // middleware to parse form data from incoming HTTP request and add form fields to req.body
   .use(express.static('static'))             // Allow server to serve static content such as images, stylesheets, fonts or frontend js from the directory named static
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
-// Use MongoDB
-const { MongoClient, ServerApiVersion, ObjectId, CommandStartedEvent } = require('mongodb')
-// Construct URL used to connect to database from info in the .env file
-const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
-// Create a MongoClient
-const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-})
+MongoClient.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(client => {
+    console.log('MongoDB connected...');
+    const db = client.db('Tech');
+    // use the db object for CRUD operations
+  })
+  .catch(err => console.log(err));
 
-// Try to open a database connection
-client.connect()
-  .then((res) => {
-    console.log('Database connection established')
-  })
-  .catch((err) => {
-    console.log(`Database connection error - ${err}`)
-    console.log(`For uri - ${uri}`)
-  })
+app.listen(3000, () => console.log('Server is running on port 3000'));
 
 // A sample route, replace this with your own routes
 app.get('/', (req, res) => {
