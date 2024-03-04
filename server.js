@@ -47,9 +47,10 @@ app.post('/new-user', async (req, res) => {
   const collection = db.collection(process.env.MONGODB_COLLECTION)
     result = await collection.insertOne({
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
+      color: req.body.color
     })
-  res.send(`signed up with ${req.body.username} and ${req.body.password}🗿`)
+  res.send(`signed up with ${req.body.username} and ${req.body.password} and the chosen favorite color is ${req.body.color}🗿`)
 })
 
 // Middleware to handle not found errors - error 404
