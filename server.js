@@ -45,17 +45,53 @@ app.get('/', (req, res) => {
 app.post('/new-user', async (req, res) => {
   const db = client.db(process.env.MONGODB_NAME)
   const collection = db.collection(process.env.MONGODB_COLLECTION)
-    result = await collection.insertOne({
-      username: req.body.username,
-      password: req.body.password,
-      color: req.body.color
-    })
-  res.send(`signed up with ${req.body.username} and ${req.body.password} and the chosen favorite color is ${req.body.color}🗿`)
+  try {
+    const checkAvailable = await collection.findOne({ username: req.body.username });
+
+    if (!checkAvailable) {
+      // User doesn't exist, so we can insert a new user
+      const result = await collection.insertOne({
+        username: req.body.username,
+        password: req.body.password,
+        color: req.body.color
+      });
+
+      res.send(`Signed up with ${req.body.username} and ${req.body.password} 🗿`);
+    } else {
+      // User already exists
+      res.send('User with this username already exists.');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
 })
 
 app.get('/login', (req, res) => {
   res.render('login.ejs')
 })
+
+app.post('/login-test', async (req, res) => {
+  try {
+    const db = client.db(process.env.MONGODB_NAME);
+    const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+    const existingUser = await collection.findOne({ username: req.body.username });
+
+    if (existingUser) {
+      if (existingUser.password === req.body.password) {
+        res.send('Login successful!');
+      } else {
+        res.send('Invalid password.');
+      }
+    } else {
+      res.send('User does not exist.');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
 
 // Middleware to handle not found errors - error 404
 app.use((req, res) => {
