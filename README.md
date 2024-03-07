@@ -10,16 +10,16 @@ MovieMunch is een platform waarbij gebruikers filmaanbevelingen krijgen met bijp
 4. [Versions](#versions)
 5. [License](#license)
 
-## Handleiding opzetten
+## Handleiding
 
 ## Libraries
 
 ## Contributors
-[Robin Elseman](https://github.com/RobinElseman)
-[Gylianto Monadjat](https://github.com/gylianto)
-[Tolga Zorlu](/#)
-[Jacco Mols](/#)
-[Jesse Kaptein](https://github.com/N0kk0N)
+- [Robin Elseman](https://github.com/RobinElseman)
+- [Gylianto Monadjat](https://github.com/gylianto)
+- [Tolga Zorlu](/#)
+- [Jacco Mols](/#)
+- [Jesse Kaptein](https://github.com/N0kk0N)
 
 ## Versions
 
