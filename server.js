@@ -53,6 +53,10 @@ app.post('/new-user', async (req, res) => {
   res.send(`signed up with ${req.body.username} and ${req.body.password} and the chosen favorite color is ${req.body.color}🗿`)
 })
 
+app.get('/login', (req, res) => {
+  res.render('login.ejs')
+})
+
 // Middleware to handle not found errors - error 404
 app.use((req, res) => {
   // log error to console
