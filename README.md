@@ -17,8 +17,8 @@ MovieMunch is een platform waarbij gebruikers filmaanbevelingen krijgen met bijp
 ## Contributors
 - [Robin Elseman](https://github.com/RobinElseman)
 - [Gylianto Monadjat](https://github.com/gylianto)
-- [Tolga Zorlu](/#)
-- [Jacco Mols](/#)
+- [Tolga Zorlu](https://github.com/TolgaZZ)
+- [Jacco Mols](https://github.com/Jacco12)
 - [Jesse Kaptein](https://github.com/N0kk0N)
 
 ## Versions
