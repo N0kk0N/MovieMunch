@@ -2,11 +2,17 @@ require('dotenv').config()
 
 // Initialise Express webserver
 const express = require('express')
+const session = require('express-session')
 const app = express()
 
 app
   .use(express.urlencoded({extended: true})) // middleware to parse form data from incoming HTTP request and add form fields to req.body
   .use(express.static('static'))             // Allow server to serve static content such as images, stylesheets, fonts or frontend js from the directory named static
+  .use(session({
+    secret: 'secret-key',
+    resave: 'false',
+    saveUninitialized: 'false',
+  }))
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
   .listen(3000, () => console.log('Server is running on port 3000'));
@@ -37,6 +43,7 @@ client.connect()
   // A sample route, replace this with your own routes
 app.get('/', (req, res) => {
   res.render('test.ejs')
+  console.log(req.session.users)
 })
 
 app.post('/new-user', async (req, res) => {
@@ -44,13 +51,13 @@ app.post('/new-user', async (req, res) => {
   const collection = db.collection(process.env.MONGODB_COLLECTION)
   try {
     const checkAvailable = await collection.findOne({ username: req.body.username });
-
     if (!checkAvailable) {
       // User doesn't exist, so we can insert a new user
       const result = await collection.insertOne({
         username: req.body.username,
         password: req.body.password,
-        color: req.body.color
+        color: req.body.color,
+        creationDate: new Date()
       });
 
       res.send(`Signed up with ${req.body.username} and ${req.body.password} 🗿`);
@@ -64,8 +71,21 @@ app.post('/new-user', async (req, res) => {
   }
 })
 
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Session destroy failed');
+    } else {
+      // Stuur de gebruiker naar de uitlogpagina of een andere gewenste bestemming
+      res.redirect('/login');
+    }
+  });
+})
+
 app.get('/login', (req, res) => {
   res.render('login.ejs')
+  console.log(req.session.users)
 })
 
 app.post('/login-test', async (req, res) => {
@@ -77,7 +97,9 @@ app.post('/login-test', async (req, res) => {
 
     if (existingUser) {
       if (existingUser.password === req.body.password) {
+        req.session.users = existingUser._id
         res.send('Login successful!');
+        console.log(req.session.users)
       } else {
         res.send('Invalid password.');
       }
