@@ -34,9 +34,6 @@ client.connect()
     console.log(`For uri - ${uri}`)
   })
 
-
-
-
   // A sample route, replace this with your own routes
 app.get('/', (req, res) => {
   res.render('test.ejs')
@@ -113,3 +110,31 @@ app.use((err, req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`I did not change this message and now my webserver is listening at port ${process.env.PORT}`)
 })
+
+
+
+// HAALT LIJST MET DISNEY FILMS OP
+
+const request = require('request');
+
+const apiKey = process.env.API_KEY;
+
+const options = {
+  method: 'GET',
+  url: 'https://api.themoviedb.org/3/discover/movie',
+  qs: {
+    language: 'en-US',
+    page: 1,
+    with_companies: '2' // TheMovieDB ID for Disney
+  },
+  headers: {
+    accept: 'application/json',
+    Authorization: `Bearer ${apiKey}`
+  }
+};
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+
+  console.log(body);
+});
