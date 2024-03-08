@@ -1,7 +1,7 @@
 # MovieMunch
 
 ## Samenvatting
-MovieMunch is een platform waarbij gebruikers filmaanbevelingen krijgen met bijpassende recepten. Het combineert films en eten voor een unieke kijkervaring. MovieMunch geeft gepersonaliseerde suggesties op basis van jouw smaak.
+MovieMunch is een platform waarbij gebruikers film aanbevelingen krijgen met bijpassende recepten. Het combineert films en eten voor een unieke kijkervaring. MovieMunch geeft gepersonaliseerde suggesties op basis van jouw smaak.
 
 ## Table of Contents
 1. [Handleiding](#handleiding)
