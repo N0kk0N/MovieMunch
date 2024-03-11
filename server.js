@@ -1,8 +1,12 @@
-require('dotenv').config();
-const bcrypt = require('bcryptjs');
-const express = require('express');
+
+require('dotenv').config() 
+
+// Initialise Express webserver
+const express = require('express')
+const session = require('express-session')
+const xss = require('xss')
 const session = require('express-session');
-const app = express();
+const app = express()
 
 app
   .use(express.urlencoded({ extended: true }))
@@ -49,19 +53,21 @@ app.post('/new-user', async (req, res) => {
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
   try {
-    const checkAvailable = await collection.findOne({ username: req.body.username });
+    const checkAvailable = await collection.findOne({ username: xss(req.body.username) });
     if (!checkAvailable) {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
       const result = await collection.insertOne({
-        username: req.body.username,
-        password: hashedPassword,
-        color: req.body.color,
-        creationDate: new Date(),
+
+        username: xss(req.body.username),
+        password: xss(hashedPassword),
+        color: xss(req.body.color),
+        creationDate: new Date()
       });
 
-      res.send(`Signed up with ${req.body.username} 🗿`);
+      res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
+
     } else {
       res.send('User with this username already exists.');
     }
@@ -95,7 +101,7 @@ app.post('/login-test', async (req, res) => {
     const db = client.db(process.env.MONGODB_NAME);
     const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-    const existingUser = await collection.findOne({ username: req.body.username });
+    const existingUser = await collection.findOne({ username: xss(req.body.username) });
 
     if (existingUser) {
       const passwordMatch = await bcrypt.compare(req.body.password, existingUser.password);
