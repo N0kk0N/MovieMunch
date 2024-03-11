@@ -3,6 +3,7 @@ require('dotenv').config()
 // Initialise Express webserver
 const express = require('express')
 const session = require('express-session')
+const xss = require('xss')
 const app = express()
 
 app
@@ -50,17 +51,17 @@ app.post('/new-user', async (req, res) => {
   const db = client.db(process.env.MONGODB_NAME)
   const collection = db.collection(process.env.MONGODB_COLLECTION)
   try {
-    const checkAvailable = await collection.findOne({ username: req.body.username });
+    const checkAvailable = await collection.findOne({ username: xss(req.body.username) });
     if (!checkAvailable) {
       // User doesn't exist, so we can insert a new user
       const result = await collection.insertOne({
-        username: req.body.username,
-        password: req.body.password,
-        color: req.body.color,
+        username: xss(req.body.username),
+        password: xss(req.body.password),
+        color: xss(req.body.color),
         creationDate: new Date()
       });
 
-      res.send(`Signed up with ${req.body.username} and ${req.body.password} 🗿`);
+      res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
     } else {
       // User already exists
       res.send('User with this username already exists.');
@@ -93,7 +94,7 @@ app.post('/login-test', async (req, res) => {
     const db = client.db(process.env.MONGODB_NAME);
     const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-    const existingUser = await collection.findOne({ username: req.body.username });
+    const existingUser = await collection.findOne({ username: xss(req.body.username) });
 
     if (existingUser) {
       if (existingUser.password === req.body.password) {
