@@ -47,6 +47,11 @@ app.get('/', (req, res) => {
   console.log(req.session.users);
 });
 
+app.get('/movie/:name', (req, res) => {
+res.send(req.params.name)
+}
+)
+
 
 // CREATE NEW USER
 app.post('/new-user', async (req, res) => {
@@ -139,6 +144,7 @@ app.listen(process.env.PORT, () => {
 
 // HAALT LIJST MET DISNEY FILMS OP (API)
 const request = require('request');
+const { application } = require('express')
 const apiKey = process.env.API_KEY;
 const options = {
   method: 'GET',
