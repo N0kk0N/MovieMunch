@@ -13,7 +13,7 @@ app
   .use(express.static('static'))
   .use(
     session({
-      secret: 'secret-key',
+      secret: process.env.SESSION_KEY,
       resave: false,
       saveUninitialized: false,
     })
