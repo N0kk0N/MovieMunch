@@ -5,6 +5,7 @@ require('dotenv').config()
 const express = require('express')
 const session = require('express-session')
 const xss = require('xss')
+const bcrypt = require('bcrypt')
 const app = express()
 
 app
