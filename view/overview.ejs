@@ -1,20 +1,55 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <main>
-            <div class="overview-film-container">
-                <div>searchbar</div>
-                <h2></h2><a href="/film/:id">see all</a>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <!-- Styles moved to external CSS file -->
+</head>
+
+<body>
+    <section class="overview-film-hero">
+        <img src="https://via.placeholder.com/150?text=Image+1">
+        <div class="overlay-content">
+            <h2>LOREM</h2>
+            <h3>Ipsum dolor sit amet</h3>
+            <button>Watch now</button>
+        </div>
+    </section>
+
+    <main class="swiper-container film-slider-container">
+        <section class="film-slider-container-items">
+            <form class="search-form" action="/search" method="get">
+                <input type="text" name="q" placeholder="Search for films...">
+            </form>
+            <div class="inline-items">
+                <h2>Your picks</h2>
+                <a href="/film/:id">see all</a>
             </div>
-        </main>
-        <script src="" async defer></script>
-    </body>
+        </section>
+
+        <section class="swiper-wrapper">
+            <% for(let i = 1; i <= 10; i++) { %>
+                <article class="swiper-slide movie-card">
+                    <img src="https://via.placeholder.com/150?text=Image+<%= i %>" alt="Image <%= i %>">
+                </article>
+            <% } %>
+        </section>
+    </main>
+
+    <script src="" async defer></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        new Swiper('.swiper-container', {
+            slidesPerView: 'auto',
+            freeMode: false,
+            spaceBetween: 5,
+        });
+    </script>
+</body>
 </html>
