@@ -1,16 +1,17 @@
-html, body {
-    height: 100%;
-    overflow-x: hidden;
-    margin: 0;
+body{
     padding: 0;
+    margin: 0;
 }
-
-body {
+.overview {
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-main {
+.swiper-container {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -80,12 +81,27 @@ main {
     align-items: center;
 }
 
-.search-form {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
+
+.film-slider-container-items form{
+    width: 90%;
 }
 
+.search-form input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    background-color: #D9D9D9;
+    height: 48px;
+    border-radius: 30px;
+    padding-left: 35px;
+    background-image: url('../images/Search.png');
+    background-position: 7px center;
+    background-repeat: no-repeat;
+}
+
+.search-form input[type="text"]::placeholder {
+    font-family: 'Archivo', sans-serif;
+}
 
 .inline-items {
     display: flex;
