@@ -100,6 +100,10 @@ app.get('/overview', (req, res) => {
   res.render('overview.ejs');
 });
 
+app.get('/filmdetail', (req, res) => {
+  res.render('filmdescription.ejs');
+});
+
 
 // LOGIN FUNCTION
 app.get('/login', (req, res) => {
