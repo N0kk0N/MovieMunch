@@ -1,3 +1,41 @@
+@font-face {
+    font-family: archivo-regular;
+    src: url(../fonts/Archivo-Regular.ttf);
+  }
+
+  @font-face {
+    font-family: archivo-light;
+    src: url(../fonts/Archivo-Light.ttf);
+  }
+
+  @font-face {
+    font-family: archivo-bold;
+    src: url(../fonts/Archivo-Bold.ttf);
+  }
+
+  @font-face {
+    font-family: clash-regular;
+    src: url(../fonts/ClashDisplay-Regular.ttf);
+  }
+
+  @font-face {
+    font-family: clash-medium;
+    src: url(../fonts/ClashDisplay-Medium.ttf);
+  }
+
+  @font-face {
+    font-family: clash-light;
+    src: url(../fonts/ClashDisplay-Light.ttf);
+  }
+
+  @font-face {
+    font-family: clash-bold;
+    src: url(../fonts/ClashDisplay-Bold.ttf);
+  }
+
+
+
+
 body{
     padding: 0;
     margin: 0;
