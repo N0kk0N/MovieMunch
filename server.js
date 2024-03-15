@@ -78,7 +78,12 @@ app.get('/profile/settings', (req, res) => {
 });
 
 app.get('/movie/:name', (req, res) => {
-res.send(req.params.name)
+  // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
+  const movieName = req.params.name
+  // DAARNA MOETEN WE ZORGEN DAT WE GEGEVENS UIT DE API KRIJGEN
+  https://api.themoviedb.org/3/search/movie?query=movieName&api_key=process.env.API_KEY
+  // DAARNA MOETEN WE DIE GEGEVENS MEE GEVEN AAN DE REQUEST
+res.render('shrek.ejs')
 }
 );
 
@@ -153,7 +158,6 @@ app.post('/login-confirmation', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
 
 
 // HAALT LIJST MET FILM POSTERS OP (API)
