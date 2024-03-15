@@ -43,15 +43,60 @@ client
   });
 
 app.get('/', (req, res) => {
-  res.render('test.ejs');
+  res.render('homepage.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/signup', (req, res) => {
+  res.render('signup.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/signup/preferences', (req, res) => {
+  res.render('signup-preferences.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/login', (req, res) => {
+  res.render('login.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/movies', (req, res) => {
+  res.render('movies.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/profile', (req, res) => {
+  res.render('profile.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/profile/settings', (req, res) => {
+  res.render('profile-settings.ejs');
   console.log(req.session.users);
 });
 
 app.get('/movie/:name', (req, res) => {
 res.send(req.params.name)
 }
-)
+);
 
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Session destroy failed');
+    } else {
+      res.redirect('/login');
+    }
+  });
+});
+
+// MOETEN DEZE VERWIJDEREN ZODRA HET AF IS!
+app.get('/filmdetail', (req, res) => {
+  res.render('filmdescription.ejs');
+});
 
 // CREATE NEW USER
 app.post('/new-user', async (req, res) => {
@@ -83,34 +128,7 @@ app.post('/new-user', async (req, res) => {
 });
 
 
-// LOGOUT FUNCTION
-app.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Session destroy failed');
-    } else {
-      res.redirect('/login');
-    }
-  });
-});
-
-
-app.get('/overview', (req, res) => {
-  res.render('overview.ejs');
-});
-
-app.get('/filmdetail', (req, res) => {
-  res.render('filmdescription.ejs');
-});
-
-
-// LOGIN FUNCTION
-app.get('/login', (req, res) => {
-  res.render('login.ejs');
-});
-
-app.post('/login-test', async (req, res) => {
+app.post('/login-confirmation', async (req, res) => {
   try {
     const db = client.db(process.env.MONGODB_NAME);
     const collection = db.collection(process.env.MONGODB_COLLECTION);
@@ -122,7 +140,7 @@ app.post('/login-test', async (req, res) => {
 
       if (passwordMatch) {
         req.session.users = existingUser._id;
-        res.send('Login successful!');
+        res.render('movies.ejs');
         console.log(req.session.users);
       } else {
         res.send('Invalid password.');
