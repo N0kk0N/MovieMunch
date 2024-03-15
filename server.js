@@ -154,6 +154,37 @@ app.post('/login-confirmation', async (req, res) => {
   }
 });
 
+
+
+// HAALT LIJST MET FILM POSTERS OP (API)
+const request = require('request');
+const apiKey = process.env.API_KEY;
+const options = {
+  method: 'GET',
+  url: 'https://api.themoviedb.org/3/movie/popular',
+  qs: {
+    language: 'en-US',
+    page: 1,
+  },
+  headers: {
+    accept: 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  },
+};
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+  const movies = JSON.parse(body).results;
+  movies.forEach(movie => {
+    console.log(`https://image.tmdb.org/t/p/w500${movie.poster_path}`)
+  });
+});
+
+
+app.get('/filmlijst', (req, res) => {
+  res.send('test');
+});
+
 app.use((req, res) => {
   console.error('404 error at URL: ' + req.url);
   res.status(404).send('404 error at URL: ' + req.url);
@@ -166,28 +197,4 @@ app.use((err, req, res) => {
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening at port ${process.env.PORT}`);
-});
-
-
-// HAALT LIJST MET DISNEY FILMS OP (API)
-const request = require('request');
-const { application } = require('express')
-const apiKey = process.env.API_KEY;
-const options = {
-  method: 'GET',
-  url: 'https://api.themoviedb.org/3/discover/movie',
-  qs: {
-    language: 'en-US',
-    page: 1,
-    with_companies: '2',
-  },
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${apiKey}`,
-  },
-};
-
-request(options, function (error, response, body) {
-  if (error) throw new Error(error);
-  // console.log(body);
 });
