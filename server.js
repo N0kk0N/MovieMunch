@@ -81,9 +81,23 @@ app.get('/movie/:name', (req, res) => {
   // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
   const movieName = req.params.name
   // DAARNA MOETEN WE ZORGEN DAT WE GEGEVENS UIT DE API KRIJGEN
-  https://api.themoviedb.org/3/search/movie?query=movieName&api_key=process.env.API_KEY
-  // DAARNA MOETEN WE DIE GEGEVENS MEE GEVEN AAN DE REQUEST
-res.render('shrek.ejs')
+  const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&api_key=${process.env.API_KEY}`
+  
+  const options = {
+    method: 'GET',
+    headers: {accept: 'application/json', Authorization: `Bearer ${process.env.API_KEY}`}
+  };
+  
+  fetch(url, options)
+  .then(res => res.json())
+  .then(json => {
+    const title = json.results[0].title
+    const overview = json.results[0].overview
+    const imageURL = json.results[0].poster_path
+    const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`
+    res.render('shrek.ejs', {title, overview, posterSrc})
+  })
+  .catch(err => console.error('error:' + err));
 }
 );
 
@@ -162,6 +176,7 @@ app.post('/login-confirmation', async (req, res) => {
 
 // HAALT LIJST MET FILM POSTERS OP (API)
 const request = require('request');
+const { json } = require('express')
 const apiKey = process.env.API_KEY;
 const options = {
   method: 'GET',
