@@ -6,6 +6,17 @@ const express = require('express')
 const session = require('express-session')
 const xss = require('xss')
 const bcrypt = require('bcrypt')
+const multer  = require('multer')
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'static/uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+
+const upload = multer({ storage: storage })
 const app = express()
 
 app
@@ -76,6 +87,12 @@ app.get('/profile/settings', (req, res) => {
   res.render('profile-settings.ejs');
   console.log(req.session.users);
 });
+
+app.post('/profile/settings', upload.single('avatar'), function (req, res, next) {
+  // req.file is the `avatar` file
+  console.log(req.file);
+  // TOEVOEGEN NAAM EN KOPPELING AAN GEBRUIKERS ID
+})
 
 app.get('/movie/:name', (req, res) => {
 res.send(req.params.name)
