@@ -10,7 +10,7 @@ const app = express()
 
 app
   .use(express.urlencoded({ extended: true }))
-  .use(express.static('static'))
+  .use('/static', express.static('static'))
   .use(
     session({
       secret: process.env.SESSION_KEY,
@@ -93,6 +93,11 @@ app.get('/logout', (req, res) => {
       res.redirect('/login');
     }
   });
+});
+
+
+app.get('/overview', (req, res) => {
+  res.render('overview.ejs');
 });
 
 
