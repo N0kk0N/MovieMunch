@@ -48,7 +48,27 @@ app.get('/', (req, res) => {
 });
 
 app.get('/overview', (req, res) => {
-  res.render('overview.ejs');
+const request = require('request');
+const { json } = require('express')
+const apiKey = process.env.API_KEY;
+const options = {
+  method: 'GET',
+  url: 'https://api.themoviedb.org/3/movie/popular',
+  qs: {
+    language: 'en-US',
+    page: 1,
+  },
+  headers: {
+    accept: 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  },
+};
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+  const movies = JSON.parse(body).results;
+  res.render('overview.ejs', {movies});
+});
 });
 
 app.get('/signup', (req, res) => {
@@ -102,7 +122,7 @@ app.get('/movie/:name', (req, res) => {
     const backdropURL = json.results[0].backdrop_path
     const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`
     console.log(json.results[0])
-    res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc})
+    res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc, popularList})
   })
   .catch(err => console.error('error:' + err));
 }
@@ -179,33 +199,6 @@ app.post('/login-confirmation', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
-
-// HAALT LIJST MET FILM POSTERS OP (API)
-const request = require('request');
-const { json } = require('express')
-const apiKey = process.env.API_KEY;
-const options = {
-  method: 'GET',
-  url: 'https://api.themoviedb.org/3/movie/popular',
-  qs: {
-    language: 'en-US',
-    page: 1,
-  },
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${apiKey}`,
-  },
-};
-
-request(options, function (error, response, body) {
-  if (error) throw new Error(error);
-  const movies = JSON.parse(body).results;
-  movies.forEach(movie => {
-    console.log(`https://image.tmdb.org/t/p/w500${movie.poster_path}`)
-  });
-});
-
 
 app.get('/filmlijst', (req, res) => {
   res.send('test');
