@@ -21,6 +21,7 @@
     "express-session": "^1.18.0",
     "mongodb": "^6.4.0",
     "request": "^2.88.2",
+    "swiper": "^11.0.7",
     "xss": "^1.0.15"
   }
 }

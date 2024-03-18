@@ -180,18 +180,19 @@ body{
     font-family: clash-bold;
     text-transform: uppercase;
     margin: 0;
-    font-size: ;
+    font-size: 2.5em;
 }
 
 
 /* filmdetail - description */
 .filmdetail-description {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center;
     text-align: center;
+    margin: 0.5em;
+    margin-bottom: 2em;
+}
+
+.filmdetail-description p:first-of-type{
+    margin-bottom: 3em;
 }
 
 .filmdetail-watchnow {
@@ -201,9 +202,34 @@ body{
 }
 
 
+/* Recipe */
+.filmdetail-recipe {
+    margin: 0.5em;
+}
+
+.filmdetail-recipe h2{
+    margin: 0;
+    margin-bottom: 2em;
+}
+.filmdetail-recipe p:first-of-type{
+    margin-bottom: 0;
+}
+
+/* ingredients */
+.filmdetail-ingredients {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 2em 2em 2em 2em;
+    margin-bottom: 3em;
+}
+
+.filmdetail-ingredients li  {
+    text-transform:capitalize;
+}
 
 
 
+/* Swiper function */
 
 
 
