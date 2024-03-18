@@ -47,6 +47,10 @@ app.get('/', (req, res) => {
   console.log(req.session.users);
 });
 
+app.get('/overview', (req, res) => {
+  res.render('overview.ejs');
+});
+
 app.get('/signup', (req, res) => {
   res.render('signup.ejs');
   console.log(req.session.users);
