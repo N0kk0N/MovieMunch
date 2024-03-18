@@ -40,6 +40,7 @@ body{
     padding: 0;
     margin: 0;
 }
+
 .overview {
     overflow-x: hidden;
     padding: 0;
@@ -90,6 +91,28 @@ body{
     z-index: 2;
 }
 
+.overlay-content h2 {
+    font-family: 'clash-bold', sans-serif;
+    font-size: 1.875em;
+}
+
+.overlay-content h3{
+    font-family: 'archivo-light', sans-serif;
+    font-size: 0.9375em;
+}
+
+.overlay-content button{
+    border: none;
+    background-color: #FF673E;
+    width: 145px;
+    height: 50px;
+    font-family: 'clash-bold', sans-serif;
+    color: white;
+    font-size: 0.875em;
+    border-radius: 11px;
+    text-transform: uppercase;
+}
+
 .swiper-container {
     flex-grow: 1;
     padding-top: 50px;
@@ -104,6 +127,7 @@ body{
 .swiper-wrapper {
     display: flex;
     flex-direction: row;
+    margin-left: 20px;
 }
 
 .swiper-slide {
@@ -144,9 +168,24 @@ body{
 .inline-items {
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    width: 90vw;
     align-items: center;
 }
+
+.inline-items h2 {
+    font-family: 'clash-bold', sans-serif;
+    font-size: 1.3125em; /* 21px */
+    text-transform: uppercase;
+}
+
+.inline-items a {
+    font-family: 'archivo-regular', sans-serif;
+    font-size: 1.0625em; /* 17px */
+    text-decoration: none;
+    color: black;
+}
+
+
 .movie-card img{
     height: 100%;
     width: 200px;
