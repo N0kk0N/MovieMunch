@@ -78,7 +78,29 @@ app.get('/profile/settings', (req, res) => {
 });
 
 app.get('/movie/:name', (req, res) => {
-res.send(req.params.name)
+  // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
+  const movieName = req.params.name
+  // DAARNA MOETEN WE ZORGEN DAT WE GEGEVENS UIT DE API KRIJGEN
+  const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&api_key=${process.env.API_KEY}`
+  
+  const options = {
+    method: 'GET',
+    headers: {accept: 'application/json', Authorization: `Bearer ${process.env.API_KEY}`}
+  };
+  
+  fetch(url, options)
+  .then(res => res.json())
+  .then(json => {
+    const title = json.results[0].title
+    const overview = json.results[0].overview
+    const imageURL = json.results[0].poster_path
+    const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`
+    const backdropURL = json.results[0].backdrop_path
+    const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`
+    console.log(json.results[0])
+    res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc})
+  })
+  .catch(err => console.error('error:' + err));
 }
 );
 
@@ -154,6 +176,37 @@ app.post('/login-confirmation', async (req, res) => {
   }
 });
 
+
+// HAALT LIJST MET FILM POSTERS OP (API)
+const request = require('request');
+const { json } = require('express')
+const apiKey = process.env.API_KEY;
+const options = {
+  method: 'GET',
+  url: 'https://api.themoviedb.org/3/movie/popular',
+  qs: {
+    language: 'en-US',
+    page: 1,
+  },
+  headers: {
+    accept: 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  },
+};
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+  const movies = JSON.parse(body).results;
+  movies.forEach(movie => {
+    console.log(`https://image.tmdb.org/t/p/w500${movie.poster_path}`)
+  });
+});
+
+
+app.get('/filmlijst', (req, res) => {
+  res.send('test');
+});
+
 app.use((req, res) => {
   console.error('404 error at URL: ' + req.url);
   res.status(404).send('404 error at URL: ' + req.url);
@@ -166,28 +219,4 @@ app.use((err, req, res) => {
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening at port ${process.env.PORT}`);
-});
-
-
-// HAALT LIJST MET DISNEY FILMS OP (API)
-const request = require('request');
-const { application } = require('express')
-const apiKey = process.env.API_KEY;
-const options = {
-  method: 'GET',
-  url: 'https://api.themoviedb.org/3/discover/movie',
-  qs: {
-    language: 'en-US',
-    page: 1,
-    with_companies: '2',
-  },
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${apiKey}`,
-  },
-};
-
-request(options, function (error, response, body) {
-  if (error) throw new Error(error);
-  // console.log(body);
 });
