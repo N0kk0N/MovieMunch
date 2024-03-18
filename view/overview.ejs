@@ -31,28 +31,13 @@
                     <a href="/film/:id">see all</a>
                 </div>
             </section>
-
             <section class="swiper-wrapper">
-                <% for(let i = 1; i <= 10; i++) { %>
+                <% for(let i = 0; i < posterPathArray.length; i++) { %>
                     <article class="swiper-slide movie-card">
-                        <img src="https://via.placeholder.com/150?text=Image+<%= i %>" alt="Image <%= i %>">
+                        <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
                     </article>
                 <% } %>
             </section>
-            <%= adultArray %>
-            <%= backdropPathArray %>
-            <%= genreIdsArray %>
-            <%= idArray %>
-            <%= originalLanguageArray %>
-            <%= originalTitleArray %>
-            <%= overviewArray %>
-            <%= popularityArray %>
-            <%= posterPathArray %>
-            <%= releaseDateArray %>
-            <%= titleArray %>
-            <%= videoArray %>
-            <%= voteAverageArray %>
-            <%= voteCountArray %>
         </main>
         <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
         <script>
