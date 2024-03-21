@@ -277,3 +277,27 @@ app.use((err, req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening at port ${process.env.PORT}`);
 });
+
+
+// HAALT RECEPT OP MET SPECIFIEK ID
+
+const fetch = require('node-fetch');
+
+const apiKey = process.env.FOOD_API_KEY;
+const recipeId = '716429';
+const apiUrl = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=${apiKey}`;
+
+fetch(apiUrl)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+  });
+
