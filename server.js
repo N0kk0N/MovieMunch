@@ -190,6 +190,7 @@ app.get('/movie/:name', (req, res) => {
 }
 );
 
+
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
