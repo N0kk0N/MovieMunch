@@ -190,6 +190,38 @@ app.get('/movie/:name', (req, res) => {
 }
 );
 
+// HAALT RECEPT OP UIT WILLEKEURIG LAND (ALLEEN WAARVAN LAND BESCHIKBAAR IS)
+
+const fetch = require('node-fetch');
+
+const apiKey = process.env.FOOD_API_KEY;
+const apiUrl = `https://api.spoonacular.com/recipes/random?number=1&apiKey=${apiKey}`;
+
+fetch(apiUrl)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Controleer of er recepten zijn geretourneerd
+    if (data && data.recipes && data.recipes.length > 0) {
+      const randomRecipe = data.recipes[0];
+      // Controleren of het land van herkomst beschikbaar is
+      if (randomRecipe.hasOwnProperty('cuisines') && randomRecipe.cuisines.length > 0) {
+        console.log('Country of origin:', randomRecipe.cuisines[0]);
+        // Loggen van de hele receptinformatie
+        console.log('Receptinformatie:', randomRecipe);
+      }
+    } else {
+      console.log('Geen recepten gevonden.');
+    }
+  })
+  .catch(error => {
+    console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+  });
+  
 
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
@@ -282,34 +314,4 @@ app.listen(process.env.PORT, () => {
 });
 
 
-// HAALT RECEPT OP UIT WILLEKEURIG LAND (ALLEEN WAARVAN LAND BESCHIKBAAR IS)
 
-const fetch = require('node-fetch');
-
-const apiKey = process.env.FOOD_API_KEY;
-const apiUrl = `https://api.spoonacular.com/recipes/random?number=1&apiKey=${apiKey}`;
-
-fetch(apiUrl)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`Network response was not ok: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => {
-    // Controleer of er recepten zijn geretourneerd
-    if (data && data.recipes && data.recipes.length > 0) {
-      const randomRecipe = data.recipes[0];
-      // Controleren of het land van herkomst beschikbaar is
-      if (randomRecipe.hasOwnProperty('cuisines') && randomRecipe.cuisines.length > 0) {
-        console.log('Country of origin:', randomRecipe.cuisines[0]);
-        // Loggen van de hele receptinformatie
-        console.log('Receptinformatie:', randomRecipe);
-      }
-    } else {
-      console.log('Geen recepten gevonden.');
-    }
-  })
-  .catch(error => {
-    console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
-  });
