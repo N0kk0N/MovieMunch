@@ -100,6 +100,11 @@ app.get('/overview', (req, res) => {
   res.render('overview.ejs');
 });
 
+app.get('/favourites', (req, res) => {
+  res.render('favourites.ejs');
+});
+
+
 
 // LOGIN FUNCTION
 app.get('/login', (req, res) => {

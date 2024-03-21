@@ -33,14 +33,34 @@
     src: url(../fonts/ClashDisplay-Bold.ttf);
   }
 
-
-
-
 body{
     padding: 0;
     margin: 0;
 }
-.overview {
+
+.logo-wrapper{
+    background-color :#ff673e;
+    width: 100vw;
+    height: 20vh;
+    padding-top: 5vh;   
+    font-family: 'Clashdisplay', sans-serif; 
+    text-transform: uppercase;
+}
+
+.sublogo{
+    color: #fff;
+    font-size: 1.65rem;
+    text-align: center;
+ 
+}
+
+.logo{
+    color: #000;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.overview{
     overflow-x: hidden;
     padding: 0;
     margin: 0;
@@ -49,11 +69,34 @@ body{
     flex-direction: column;
 }
 
-.swiper-container {
-    flex-grow: 1;
+.favourites {
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column;
 }
+
+.swiper {
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 200px!important;
+    background-color: #fff;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+    border-radius: 2rem;
+  }
+
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+  }
 
 .overview-film-hero {
     flex-shrink: 0;
@@ -89,7 +132,7 @@ body{
     text-align: center;
     z-index: 2;
 }
-
+/* 
 .swiper-container {
     flex-grow: 1;
     padding-top: 50px;
@@ -99,19 +142,20 @@ body{
     border-top-right-radius: 30px;
     margin-top: -30px;
     z-index: 100;
-}
+} */
 
-.swiper-wrapper {
+/* .swiper-wrapper {
     display: flex;
     flex-direction: row;
-}
+    margin-left: 20px;
+} */
 
-.swiper-slide {
+/* .swiper-slide {
     background-position: center;
     background-size: cover;
     width: 200px!important;
-    background-color: yellow;
-}
+    background-color: #fff;
+    } */
 
 .film-slider-container-items{
     display: flex;
