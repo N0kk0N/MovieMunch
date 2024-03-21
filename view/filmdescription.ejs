@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 </head>
 <body>
     <!-- HEADER -->
     <header>
         <section class="filmdetail-poster"> 
+            <!-- <img src="https://image.tmdb.org/t/p/w500" alt=""> -->
             <div>
                 <button>go back</button>
                 <button></button>
@@ -20,7 +23,7 @@
                </div>
         </section>
     </header>
-    <!----MAIN------->
+    <!----MAIN----->
     <main>
         <!-- Film description -->
         <section class="filmdetail-description">
@@ -37,8 +40,8 @@
         <!-- recipe -->
         <p>aangeboden recepten</p>
         <article class="filmdetail-recipe">
-            <details>
-                <summary>american burger</summary>
+     
+            <h2>american burger</h2>
 
 
                    <!-- ingrediënts -->
@@ -58,7 +61,7 @@
                 </ul>
             </section>
                 <!-- instructions -->
-            <section class="instructies swiper">
+            <section class="swiper">
            
                 <button class="swiper-button-prev"></button>
                 <button class="swiper-button-next"></button>
@@ -87,7 +90,7 @@
 
 
 
-            </details>
+    
 
 
          
@@ -107,6 +110,13 @@
         
   
   
-    <script src="../static/js/filmdetail.js"></script>
+    <script type="module" src="../static/js/filmdetail.js"></script>
+
+
+    <script type="module">
+        import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'
+      
+        const swiper = new Swiper('.swiper') 
+      </script>
 </body>
 </html>

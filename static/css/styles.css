@@ -203,17 +203,11 @@ body{
 
 
 /* Recipe */
-.filmdetail-recipe {
-    margin: 0.5em;
-}
-
 .filmdetail-recipe h2{
     margin: 0;
     margin-bottom: 2em;
 }
-.filmdetail-recipe p:first-of-type{
-    margin-bottom: 0;
-}
+
 
 /* ingredients */
 .filmdetail-ingredients {
@@ -229,8 +223,30 @@ body{
 
 
 
-/* Swiper function */
+/* Swiper function / instructions */
+.swiper-wrapper {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    overflow-x: auto;
+    padding: 0;
+    max-width: 100%;
+}
 
+.swiper-slide {
+    background-color: black;
+    color: white;
+    margin: 5em;
+    display: flex;
+    justify-content: center;
+    text-align: center;
 
+}
+
+.swiper-slide p {
+    width: 20em;
+    padding: 3em;
+   text-align: center;
+}
 
 
