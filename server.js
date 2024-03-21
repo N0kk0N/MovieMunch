@@ -181,7 +181,9 @@ app.get('/movie/:name', (req, res) => {
     const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`
     const backdropURL = json.results[0].backdrop_path
     const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`
+    const originalLanguage = json.results[0].original_language; // Voeg deze regel toe
     console.log(json.results[0])
+    console.log("Original language:", originalLanguage); // Voeg deze regel toe voor de originele taal
     res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc})
   })
   .catch(err => console.error('error:' + err));
@@ -279,13 +281,12 @@ app.listen(process.env.PORT, () => {
 });
 
 
-// HAALT RECEPT OP MET SPECIFIEK ID
+// HAALT RECEPT OP UIT WILLEKEURIG LAND (ALLEEN WAARVAN LAND BESCHIKBAAR IS)
 
 const fetch = require('node-fetch');
 
 const apiKey = process.env.FOOD_API_KEY;
-const recipeId = '716429';
-const apiUrl = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=${apiKey}`;
+const apiUrl = `https://api.spoonacular.com/recipes/random?number=1&apiKey=${apiKey}`;
 
 fetch(apiUrl)
   .then(response => {
@@ -295,9 +296,19 @@ fetch(apiUrl)
     return response.json();
   })
   .then(data => {
-    console.log(data);
+    // Controleer of er recepten zijn geretourneerd
+    if (data && data.recipes && data.recipes.length > 0) {
+      const randomRecipe = data.recipes[0];
+      // Controleren of het land van herkomst beschikbaar is
+      if (randomRecipe.hasOwnProperty('cuisines') && randomRecipe.cuisines.length > 0) {
+        console.log('Country of origin:', randomRecipe.cuisines[0]);
+        // Loggen van de hele receptinformatie
+        console.log('Receptinformatie:', randomRecipe);
+      }
+    } else {
+      console.log('Geen recepten gevonden.');
+    }
   })
   .catch(error => {
     console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
   });
-
