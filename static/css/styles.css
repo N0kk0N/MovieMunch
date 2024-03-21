@@ -1,148 +1,137 @@
 @font-face {
-    font-family: archivo-regular;
-    src: url(../fonts/Archivo-Regular.ttf);
-  }
-
-  @font-face {
-    font-family: archivo-light;
-    src: url(../fonts/Archivo-Light.ttf);
-  }
-
-  @font-face {
-    font-family: archivo-bold;
-    src: url(../fonts/Archivo-Bold.ttf);
-  }
-
-  @font-face {
-    font-family: clash-regular;
-    src: url(../fonts/ClashDisplay-Regular.ttf);
-  }
-
-  @font-face {
-    font-family: clash-medium;
-    src: url(../fonts/ClashDisplay-Medium.ttf);
-  }
-
-  @font-face {
-    font-family: clash-light;
-    src: url(../fonts/ClashDisplay-Light.ttf);
-  }
-
-  @font-face {
-    font-family: clash-bold;
-    src: url(../fonts/ClashDisplay-Bold.ttf);
-  }
-
-body{
-    padding: 0;
-    margin: 0;
+  font-family: archivo-regular;
+  src: url(../fonts/Archivo-Regular.ttf);
 }
 
-.logo-wrapper{
-    background-color :#ff673e;
-    width: 100vw;
-    height: 20vh;
-    padding-top: 5vh;   
-    font-family: 'Clashdisplay', sans-serif; 
-    text-transform: uppercase;
+@font-face {
+  font-family: archivo-light;
+  src: url(../fonts/Archivo-Light.ttf);
 }
 
-.sublogo{
-    color: #fff;
-    font-size: 1.65rem;
-    text-align: center;
- 
+@font-face {
+  font-family: archivo-bold;
+  src: url(../fonts/Archivo-Bold.ttf);
 }
 
-.logo{
-    color: #000;
-    font-size: 2rem;
-    text-align: center;
+@font-face {
+  font-family: clash-regular;
+  src: url(../fonts/ClashDisplay-Regular.ttf);
 }
 
-.overview{
-    overflow-x: hidden;
-    padding: 0;
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+@font-face {
+  font-family: clash-medium;
+  src: url(../fonts/ClashDisplay-Medium.ttf);
+}
+
+@font-face {
+  font-family: clash-light;
+  src: url(../fonts/ClashDisplay-Light.ttf);
+}
+
+@font-face {
+  font-family: clash-bold;
+  src: url(../fonts/ClashDisplay-Bold.ttf);
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.logo-wrapper {
+  background-color: #ff673e;
+  width: 100vw;
+  height: 20vh;
+  padding-top: 5vh;
+  font-family: 'Clashdisplay', sans-serif;
+  text-transform: uppercase;
+}
+
+.sublogo {
+  color: #fff;
+  font-size: 1.65rem;
+  text-align: center;
+
+}
+
+.logo {
+  color: #000;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.overview {
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .favourites {
-    overflow-x: hidden;
-    padding: 0;
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.swiper {
-    width: 100%;
-    padding-top: 50px;
-    padding-bottom: 50px;
+.swiper-container {
+  width: 90vw;
+  padding-top: 3em;
+  padding-bottom: 3em;
+  background-color: white;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.swiper-slide {
+  width: 160px !important;
   }
 
-  .swiper-slide {
-    background-position: center;
-    background-size: cover;
-    width: 200px!important;
-    background-color: #fff;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
-    border-radius: 2rem;
-  }
-
-  .swiper-slide img {
-    display: block;
-    width: 100%;
-  }
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  border-radius: 1rem;
+  height: 15rem;
+}
 
 .overview-film-hero {
-    flex-shrink: 0;
-    width: 100%;
-    height: 40vh;
-    background-color: blue;
-    position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  height: 40vh;
+  background-color: blue;
+  position: relative;
 }
 
 .overview-film-hero::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(33,33,33,0.41222426470588236) 53%, rgba(120,120,120,0) 63%, rgba(255,255,255,0) 100%);
-    z-index: 1;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(33, 33, 33, 0.41222426470588236) 53%, rgba(120, 120, 120, 0) 63%, rgba(255, 255, 255, 0) 100%);
+  z-index: 1;
 }
 
-.overview-film-hero img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.overview-film-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .overlay-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    text-align: center;
-    z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  z-index: 2;
 }
-/* 
-.swiper-container {
-    flex-grow: 1;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    background-color: white;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    margin-top: -30px;
-    z-index: 100;
-} */
 
 /* .swiper-wrapper {
     display: flex;
@@ -157,42 +146,42 @@ body{
     background-color: #fff;
     } */
 
-.film-slider-container-items{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.film-slider-container-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-
-.film-slider-container-items form{
-    width: 90%;
+.film-slider-container-items form {
+  width: 90%;
 }
 
 .search-form input[type="text"] {
-    width: 100%;
-    box-sizing: border-box;
-    border: none;
-    background-color: #D9D9D9;
-    height: 48px;
-    border-radius: 30px;
-    padding-left: 35px;
-    background-image: url('../images/Search.png');
-    background-position: 7px center;
-    background-repeat: no-repeat;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  background-color: #D9D9D9;
+  height: 48px;
+  border-radius: 30px;
+  padding-left: 35px;
+  background-image: url('../images/Search.png');
+  background-position: 7px center;
+  background-repeat: no-repeat;
 }
 
 .search-form input[type="text"]::placeholder {
-    font-family: 'Archivo', sans-serif;
+  font-family: 'Archivo', sans-serif;
 }
 
 .inline-items {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
 }
-.movie-card img{
-    height: 100%;
-    width: 200px;
-    object-fit: cover;
+
+.movie-card img {
+  height: 100%;
+  width: 200px;
+  object-fit: cover;
 }

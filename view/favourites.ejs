@@ -17,8 +17,8 @@
             <h1 class="sublogo">MovieMunch</h1>
             <h1 class="logo">MovieMunch</h1>
         </div>
-        <main class="swiper-container film-slider-container">
-            <div class="swiper mySwiper">
+        <main class="swiper-container swiper film-slider-container">
+            <div class=" mySwiper">
                 <ul class="swiper-wrapper">
                     <li class="swiper-slide">
                         <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
@@ -50,34 +50,23 @@
                 </ul>
                 <div class="swiper-pagination"></div>
             </div>
-
-            <!-- -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC); -->
-
-            <!-- <section class="swiper-wrapper">
-                <% for(let i = 1; i <= 10; i++) { %>
-                <article class="swiper-slide movie-card">
-                    <img src="https://via.placeholder.com/150?text=Image+<%= i %>" alt="Image <%= i %>">
-                </article>
-                <% } %>
-            </section> -->
         </main>
         <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
         <script>
-            var swiper = new Swiper(".mySwiper", {
-                effect: "coverflow",
-                initialSlide: 2,
+            var mySwiper = new Swiper('.mySwiper', {
+                loop: true,
+                effect: 'coverflow',
                 grabCursor: true,
                 centeredSlides: true,
-                slidesPerView: "auto",
+                slidesPerView: 'auto',
                 coverflowEffect: {
                     rotate: 0,
-                    stretch: 0,
-                    depth: 100,
-                    modifier: 2,
-                    slideShadows: true,
-                }, 
-                loop : true,
-            });
+                    stretch: 88,
+                    depth: 200,
+                    modifier: 1,
+                    slideShadows: false,
+                },
+            })
         </script>
     </div>
 </body>
