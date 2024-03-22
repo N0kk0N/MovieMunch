@@ -121,7 +121,7 @@ request(options, function (error, response, body) {
     
     const voteAverage = movie.vote_average
     voteAverageArray.push(voteAverage)
-
+    
     const voteCount  = movie.vote_count
     voteCountArray.push(voteCount)
 
