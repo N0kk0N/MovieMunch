@@ -13,6 +13,7 @@ MovieMunch is een platform waarbij gebruikers film aanbevelingen krijgen met bij
 ## Handleiding
 
 ## Libraries
+1. https://swiperjs.com/
 
 ## Contributors
 - [Robin Elseman (Backend)](https://github.com/RobinElseman)
