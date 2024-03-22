@@ -161,6 +161,8 @@ app.get('/profile/settings', (req, res) => {
   console.log(req.session.users);
 });
 
+
+
 app.get('/movie/:name', (req, res) => {
   const movieName = req.params.name
   const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&api_key=${process.env.API_KEY}`
@@ -187,6 +189,32 @@ app.get('/movie/:name', (req, res) => {
   .catch(err => console.error('error:' + err));
 }
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // HAALT RECEPT OP UIT WILLEKEURIG LAND (ALLEEN WAARVAN LAND BESCHIKBAAR IS)
