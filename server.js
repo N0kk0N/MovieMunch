@@ -162,9 +162,7 @@ app.get('/profile/settings', (req, res) => {
 });
 
 app.get('/movie/:name', (req, res) => {
-  // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
   const movieName = req.params.name
-  // DAARNA MOETEN WE ZORGEN DAT WE GEGEVENS UIT DE API KRIJGEN
   const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&api_key=${process.env.API_KEY}`
   
   const options = {
@@ -181,9 +179,9 @@ app.get('/movie/:name', (req, res) => {
     const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`
     const backdropURL = json.results[0].backdrop_path
     const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`
-    const originalLanguage = json.results[0].original_language; // Voeg deze regel toe
+    const originalLanguage = json.results[0].original_language;
     console.log(json.results[0])
-    console.log("Original language:", originalLanguage); // Voeg deze regel toe voor de originele taal
+    console.log("Original language:", originalLanguage);
     res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc})
   })
   .catch(err => console.error('error:' + err));
@@ -197,30 +195,93 @@ const fetch = require('node-fetch');
 const apiKey = process.env.FOOD_API_KEY;
 const apiUrl = `https://api.spoonacular.com/recipes/random?number=1&apiKey=${apiKey}`;
 
-fetch(apiUrl)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`Network response was not ok: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => {
-    // Controleer of er recepten zijn geretourneerd
-    if (data && data.recipes && data.recipes.length > 0) {
-      const randomRecipe = data.recipes[0];
-      // Controleren of het land van herkomst beschikbaar is
-      if (randomRecipe.hasOwnProperty('cuisines') && randomRecipe.cuisines.length > 0) {
-        console.log('Country of origin:', randomRecipe.cuisines[0]);
-        // Loggen van de hele receptinformatie
-        console.log('Receptinformatie:', randomRecipe);
+const fetchRandomRecipe = (retryCount = 0) => {
+  const maxRetries = 3;
+  const recipesToFetch = 5; // Aantal recepten om op te halen
+
+  fetch(`${apiUrl}&number=${recipesToFetch}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.status}`);
       }
-    } else {
-      console.log('Geen recepten gevonden.');
-    }
-  })
-  .catch(error => {
-    console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
-  });
+      return response.json();
+    })
+    .then(data => {
+      // Controleren of er recepten zijn geretourneerd
+      if (data && data.recipes && data.recipes.length > 0) {
+        let foundRecipe = false;
+        for (const recipe of data.recipes) {
+          // Controleren of het land van herkomst beschikbaar is
+          if (recipe.hasOwnProperty('cuisines') && recipe.cuisines.length > 0) {
+            console.log('Country of origin:', recipe.cuisines[0]);
+            // Loggen van de hele receptinformatie
+            console.log('Receptinformatie:', recipe);
+            foundRecipe = true;
+            break; // Stop de lus als een recept is gevonden
+          }
+        }
+        if (!foundRecipe && retryCount < maxRetries) {
+          // Als er geen recept is gevonden met bekend land van herkomst, probeer opnieuw
+          console.log(`Geen recepten gevonden met bekend land van herkomst. Poging ${retryCount + 1} van ${maxRetries}...`);
+          fetchRandomRecipe(retryCount + 1);
+        } else if (!foundRecipe) {
+          console.log(`Geen recepten gevonden met bekend land van herkomst na ${maxRetries} pogingen.`);
+        }
+      } else {
+        console.log('Geen recepten gevonden.');
+      }
+    })
+    .catch(error => {
+      console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+    });
+};
+
+// Begin met het ophalen van willekeurige recepten
+fetchRandomRecipe();
+
+
+
+
+
+
+
+// fetch(apiUrl)
+//   .then(response => {
+//     if (!response.ok) {
+//       throw new Error(`Network response was not ok: ${response.status}`);
+//     }
+//     return response.json();
+//   })
+//   .then(data => {
+//     // Controleer of er recepten zijn geretourneerd
+//     if (data && data.recipes && data.recipes.length > 0) {
+//       const randomRecipe = data.recipes[0];
+//       // Controleren of het land van herkomst beschikbaar is
+//       if (randomRecipe.hasOwnProperty('cuisines') && randomRecipe.cuisines.length > 0) {
+//         console.log('Country of origin:', randomRecipe.cuisines[0]);
+//         // Loggen van de hele receptinformatie
+//         console.log('Receptinformatie:', randomRecipe);
+//       }
+//     } else {
+//       console.log('Geen recepten gevonden.');
+//     }
+//   })
+//   .catch(error => {
+//     console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+//   });
+
+
+  
+  
+
+
+
+
+
+
+
+
+
   
 
 app.get('/logout', (req, res) => {
@@ -233,6 +294,7 @@ app.get('/logout', (req, res) => {
     }
   });
 });
+
 
 // MOETEN DEZE VERWIJDEREN ZODRA HET AF IS!
 app.get('/filmdetail', (req, res) => {
