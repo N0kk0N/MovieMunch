@@ -1,4 +1,3 @@
-
 require('dotenv').config() 
 
 // Initialise Express webserver
@@ -183,7 +182,7 @@ app.get('/movie/:name', (req, res) => {
     const backdropURL = json.results[0].backdrop_path
     const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`
     console.log(json.results[0])
-    res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc, popularList})
+    res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc})
   })
   .catch(err => console.error('error:' + err));
 }
