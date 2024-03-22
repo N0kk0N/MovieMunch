@@ -46,9 +46,8 @@ app.get('/', (req, res) => {
   console.log(req.session.users);
 });
 
-app.get('/overview', (req, res) => {
 const request = require('request');
-const { json } = require('express')
+const { json } = require('express');
 const apiKey = process.env.API_KEY;
 const options = {
   method: 'GET',
@@ -63,159 +62,56 @@ const options = {
   },
 };
 
-request(options, function (error, response, body) {
-  if (error) throw new Error(error);
-  const movies = JSON.parse(body).results;
-  const adultArray = []
-  const backdropPathArray = []
-  const genreIdsArray = []
-  const idArray = []
-  const originalLanguageArray = []
-  const originalTitleArray = []
-  const overviewArray = []
-  const popularityArray = []
-  const posterPathArray = []
-  const releaseDateArray = []
-  const titleArray = []
-  const videoArray = []
-  const voteAverageArray = []
-  const voteCountArray = []
-
-  movies.forEach(movie => {
-
-    const adult = movie.adult
-    adultArray.push(adult)
-
-    const backdropPath = movie.backdrop_path
-    backdropPathArray.push(backdropPath)
-
-    const genreIds = movie.genre_ids
-    genreIdsArray.push(genreIds)
-
-    const id = movie.id
-    idArray.push(id)
-
-    const originalLanguage = movie.original_language
-    originalLanguageArray.push(originalLanguage)
-
-    const originalTitle = movie.original_title
-    originalTitleArray.push(originalTitle)
-
-    const overview = movie.overview
-    overviewArray.push(overview)
-    
-    const popularity = movie.popularity
-    popularityArray.push(popularity)
-
-    const posterPath = movie.poster_path
-    posterPathArray.push(posterPath)
-    
-    const releaseDate = movie.release_date
-    releaseDateArray.push(releaseDate)
-
-    const title = movie.title
-    titleArray.push(title)
-
-    const video = movie.video
-    videoArray.push(video)
-    
-    const voteAverage = movie.vote_average
-    voteAverageArray.push(voteAverage)
-    
-    const voteCount  = movie.vote_count
-    voteCountArray.push(voteCount)
-
-  });
-
-  res.render('overview.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
-});
-});
-
-
-app.get('/favourites', (req, res) => {
-  const request = require('request');
-  const { json } = require('express')
-  const apiKey = process.env.API_KEY;
-  const options = {
-    method: 'GET',
-    url: 'https://api.themoviedb.org/3/movie/popular',
-    qs: {
-      language: 'en-US',
-      page: 1,
-    },
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-  };
-  
+function handleRequest(req, res, route) {
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
     const movies = JSON.parse(body).results;
-    const adultArray = []
-    const backdropPathArray = []
-    const genreIdsArray = []
-    const idArray = []
-    const originalLanguageArray = []
-    const originalTitleArray = []
-    const overviewArray = []
-    const popularityArray = []
-    const posterPathArray = []
-    const releaseDateArray = []
-    const titleArray = []
-    const videoArray = []
-    const voteAverageArray = []
-    const voteCountArray = []
-  
+    const data = {
+      adultArray: [],
+      backdropPathArray: [],
+      genreIdsArray: [],
+      idArray: [],
+      originalLanguageArray: [],
+      originalTitleArray: [],
+      overviewArray: [],
+      popularityArray: [],
+      posterPathArray: [],
+      releaseDateArray: [],
+      titleArray: [],
+      videoArray: [],
+      voteAverageArray: [],
+      voteCountArray: []
+    };
+
     movies.forEach(movie => {
-  
-      const adult = movie.adult
-      adultArray.push(adult)
-  
-      const backdropPath = movie.backdrop_path
-      backdropPathArray.push(backdropPath)
-  
-      const genreIds = movie.genre_ids
-      genreIdsArray.push(genreIds)
-  
-      const id = movie.id
-      idArray.push(id)
-  
-      const originalLanguage = movie.original_language
-      originalLanguageArray.push(originalLanguage)
-  
-      const originalTitle = movie.original_title
-      originalTitleArray.push(originalTitle)
-  
-      const overview = movie.overview
-      overviewArray.push(overview)
-      
-      const popularity = movie.popularity
-      popularityArray.push(popularity)
-  
-      const posterPath = movie.poster_path
-      posterPathArray.push(posterPath)
-      
-      const releaseDate = movie.release_date
-      releaseDateArray.push(releaseDate)
-  
-      const title = movie.title
-      titleArray.push(title)
-  
-      const video = movie.video
-      videoArray.push(video)
-      
-      const voteAverage = movie.vote_average
-      voteAverageArray.push(voteAverage)
-  
-      const voteCount  = movie.vote_count
-      voteCountArray.push(voteCount)
-  
+      data.adultArray.push(movie.adult);
+      data.backdropPathArray.push(movie.backdrop_path);
+      data.genreIdsArray.push(movie.genre_ids);
+      data.idArray.push(movie.id);
+      data.originalLanguageArray.push(movie.original_language);
+      data.originalTitleArray.push(movie.original_title);
+      data.overviewArray.push(movie.overview);
+      data.popularityArray.push(movie.popularity);
+      data.posterPathArray.push(movie.poster_path);
+      data.releaseDateArray.push(movie.release_date);
+      data.titleArray.push(movie.title);
+      data.videoArray.push(movie.video);
+      data.voteAverageArray.push(movie.vote_average);
+      data.voteCountArray.push(movie.vote_count);
     });
-  
-    res.render('favourites.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
+
+    res.render(route, data);
   });
+}
+
+app.get('/overview', (req, res) => {
+  handleRequest(req, res, 'overview.ejs');
 });
+
+app.get('/favourites', (req, res) => {
+  handleRequest(req, res, 'favourites.ejs');
+});
+
 
 
 app.get('/signup', (req, res) => {
