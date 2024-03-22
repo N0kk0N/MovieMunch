@@ -92,19 +92,15 @@ app.get('/profile/settings', (req, res) => {
 });
 
 app.post('/profile/settingsnew', upload.single('avatar'), async function (req, res, next) {
-  console.log(req.file)
-  console.log(req.session.users)
-  console.log(req.file.filename)
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
   const picture = req.file.filename
   try {
-    const sessionUser = req.session.users;
-    const result = await collection.insertOne(
-      { _id: sessionUser, profilepicture: picture }
-    );
+    collection.findOneAndUpdate( { "_id" : new ObjectId(req.session.users) },
+    { $set: { "fileName" : picture } });
   } catch (error) {
     console.error(error);
+    res.status(500).send('Server error');
   }
   res.send(`<img src="../static/uploads/${req.file.filename}" alt="Profile picture">`)
 })
@@ -146,7 +142,7 @@ app.post('/new-user', async (req, res) => {
         password: xss(hashedPassword),
         color: xss(req.body.color),
         creationDate: new Date(),
-        profilepicture: ``
+        fileName: ""
       });
 
       res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
