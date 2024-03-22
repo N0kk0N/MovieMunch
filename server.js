@@ -215,7 +215,8 @@ app.get('/favourites', (req, res) => {
   
     res.render('favourites.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
   });
-  });
+});
+
 
 app.get('/signup', (req, res) => {
   res.render('signup.ejs');
