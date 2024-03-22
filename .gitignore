@@ -7,4 +7,4 @@
 .DS_Store
 
 # Ignore Node Modules
-.node_modules
+node_modules/
