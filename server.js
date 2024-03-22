@@ -100,9 +100,30 @@ app.get('/overview', (req, res) => {
   res.render('overview.ejs');
 });
 
-app.get('/filmdetail', (req, res) => {
-  res.render('filmdescription.ejs');
-});
+app.get('/filmdetail/:movie', (req, res) => {
+    // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
+    const movieName = req.params.name
+    // DAARNA MOETEN WE ZORGEN DAT WE GEGEVENS UIT DE API KRIJGEN
+    const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&api_key=${process.env.API_KEY}`
+    
+    const options = {
+      method: 'GET',
+      headers: {accept: 'application/json', Authorization: `Bearer ${process.env.API_KEY}`}
+    };
+    
+    fetch(url, options)
+    .then(res => res.json())
+    .then(json => {
+      const title = json.results[0].title
+      const overview = json.results[0].overview
+      const imageURL = json.results[0].poster_path
+      const backdropURL = json.results[0].backdrop_path
+      console.log(json.results[0])
+      res.render('filmdescription.ejs', {title, overview, imageURL, backdropURL})
+    })
+    .catch(err => console.error('error:' + err));
+  }
+);
 
 
 // LOGIN FUNCTION
