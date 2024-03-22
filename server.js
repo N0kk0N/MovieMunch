@@ -12,7 +12,10 @@ const storage = multer.diskStorage({
     cb(null, 'static/uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
+    const extension = file.originalname.split(".").pop()
+    const date = new Date
+    const dateISO = date.toISOString()
+    cb(null, `${req.session.users}${dateISO}.${extension}` )
   }
 })
 
@@ -88,10 +91,22 @@ app.get('/profile/settings', (req, res) => {
   console.log(req.session.users);
 });
 
-app.post('/profile/settings', upload.single('avatar'), function (req, res, next) {
-  // req.file is the `avatar` file
-  console.log(req.file);
-  // TOEVOEGEN NAAM EN KOPPELING AAN GEBRUIKERS ID
+app.post('/profile/settingsnew', upload.single('avatar'), async function (req, res, next) {
+  console.log(req.file)
+  console.log(req.session.users)
+  console.log(req.file.filename)
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+  const picture = req.file.filename
+  try {
+    const sessionUser = req.session.users;
+    const result = await collection.insertOne(
+      { _id: sessionUser, profilepicture: picture }
+    );
+  } catch (error) {
+    console.error(error);
+  }
+  res.send(`<img src="../static/uploads/${req.file.filename}" alt="Profile picture">`)
 })
 
 app.get('/movie/:name', (req, res) => {
@@ -130,7 +145,8 @@ app.post('/new-user', async (req, res) => {
         username: xss(req.body.username),
         password: xss(hashedPassword),
         color: xss(req.body.color),
-        creationDate: new Date()
+        creationDate: new Date(),
+        profilepicture: ``
       });
 
       res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
@@ -189,6 +205,7 @@ app.listen(process.env.PORT, () => {
 // HAALT LIJST MET DISNEY FILMS OP (API)
 const request = require('request');
 const { application } = require('express')
+const { parse } = require('dotenv')
 const apiKey = process.env.API_KEY;
 const options = {
   method: 'GET',
