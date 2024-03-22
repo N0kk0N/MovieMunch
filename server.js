@@ -5,6 +5,20 @@ const express = require('express')
 const session = require('express-session')
 const xss = require('xss')
 const bcrypt = require('bcrypt')
+const multer  = require('multer')
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'static/uploads')
+  },
+  filename: function (req, file, cb) {
+    const extension = file.originalname.split(".").pop()
+    const date = new Date
+    const dateISO = date.toISOString()
+    cb(null, `${req.session.users}${dateISO}.${extension}` )
+  }
+})
+
+const upload = multer({ storage: storage })
 const app = express()
 
 app
@@ -267,6 +281,20 @@ app.get('/profile/settings', (req, res) => {
   console.log(req.session.users);
 });
 
+app.post('/profile/settingsnew', upload.single('avatar'), async function (req, res, next) {
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+  const picture = req.file.filename
+  try {
+    collection.findOneAndUpdate( { "_id" : new ObjectId(req.session.users) },
+    { $set: { "fileName" : picture } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+  res.send(`<img src="../static/uploads/${req.file.filename}" alt="Profile picture">`)
+})
+
 app.get('/movie/:name', (req, res) => {
   // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
   const movieName = req.params.name
@@ -325,7 +353,8 @@ app.post('/new-user', async (req, res) => {
         username: xss(req.body.username),
         password: xss(hashedPassword),
         color: xss(req.body.color),
-        creationDate: new Date()
+        creationDate: new Date(),
+        fileName: ""
       });
 
       res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
