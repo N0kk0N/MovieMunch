@@ -162,59 +162,56 @@ app.get('/profile/settings', (req, res) => {
 });
 
 
+// HAALT FILMPOSTER OP EN GEEFT DAARBIJ COUNTRY OF ORIGIN
 
 app.get('/movie/:name', (req, res) => {
-  const movieName = req.params.name
-  const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&api_key=${process.env.API_KEY}`
-  
-  const options = {
+  const movieName = req.params.name;
+  const searchUrl = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
+  const apiKey = process.env.API_KEY;
+  const searchOptions = {
     method: 'GET',
-    headers: {accept: 'application/json', Authorization: `Bearer ${process.env.API_KEY}`}
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${apiKey}`
+    }
   };
-  
-  fetch(url, options)
-  .then(res => res.json())
-  .then(json => {
-    const title = json.results[0].title
-    const overview = json.results[0].overview
-    const imageURL = json.results[0].poster_path
-    const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`
-    const backdropURL = json.results[0].backdrop_path
-    const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`
-    const originalLanguage = json.results[0].original_language;
-    console.log(json.results[0])
-    console.log("Original language:", originalLanguage);
-    res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc})
-  })
-  .catch(err => console.error('error:' + err));
-}
-);
 
+  // Haalt details op van de film (country of origin)
+  fetch(searchUrl, searchOptions)
+    .then(res => res.json())
+    .then(json => {
+      if (json.results.length > 0) {
+        const movieId = json.results[0].id;
+        const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
+        const movieDetailsOptions = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${apiKey}`
+          }
+        };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        // Haalt filmposter op
+        fetch(movieDetailsUrl, movieDetailsOptions)
+          .then(res => res.json())
+          .then(json => {
+            const title = json.title;
+            const overview = json.overview;
+            const imageURL = json.poster_path;
+            const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`;
+            const backdropURL = json.backdrop_path;
+            const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`;
+            const originalLanguage = json.original_language;
+            console.log(json);
+            res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc });
+          })
+          .catch(err => console.error('Error fetching movie details:', err));
+      } else {
+        res.status(404).send('Movie not found');
+      }
+    })
+    .catch(err => console.error('Error fetching movie:', err));
+});
 
 
 // HAALT RECEPT OP UIT WILLEKEURIG LAND (ALLEEN WAARVAN LAND BESCHIKBAAR IS)
@@ -236,17 +233,17 @@ const fetchRandomRecipe = (retryCount = 0) => {
       return response.json();
     })
     .then(data => {
-      // Controleren of er recepten zijn geretourneerd
+      // Checks if there are recipes.
       if (data && data.recipes && data.recipes.length > 0) {
         let foundRecipe = false;
         for (const recipe of data.recipes) {
-          // Controleren of het land van herkomst beschikbaar is
+          // Checking if country of origin is available.
           if (recipe.hasOwnProperty('cuisines') && recipe.cuisines.length > 0) {
             console.log('Country of origin:', recipe.cuisines[0]);
-            // Loggen van de hele receptinformatie
+            // Console log recipe.
             console.log('Receptinformatie:', recipe);
             foundRecipe = true;
-            break; // Stop de lus als een recept is gevonden
+            break; // Stop loop when correct recipe is found.
           }
         }
         if (!foundRecipe && retryCount < maxRetries) {
