@@ -118,7 +118,6 @@ body{
 .film-slider-container {
     flex-grow: 1;
     padding-top: 30px;
-    padding-bottom: 50px;
     background-color: white;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
