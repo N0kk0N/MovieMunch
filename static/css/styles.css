@@ -121,7 +121,7 @@ body{
 .film-slider-container {
     flex-grow: 1;
     padding-top: 30px;
-    background-color: red;
+    background-color: white;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     margin-top: -30px;
