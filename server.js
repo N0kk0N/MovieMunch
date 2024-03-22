@@ -166,6 +166,108 @@ app.get('/overview', (req, res) => {
   });
 });
 
+app.get('/overview/all', (req, res) => {
+  const request = require('request');
+  const { json } = require('express');
+  const apiKey = process.env.API_KEY;
+  
+  // Arrays om gegevens van films op te slaan
+  const adultArray = [];
+  const backdropPathArray = [];
+  const genreIdsArray = [];
+  const idArray = [];
+  const originalLanguageArray = [];
+  const originalTitleArray = [];
+  const overviewArray = [];
+  const popularityArray = [];
+  const posterPathArray = [];
+  const releaseDateArray = [];
+  const titleArray = [];
+  const videoArray = [];
+  const voteAverageArray = [];
+  const voteCountArray = [];
+
+  let page = 1;
+  
+  // Functie om films op te halen en gegevens in arrays op te slaan
+  function fetchMovies() {
+    const options = {
+      method: 'GET',
+      url: 'https://api.themoviedb.org/3/movie/popular',
+      qs: {
+        language: 'en-US',
+        page: page,
+      },
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+    };
+
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      
+      const movies = JSON.parse(body).results;
+
+      // Loop door de films en sla gegevens op in de arrays
+      movies.forEach(movie => {
+        adultArray.push(movie.adult);
+        backdropPathArray.push(movie.backdrop_path);
+        genreIdsArray.push(movie.genre_ids);
+        idArray.push(movie.id);
+        originalLanguageArray.push(movie.original_language);
+        originalTitleArray.push(movie.original_title);
+        overviewArray.push(movie.overview);
+        popularityArray.push(movie.popularity);
+        posterPathArray.push(movie.poster_path);
+        releaseDateArray.push(movie.release_date);
+        titleArray.push(movie.title);
+        videoArray.push(movie.video);
+        voteAverageArray.push(movie.vote_average);
+        voteCountArray.push(movie.vote_count);
+      });
+
+      // Verhoog de paginanummer voor de volgende aanvraag
+      page++;
+
+      // Als er nog meer pagina's zijn, blijf films ophalen
+      if (page <= 10) {
+        fetchMovies();
+      } else {
+        // Als alle pagina's zijn opgehaald, render de pagina met alle gegevens
+        renderOverviewPage();
+      }
+    });
+  }
+
+  // Functie om de overzichtspagina te renderen
+  function renderOverviewPage() {
+    // Render de pagina met de verzamelde gegevens
+    res.render('overviewAll.ejs', {
+      adultArray,
+      backdropPathArray,
+      genreIdsArray,
+      idArray,
+      originalLanguageArray,
+      originalTitleArray,
+      overviewArray,
+      popularityArray,
+      posterPathArray,
+      releaseDateArray,
+      titleArray,
+      videoArray,
+      voteAverageArray,
+      voteCountArray
+    });
+  }
+
+  // Start het ophalen van films
+  fetchMovies();
+});
+
+
+
+
 app.get('/favourites', (req, res) => {
   const request = require('request');
   const { json } = require('express')
