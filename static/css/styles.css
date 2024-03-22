@@ -106,7 +106,7 @@ body{
     flex-direction: row;
 }
 
-.swiper-slide {
+.overview-swiper-slide {
     background-position: center;
     background-size: cover;
     width: 200px!important;
@@ -156,7 +156,6 @@ body{
 /* FILMDETAIL */
 /* Filmdetail - movie poster */
 .filmdetail-poster {
-    background-color: #D9D9D9;
     height: 100vh;
     text-align: center;
     display: flex;
@@ -164,16 +163,35 @@ body{
     flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 1.5em;
+    position: relative;
 }
 
-.filmdetail-poster div:first-child {
+.filmdetail-poster-img {
+    height: 100%;
+    width: 100vw;
+    position: absolute;
+    z-index: -1;
+}
+
+.filmdetail-poster div:first-of-type {
     display: flex;
     justify-content: space-between;
 }
 
 .filmdetail-poster div button {
-    justify-content: space-between;
     margin: 0.5em;
+    padding: 0.5em;
+    height: 3.5em;
+    width: 5em;
+    border: none;
+    border-radius: 10px;
+    background-color: rgb(183, 166, 158);
+    color: white;
+}
+
+.filmdetail-poster div button:nth-of-type(2) {
+    width: 5em;
+    border-radius: 40em;
 }
 
 .filmdetail-poster div h1 {
@@ -181,6 +199,20 @@ body{
     text-transform: uppercase;
     margin: 0;
     font-size: 2.5em;
+}
+
+.filmdetail-poster div p {
+    font-family: archivo-light;
+    font-size: 0.9em;
+    margin: 0;
+    margin-bottom: 1em
+}
+
+.filmdetail-favorite-icon {
+    color: black;
+    max-width: 100%;
+    height: 2em;
+    z-index: 1;
 }
 
 
@@ -193,21 +225,31 @@ body{
 
 .filmdetail-description p:first-of-type{
     margin-bottom: 3em;
+    font-family: archivo-bold;
+    font-size:0.8em;
+}
+
+.filmdetail-description p:first-of-type{
+    margin-bottom: 3em;
+    font-family: archivo-bold;
+    font-size:0.8em;
 }
 
 .filmdetail-watchnow {
     padding: 0.5em;
     width: 80vw;
     text-transform: uppercase;
+    border: none;
+    border-radius: 25px;
+    background-color: rgb(255, 103, 63);
+    font-family: archivo-bold
 }
-
 
 /* Recipe */
 .filmdetail-recipe h2{
     margin: 0;
     margin-bottom: 2em;
 }
-
 
 /* ingredients */
 .filmdetail-ingredients {
@@ -222,31 +264,32 @@ body{
 }
 
 
-
 /* Swiper function / instructions */
-.swiper-wrapper {
-    display: flex;
-    list-style-type: none;
-    margin: 0;
-    overflow-x: auto;
-    padding: 0;
-    max-width: 100%;
-}
 
-.swiper-slide {
-    background-color: black;
+.filmdetail-swiper {
+    background-color: rgb(183, 166, 158);
     color: white;
-    margin: 5em;
-    display: flex;
-    justify-content: center;
     text-align: center;
-
+    justify-content: space-between;
+    height: 15em;
+    text-align: center;
+    border-radius: 25px;
+    align-items: center;
 }
 
-.swiper-slide p {
-    width: 20em;
+.filmdetail-slide {
+    width: 5em
+} 
+
+.filmdetail-slide p {
+    width: 5em;
     padding: 3em;
-   text-align: center;
+    text-align: center;
+    align-items: center;
+} 
+
+.filmdetail-pagination {
+    color: white;
 }
 
 

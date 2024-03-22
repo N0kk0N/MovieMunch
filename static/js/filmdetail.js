@@ -1,26 +1,44 @@
-// import Swiper from 'swiper'
-// import { Navigation, Pagination } from 'swiper/modules'
+//  const swiper = new Swiper ('.swiper',  {
 
-// import 'swiper/css'
-// import 'swiper/css/navigation'
-// import 'swiper/css/pagination'
 
- const swiper = new Swiper ('.swiper',  {
-    modules: [Navigation, Pagination],
+//     direction: 'vertical',
+//     loop: 'true',
+
+//     pagination: {
+//         el:  '.swiper-pagination',
+//     },
+    
+//     navigation: {
+//         nextEl: '.swiper-button-next',
+//         prevEl: '.swiper-button-prev'
+//     },
+
+//     // scrollbar: {
+//     //     el: '.swiper-scrollbar',
+//     //   },
+// }) 
+
+
+
+
+
+const swiper = new Swiper('.filmdetail-swiper', {
 
     direction: 'horizontal',
-    loop: 'true',
-
+    loop: true,
     pagination: {
-        el:  '.swiper-pagination',
+    el: '.swiper-pagination',
     },
-    
     navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
     },
-
     scrollbar: {
-        el: '.swiper-scrollbar',
-      },
-}) 
+      el: '.swiper-scrollbar',
+    },
+  });
+  
+
+
+
+

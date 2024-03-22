@@ -12,15 +12,16 @@
     <!-- HEADER -->
     <header>
         <section class="filmdetail-poster"> 
-            <!-- <img src="https://image.tmdb.org/t/p/w500" alt=""> -->
+            <img class="filmdetail-poster-img" src="https://via.placeholder.com/150?text=Image+1">
+
             <div>
                 <button>go back</button>
-                <button></button>
+                <button><img class="filmdetail-favorite-icon" src="../static/images/favorite.svg" alt="svg icon"></button>
             </div>
-               <div>
+            <div>
                 <h1>dune</h1>
                 <p>american movie</p>
-               </div>
+            </div>
         </section>
     </header>
     <!----MAIN----->
@@ -29,7 +30,6 @@
         <section class="filmdetail-description">
             <button class="filmdetail-watchnow">watch now</button>
             <p>02:47:00</p>
-
             <p>Set in the distant future, the film follows Paul Atreides as his family,
                 the noble House Atreides, is thrust into a war for the deadly
                 and inhospitable desert planet Arrakis
@@ -61,7 +61,7 @@
                 </ul>
             </section>
                 <!-- instructions -->
-            <section class="swiper">
+            <!-- <section class="swiper">
            
                 <button class="swiper-button-prev"></button>
                 <button class="swiper-button-next"></button>
@@ -86,14 +86,28 @@
                 </ul>
 
                 <p class="swiper-pagination"></p>
-            </section>
+            </section> -->
 
 
+           <div class="swiper filmdetail-swiper">
+               
+                <div class="swiper-wrapper filmdetail-swiper">
+                  <div class="swiper-slide filmdetail-swiper">
+                    <p>heat the olive oil in a frying pan, add the onion and cook for 5minutes.</p>
+                  </div>
+                  <div class="swiper-slide filmdetail-slide"><p>in a bowl, combine the beef with the herbs and the egg.
+                    Season, add the onions and mix well.</p></div>
+                  <div class="swiper-slide filmdetail-slide"><p>cook the burger on a preheated pan for 5-6 minutes on each side.</p></div>
+                  <div class="swiper-slide filmdetail-slide"><p>meanwhile, lightly toast the cut-side of the buns on the hot pan.</p></div>
 
-    
+                </div>
 
+                <div class="swiper-pagination filmdetail-pagination"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
 
-         
+              </div>
+
 
 
 
@@ -110,13 +124,8 @@
         
   
   
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script type="module" src="../static/js/filmdetail.js"></script>
 
-
-    <script type="module">
-        import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'
-      
-        const swiper = new Swiper('.swiper') 
-      </script>
 </body>
 </html>
