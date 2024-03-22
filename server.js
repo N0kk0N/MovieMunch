@@ -46,6 +46,24 @@ app.get('/', (req, res) => {
   console.log(req.session.users);
 });
 
+// const moviesArray = [];
+
+// movies.forEach(movie => {
+//   const movieObject = {
+//     id: movie.id,
+//     title: movie.title,
+//     // ... other properties
+//   };
+
+//   moviesArray.push(movieObject);
+// });
+
+// res.render('overview.ejs', { movies: moviesArray });
+
+// const movieId = /* the id of the movie you are interested in */;
+// const movie = moviesArray.find(movie => movie.id === movieId);
+// const movieTitle = movie ? movie.title : 'Movie not found';
+
 app.get('/overview', (req, res) => {
 const request = require('request');
 const { json } = require('express')
@@ -130,6 +148,7 @@ request(options, function (error, response, body) {
 
 });
 });
+
 
 app.get('/signup', (req, res) => {
   res.render('signup.ejs');
