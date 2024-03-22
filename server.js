@@ -100,7 +100,7 @@ app.get('/overview', (req, res) => {
   res.render('overview.ejs');
 });
 
-app.get('/filmdetail/:movie', (req, res) => {
+app.get('/filmdetail/:name', (req, res) => {
     // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
     const movieName = req.params.name
     // DAARNA MOETEN WE ZORGEN DAT WE GEGEVENS UIT DE API KRIJGEN
