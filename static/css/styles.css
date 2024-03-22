@@ -93,8 +93,9 @@ body{
 
 .overlay-content h2 {
     font-family: 'clash-bold', sans-serif;
-    font-size: 1.875em;
-    filter: drop-shadow(0px 0px 100px #000000);
+    font-size: 2.5em;
+    line-height: 1.2em;
+    text-shadow: 0px 0px 19px rgba(0, 0, 0, 1);
 }
 
 .overlay-content h3{
