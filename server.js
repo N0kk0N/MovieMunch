@@ -46,11 +46,6 @@ app.get('/', (req, res) => {
   console.log(req.session.users);
 });
 
-
-
-
-
-
 app.get('/overview', (req, res) => {
   const request = require('request');
   const { json } = require('express')
