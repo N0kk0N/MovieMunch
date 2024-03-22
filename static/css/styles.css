@@ -113,28 +113,16 @@ body{
     text-transform: uppercase;
 }
 
-.swiper-container {
-    flex-grow: 1;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    background-color: white;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    margin-top: -30px;
-    z-index: 100;
-}
-
-.swiper-wrapper {
+.gsap-wrapper {
     display: flex;
-    flex-direction: row;
-    margin-left: 20px;
+    overflow-x: scroll;
+    padding-left: 20px;
+    box-sizing: border-box;
 }
 
-.swiper-slide {
-    background-position: center;
-    background-size: cover;
-    width: 200px!important;
-    background-color: yellow;
+.gsap-slide {
+    flex: 0 0 auto;
+    margin-right: 10px;
 }
 
 .film-slider-container-items{
