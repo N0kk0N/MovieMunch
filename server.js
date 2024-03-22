@@ -132,7 +132,7 @@ request(options, function (error, response, body) {
 });
 
 
-app.get('/favorites', (req, res) => {
+app.get('/favourites', (req, res) => {
   const request = require('request');
   const { json } = require('express')
   const apiKey = process.env.API_KEY;
@@ -213,7 +213,7 @@ app.get('/favorites', (req, res) => {
   
     });
   
-    res.render('favorites.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
+    res.render('favourites.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
   });
   });
 
