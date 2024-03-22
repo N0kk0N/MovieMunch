@@ -1,4 +1,3 @@
-
 require('dotenv').config() 
 
 // Initialise Express webserver
@@ -43,15 +42,150 @@ client
   });
 
 app.get('/', (req, res) => {
-  res.render('test.ejs');
+  res.render('homepage.ejs');
+  console.log(req.session.users);
+});
+
+const request = require('request');
+const { json } = require('express');
+const apiKey = process.env.API_KEY;
+const options = {
+  method: 'GET',
+  url: 'https://api.themoviedb.org/3/movie/popular',
+  qs: {
+    language: 'en-US',
+    page: 1,
+  },
+  headers: {
+    accept: 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  },
+};
+
+function handleRequest(req, res, route) {
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error);
+    const movies = JSON.parse(body).results;
+    const data = {
+      adultArray: [],
+      backdropPathArray: [],
+      genreIdsArray: [],
+      idArray: [],
+      originalLanguageArray: [],
+      originalTitleArray: [],
+      overviewArray: [],
+      popularityArray: [],
+      posterPathArray: [],
+      releaseDateArray: [],
+      titleArray: [],
+      videoArray: [],
+      voteAverageArray: [],
+      voteCountArray: []
+    };
+
+    movies.forEach(movie => {
+      data.adultArray.push(movie.adult);
+      data.backdropPathArray.push(movie.backdrop_path);
+      data.genreIdsArray.push(movie.genre_ids);
+      data.idArray.push(movie.id);
+      data.originalLanguageArray.push(movie.original_language);
+      data.originalTitleArray.push(movie.original_title);
+      data.overviewArray.push(movie.overview);
+      data.popularityArray.push(movie.popularity);
+      data.posterPathArray.push(movie.poster_path);
+      data.releaseDateArray.push(movie.release_date);
+      data.titleArray.push(movie.title);
+      data.videoArray.push(movie.video);
+      data.voteAverageArray.push(movie.vote_average);
+      data.voteCountArray.push(movie.vote_count);
+    });
+
+    res.render(route, data);
+  });
+}
+
+app.get('/overview', (req, res) => {
+  handleRequest(req, res, 'overview.ejs');
+});
+
+app.get('/favourites', (req, res) => {
+  handleRequest(req, res, 'favourites.ejs');
+});
+
+
+
+app.get('/signup', (req, res) => {
+  res.render('signup.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/signup/preferences', (req, res) => {
+  res.render('signup-preferences.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/login', (req, res) => {
+  res.render('login.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/movies', (req, res) => {
+  res.render('movies.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/profile', (req, res) => {
+  res.render('profile.ejs');
+  console.log(req.session.users);
+});
+
+app.get('/profile/settings', (req, res) => {
+  res.render('profile-settings.ejs');
   console.log(req.session.users);
 });
 
 app.get('/movie/:name', (req, res) => {
-res.send(req.params.name)
+  // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
+  const movieName = req.params.name
+  // DAARNA MOETEN WE ZORGEN DAT WE GEGEVENS UIT DE API KRIJGEN
+  const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&api_key=${process.env.API_KEY}`
+  
+  const options = {
+    method: 'GET',
+    headers: {accept: 'application/json', Authorization: `Bearer ${process.env.API_KEY}`}
+  };
+  
+  fetch(url, options)
+  .then(res => res.json())
+  .then(json => {
+    const title = json.results[0].title
+    const overview = json.results[0].overview
+    const imageURL = json.results[0].poster_path
+    const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`
+    const backdropURL = json.results[0].backdrop_path
+    const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`
+    console.log(json.results[0])
+    res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc})
+  })
+  .catch(err => console.error('error:' + err));
 }
-)
+);
 
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Session destroy failed');
+    } else {
+      res.redirect('/login');
+    }
+  });
+});
+
+// MOETEN DEZE VERWIJDEREN ZODRA HET AF IS!
+app.get('/filmdetail', (req, res) => {
+  res.render('filmdescription.ejs');
+});
 
 // CREATE NEW USER
 app.post('/new-user', async (req, res) => {
@@ -83,35 +217,7 @@ app.post('/new-user', async (req, res) => {
 });
 
 
-// LOGOUT FUNCTION
-app.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Session destroy failed');
-    } else {
-      res.redirect('/login');
-    }
-  });
-});
-
-
-app.get('/overview', (req, res) => {
-  res.render('overview.ejs');
-});
-
-app.get('/favourites', (req, res) => {
-  res.render('favourites.ejs');
-});
-
-
-
-// LOGIN FUNCTION
-app.get('/login', (req, res) => {
-  res.render('login.ejs');
-});
-
-app.post('/login-test', async (req, res) => {
+app.post('/login-confirmation', async (req, res) => {
   try {
     const db = client.db(process.env.MONGODB_NAME);
     const collection = db.collection(process.env.MONGODB_COLLECTION);
@@ -123,7 +229,7 @@ app.post('/login-test', async (req, res) => {
 
       if (passwordMatch) {
         req.session.users = existingUser._id;
-        res.send('Login successful!');
+        res.render('movies.ejs');
         console.log(req.session.users);
       } else {
         res.send('Invalid password.');
@@ -135,6 +241,10 @@ app.post('/login-test', async (req, res) => {
     console.error(error);
     res.status(500).send('Server error');
   }
+});
+
+app.get('/filmlijst', (req, res) => {
+  res.send('test');
 });
 
 app.use((req, res) => {
@@ -149,28 +259,4 @@ app.use((err, req, res) => {
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening at port ${process.env.PORT}`);
-});
-
-
-// HAALT LIJST MET DISNEY FILMS OP (API)
-const request = require('request');
-const { application } = require('express')
-const apiKey = process.env.API_KEY;
-const options = {
-  method: 'GET',
-  url: 'https://api.themoviedb.org/3/discover/movie',
-  qs: {
-    language: 'en-US',
-    page: 1,
-    with_companies: '2',
-  },
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${apiKey}`,
-  },
-};
-
-request(options, function (error, response, body) {
-  if (error) throw new Error(error);
-  // console.log(body);
 });

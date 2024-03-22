@@ -51,13 +51,29 @@ body {
   color: #fff;
   font-size: 1.65rem;
   text-align: center;
-
+  font-family: clash-bold;
 }
 
 .logo {
   color: #000;
   font-size: 2rem;
   text-align: center;
+  font-family: clash-bold;
+  margin-top: -.7em;
+}
+
+.content{
+  margin-top: -5vh;
+  width: 100vw;
+  background-color: #fff;
+  border-radius: 1.5em 1.5em 0 0;
+}
+
+.cta{
+  font-size: 1.5rem;
+  text-align: center;
+  font-family: clash-bold;
+  text-transform: uppercase;
 }
 
 .overview {
@@ -80,15 +96,15 @@ body {
 
 .swiper-container {
   width: 90vw;
-  padding-top: 3em;
+  padding-top: 4em;
   padding-bottom: 3em;
-  background-color: white;
+  /* background-color: white; */
   z-index: 100;
   overflow: hidden;
 }
 
 .swiper-slide {
-  width: 160px !important;
+  width: 10em !important;
   }
 
 .swiper-slide img {
@@ -133,18 +149,9 @@ body {
   z-index: 2;
 }
 
-/* .swiper-wrapper {
-    display: flex;
-    flex-direction: row;
-    margin-left: 20px;
-} */
-
-/* .swiper-slide {
-    background-position: center;
-    background-size: cover;
-    width: 200px!important;
-    background-color: #fff;
-    } */
+.gsap-wrapper::-webkit-scrollbar {
+  display: none;
+}
 
 .film-slider-container-items {
   display: flex;

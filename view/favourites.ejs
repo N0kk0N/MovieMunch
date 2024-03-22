@@ -20,36 +20,33 @@
         <main class="swiper-container swiper film-slider-container">
             <div class=" mySwiper">
                 <ul class="swiper-wrapper">
-                    <li class="swiper-slide">
-                        <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-                    </li>
-                    <li class="swiper-slide">
-                        <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-                    </li>
-                    <li class="swiper-slide">
-                        <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    </li>
-                    <li class="swiper-slide">
-                        <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-                    </li>
-                    <li class="swiper-slide">
-                        <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-                    </li>
-                    <li class="swiper-slide">
-                        <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-                    </li>
-                    <li class="swiper-slide">
-                        <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-                    </li>
-                    <li class="swiper-slide">
-                        <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-                    </li>
-                    <li class="swiper-slide">
-                        <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-                    </li>
+                    <% for(let i = 0; i < posterPathArray.length; i++) { %>
+                        <li class="swiper-slide">
+                            <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
+                        </li>
+                    <% } %>
                 </ul>
                 <div class="swiper-pagination"></div>
             </div>
+            <section class="film-slider-container-items">
+                <div class="inline-items">
+                    <h2>Your picks</h2>
+                    <a href="/film/:id">see all</a>
+                </div>
+            </section>
+            <section class="gsap-wrapper">
+                <% for(let i = 0; i < posterPathArray.length; i++) { %>
+                    <article class="gsap-slide movie-card">
+                        <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
+                    </article>
+                <% } %>
+            </section>
+            <section class="film-slider-container-items">
+                <div class="inline-items">
+                    <h2>Your picks</h2>
+                    <a href="/film/:id">see all</a>
+                </div>
+            </section>
         </main>
         <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
         <script>
@@ -67,7 +64,28 @@
                     slideShadows: false,
                 },
             })
+
+            new Swiper('.swiper-wrapper', {
+                slidesPerView: 'auto',
+                freeMode: false,
+                spaceBetween: 5,
+            });
+
+            const slides = document.querySelectorAll('.gsap-slide');
+            let currentSlide = 0;
+            const slideWidth = slides[0].offsetWidth;
+            const totalSlides = slides.length;
+
+            function slideTo(index) {
+                gsap.to('.gsap-wrapper', {
+                    scrollLeft: slideWidth * index,
+                    duration: 1,
+                    ease: 'power1.inOut'
+                });
+                currentSlide = index;
+            }
         </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     </div>
 </body>
 
