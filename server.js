@@ -347,7 +347,7 @@ const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
         console.log('Recept komt uit:', recipeCountry);
         console.log('Receptinformatie:', data.recipes[0]);
                 //Testfunctie
-                let cuisineFunction = (countryOfOriginParam) => {
+                let cuisineFunction = (HIERKOMTORIGINCOUNTRY) => {
                   const cuisines = {
                     "Algeria": "african",
                     "Angola": "african",
@@ -429,7 +429,7 @@ const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
                     "Qatar": "asian",
                     "Bahrain": "asian",
                     "Timor-Leste": "asian",
-                    "United States": "american",
+                    "United States of America": "american",
                     "United Kingdom": "british",
                     "Antigua and Barbuda": "caribbean",
                     "The Bahamas": "caribbean",
@@ -507,11 +507,11 @@ const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
                     "Venezuela": "latinAmerican"
                   };
                 
-                  return cuisines[countryOfOriginParam] || "Country of origin not found";
+                  return cuisines[HIERKOMTORIGINCOUNTRY] || "Country of origin not found";
                 }
                 
                 // Voorbeeldgebruik
-                console.log(cuisineFunction(countryOfOrigin)); // Output: european
+                console.log(cuisineFunction(HIERKOMTORIGINCOUNTRY)); // Output: european
         
       } else if (retryCount < maxRetries) {
         console.log(`Geen recepten gevonden uit ${countryOfOrigin}. Poging ${retryCount + 1} van ${maxRetries}...`);
@@ -618,7 +618,7 @@ const african = [
     "Timor-Leste"
   ];
   
-  const american = ["United States"];
+  const american = ["United States of America"];
   
   const british = ["United Kingdom"];
   
