@@ -5,6 +5,20 @@ const express = require('express')
 const session = require('express-session')
 const xss = require('xss')
 const bcrypt = require('bcrypt')
+const multer  = require('multer')
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'static/uploads')
+  },
+  filename: function (req, file, cb) {
+    const extension = file.originalname.split(".").pop()
+    const date = new Date
+    const dateISO = date.toISOString()
+    cb(null, `${req.session.users}${dateISO}.${extension}` )
+  }
+})
+
+const upload = multer({ storage: storage })
 const app = express()
 
 app
@@ -46,73 +60,298 @@ app.get('/', (req, res) => {
   console.log(req.session.users);
 });
 
-const request = require('request');
-const { json } = require('express');
-const apiKey = process.env.API_KEY;
-const options = {
-  method: 'GET',
-  url: 'https://api.themoviedb.org/3/movie/popular',
-  qs: {
-    language: 'en-US',
-    page: 1,
-  },
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${apiKey}`,
-  },
-};
+app.get('/overview', (req, res) => {
+  const request = require('request');
+  const { json } = require('express')
+  const apiKey = process.env.API_KEY;
+  const genreMap = {
+    28: 'Action',
+    12: 'Adventure',
+    16: 'Animation',
+    35: 'Comedy',
+    80: 'Crime',
+    99: 'Documentary',
+    18: 'Drama',
+    10751: 'Family',
+    14: 'Fantasy',
+    36: 'History',
+    27: 'Horror',
+    10402: 'Music',
+    9648: 'Mystery',
+    10749: 'Romance',
+    878: 'Science Fiction',
+    10770: 'TV Movie',
+    53: 'Thriller',
+    10752: 'War',
+    37: 'Western'
+  };
 
-function handleRequest(req, res, route) {
+  
+
+  const options = {
+    method: 'GET',
+    url: 'https://api.themoviedb.org/3/movie/popular',
+    qs: {
+      language: 'en-US',
+      page: 1,
+    },
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+  };
+
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
     const movies = JSON.parse(body).results;
-    const data = {
-      adultArray: [],
-      backdropPathArray: [],
-      genreIdsArray: [],
-      idArray: [],
-      originalLanguageArray: [],
-      originalTitleArray: [],
-      overviewArray: [],
-      popularityArray: [],
-      posterPathArray: [],
-      releaseDateArray: [],
-      titleArray: [],
-      videoArray: [],
-      voteAverageArray: [],
-      voteCountArray: []
-    };
+    const adultArray = []
+    const backdropPathArray = []
+    const genreIdsArray = []
+    const idArray = []
+    const originalLanguageArray = []
+    const originalTitleArray = []
+    const overviewArray = []
+    const popularityArray = []
+    const posterPathArray = []
+    const releaseDateArray = []
+    const titleArray = []
+    const videoArray = []
+    const voteAverageArray = []
+    const voteCountArray = []
 
     movies.forEach(movie => {
-      data.adultArray.push(movie.adult);
-      data.backdropPathArray.push(movie.backdrop_path);
-      data.genreIdsArray.push(movie.genre_ids);
-      data.idArray.push(movie.id);
-      data.originalLanguageArray.push(movie.original_language);
-      data.originalTitleArray.push(movie.original_title);
-      data.overviewArray.push(movie.overview);
-      data.popularityArray.push(movie.popularity);
-      data.posterPathArray.push(movie.poster_path);
-      data.releaseDateArray.push(movie.release_date);
-      data.titleArray.push(movie.title);
-      data.videoArray.push(movie.video);
-      data.voteAverageArray.push(movie.vote_average);
-      data.voteCountArray.push(movie.vote_count);
+      const adult = movie.adult
+      adultArray.push(adult)
+
+      const backdropPath = movie.backdrop_path
+      backdropPathArray.push(backdropPath)
+
+      const genreIds = movie.genre_ids.map(id => genreMap[id]);
+      genreIdsArray.push(genreIds)
+
+      const id = movie.id
+      idArray.push(id)
+
+      const originalLanguage = movie.original_language
+      originalLanguageArray.push(originalLanguage)
+
+      const originalTitle = movie.original_title
+      originalTitleArray.push(originalTitle)
+
+      const overview = movie.overview
+      overviewArray.push(overview)
+      
+      const popularity = movie.popularity
+      popularityArray.push(popularity)
+
+      const posterPath = movie.poster_path
+      posterPathArray.push(posterPath)
+      
+      const releaseDate = movie.release_date
+      releaseDateArray.push(releaseDate)
+
+      const title = movie.title
+      titleArray.push(title)
+
+      const video = movie.video
+      videoArray.push(video)
+      
+      const voteAverage = movie.vote_average
+      voteAverageArray.push(voteAverage)
+
+      const voteCount  = movie.vote_count
+      voteCountArray.push(voteCount)
     });
-
-    res.render(route, data);
+    res.render('overview.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
   });
-}
-
-app.get('/overview', (req, res) => {
-  handleRequest(req, res, 'overview.ejs');
 });
+
+app.get('/overview/all', (req, res) => {
+  const request = require('request');
+  const { json } = require('express');
+  const apiKey = process.env.API_KEY;
+  
+  // Arrays om gegevens van films op te slaan
+  const adultArray = [];
+  const backdropPathArray = [];
+  const genreIdsArray = [];
+  const idArray = [];
+  const originalLanguageArray = [];
+  const originalTitleArray = [];
+  const overviewArray = [];
+  const popularityArray = [];
+  const posterPathArray = [];
+  const releaseDateArray = [];
+  const titleArray = [];
+  const videoArray = [];
+  const voteAverageArray = [];
+  const voteCountArray = [];
+
+  let page = 1;
+  
+  // Functie om films op te halen en gegevens in arrays op te slaan
+  function fetchMovies() {
+    const options = {
+      method: 'GET',
+      url: 'https://api.themoviedb.org/3/movie/popular',
+      qs: {
+        language: 'en-US',
+        page: page,
+      },
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+    };
+
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      
+      const movies = JSON.parse(body).results;
+
+      // Loop door de films en sla gegevens op in de arrays
+      movies.forEach(movie => {
+        adultArray.push(movie.adult);
+        backdropPathArray.push(movie.backdrop_path);
+        genreIdsArray.push(movie.genre_ids);
+        idArray.push(movie.id);
+        originalLanguageArray.push(movie.original_language);
+        originalTitleArray.push(movie.original_title);
+        overviewArray.push(movie.overview);
+        popularityArray.push(movie.popularity);
+        posterPathArray.push(movie.poster_path);
+        releaseDateArray.push(movie.release_date);
+        titleArray.push(movie.title);
+        videoArray.push(movie.video);
+        voteAverageArray.push(movie.vote_average);
+        voteCountArray.push(movie.vote_count);
+      });
+
+      // Verhoog de paginanummer voor de volgende aanvraag
+      page++;
+
+      // Als er nog meer pagina's zijn, blijf films ophalen
+      if (page <= 10) {
+        fetchMovies();
+      } else {
+        // Als alle pagina's zijn opgehaald, render de pagina met alle gegevens
+        renderOverviewPage();
+      }
+    });
+  }
+
+  // Functie om de overzichtspagina te renderen
+  function renderOverviewPage() {
+    // Render de pagina met de verzamelde gegevens
+    res.render('overviewAll.ejs', {
+      adultArray,
+      backdropPathArray,
+      genreIdsArray,
+      idArray,
+      originalLanguageArray,
+      originalTitleArray,
+      overviewArray,
+      popularityArray,
+      posterPathArray,
+      releaseDateArray,
+      titleArray,
+      videoArray,
+      voteAverageArray,
+      voteCountArray
+    });
+  }
+
+  // Start het ophalen van films
+  fetchMovies();
+});
+
+
+
 
 app.get('/favourites', (req, res) => {
-  handleRequest(req, res, 'favourites.ejs');
+  const request = require('request');
+  const { json } = require('express')
+  const apiKey = process.env.API_KEY;
+  const options = {
+    method: 'GET',
+    url: 'https://api.themoviedb.org/3/movie/popular',
+    qs: {
+      language: 'en-US',
+      page: 1,
+    },
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+  };
+  
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error);
+    const movies = JSON.parse(body).results;
+    const adultArray = []
+    const backdropPathArray = []
+    const genreIdsArray = []
+    const idArray = []
+    const originalLanguageArray = []
+    const originalTitleArray = []
+    const overviewArray = []
+    const popularityArray = []
+    const posterPathArray = []
+    const releaseDateArray = []
+    const titleArray = []
+    const videoArray = []
+    const voteAverageArray = []
+    const voteCountArray = []
+  
+    movies.forEach(movie => {
+  
+      const adult = movie.adult
+      adultArray.push(adult)
+  
+      const backdropPath = movie.backdrop_path
+      backdropPathArray.push(backdropPath)
+  
+      const genreIds = movie.genre_ids
+      genreIdsArray.push(genreIds)
+  
+      const id = movie.id
+      idArray.push(id)
+  
+      const originalLanguage = movie.original_language
+      originalLanguageArray.push(originalLanguage)
+  
+      const originalTitle = movie.original_title
+      originalTitleArray.push(originalTitle)
+  
+      const overview = movie.overview
+      overviewArray.push(overview)
+      
+      const popularity = movie.popularity
+      popularityArray.push(popularity)
+  
+      const posterPath = movie.poster_path
+      posterPathArray.push(posterPath)
+      
+      const releaseDate = movie.release_date
+      releaseDateArray.push(releaseDate)
+  
+      const title = movie.title
+      titleArray.push(title)
+  
+      const video = movie.video
+      videoArray.push(video)
+      
+      const voteAverage = movie.vote_average
+      voteAverageArray.push(voteAverage)
+  
+      const voteCount  = movie.vote_count
+      voteCountArray.push(voteCount)
+  
+    });
+  
+    res.render('favourites.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
+  });
 });
-
-
 
 app.get('/signup', (req, res) => {
   res.render('signup.ejs');
@@ -143,6 +382,20 @@ app.get('/profile/settings', (req, res) => {
   res.render('profile-settings.ejs');
   console.log(req.session.users);
 });
+
+app.post('/profile/settingsnew', upload.single('avatar'), async function (req, res, next) {
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+  const picture = req.file.filename
+  try {
+    collection.findOneAndUpdate( { "_id" : new ObjectId(req.session.users) },
+    { $set: { "fileName" : picture } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+  res.send(`<img src="../static/uploads/${req.file.filename}" alt="Profile picture">`)
+})
 
 app.get('/movie/:name', (req, res) => {
   // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
@@ -202,7 +455,8 @@ app.post('/new-user', async (req, res) => {
         username: xss(req.body.username),
         password: xss(hashedPassword),
         color: xss(req.body.color),
-        creationDate: new Date()
+        creationDate: new Date(),
+        fileName: ""
       });
 
       res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
