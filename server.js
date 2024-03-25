@@ -164,6 +164,113 @@ app.get('/profile/settings', (req, res) => {
 
 // HAALT FILMPOSTER OP EN GEEFT DAARBIJ COUNTRY OF ORIGIN
 
+// app.get('/movie/:name', (req, res) => {
+//   const movieName = req.params.name;
+//   const searchUrl = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
+//   const apiKey = process.env.API_KEY;
+//   const searchOptions = {
+//     method: 'GET',
+//     headers: {
+//       accept: 'application/json',
+//       Authorization: `Bearer ${apiKey}`
+//     }
+//   };
+
+//   // Haalt details op van de film (country of origin)
+//   fetch(searchUrl, searchOptions)
+//     .then(res => res.json())
+//     .then(json => {
+//       if (json.results.length > 0) {
+//         const movieId = json.results[0].id;
+//         const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
+//         const movieDetailsOptions = {
+//           method: 'GET',
+//           headers: {
+//             accept: 'application/json',
+//             Authorization: `Bearer ${apiKey}`
+//           }
+//         };
+
+//         // Haalt filmposter op
+//         fetch(movieDetailsUrl, movieDetailsOptions)
+//           .then(res => res.json())
+//           .then(json => {
+//             const title = json.title;
+//             const overview = json.overview;
+//             const imageURL = json.poster_path;
+//             const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`;
+//             const backdropURL = json.backdrop_path;
+//             const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`;
+//             const originalLanguage = json.original_language;
+//             console.log(json);
+//             res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc });
+//           })
+//           .catch(err => console.error('Error fetching movie details:', err));
+//       } else {
+//         res.status(404).send('Movie not found');
+//       }
+//     })
+//     .catch(err => console.error('Error fetching movie:', err));
+// });
+
+
+// // HAALT RECEPT OP UIT WILLEKEURIG LAND (ALLEEN WAARVAN LAND BESCHIKBAAR IS)
+
+// const fetch = require('node-fetch');
+
+// const apiKey = process.env.FOOD_API_KEY;
+// const apiUrl = `https://api.spoonacular.com/recipes/random?number=1&apiKey=${apiKey}`;
+
+// const fetchRandomRecipe = (retryCount = 0) => {
+//   const maxRetries = 3;
+//   const recipesToFetch = 15;
+
+//   fetch(`${apiUrl}&number=${recipesToFetch}`)
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error(`Network response was not ok: ${response.status}`);
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       // Checks if there are recipes.
+//       if (data && data.recipes && data.recipes.length > 0) {
+//         let foundRecipe = false;
+//         for (const recipe of data.recipes) {
+//           // Checking if country of origin is available.
+//           if (recipe.hasOwnProperty('cuisines') && recipe.cuisines.length > 0) {
+//             console.log('Country of origin:', recipe.cuisines[0]);
+//             // Console log recipe.
+//             console.log('Receptinformatie:', recipe);
+//             foundRecipe = true;
+//             break; // Stop loop when correct recipe is found.
+//           }
+//         }
+//         if (!foundRecipe && retryCount < maxRetries) {
+//           // Als er geen recept is gevonden met bekend land van herkomst, probeer opnieuw
+//           console.log(`Geen recepten gevonden met bekend land van herkomst. Poging ${retryCount + 1} van ${maxRetries}...`);
+//           fetchRandomRecipe(retryCount + 1);
+//         } else if (!foundRecipe) {
+//           console.log(`Geen recepten gevonden met bekend land van herkomst na ${maxRetries} pogingen.`);
+//         }
+//       } else {
+//         console.log('Geen recepten gevonden.');
+//       }
+//     })
+//     .catch(error => {
+//       console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+//     });
+// };
+
+// fetchRandomRecipe();
+
+
+
+
+
+
+const maxRetries = 1; // Maximaal aantal pogingen om een recept op te halen
+
 app.get('/movie/:name', (req, res) => {
   const movieName = req.params.name;
   const searchUrl = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
@@ -202,7 +309,15 @@ app.get('/movie/:name', (req, res) => {
             const backdropURL = json.backdrop_path;
             const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`;
             const originalLanguage = json.original_language;
-            console.log(json);
+
+            // Haal land van herkomst op
+            const countryOfOrigin = json.production_countries[0].name; // Neem het eerste land in de lijst
+            console.log('Film komt uit:', countryOfOrigin);
+            console.log('Film informatie:', { title, overview, posterSrc, backdropSrc });
+
+            // Roep de functie aan om een recept op te halen uit hetzelfde land
+            fetchRandomRecipe(countryOfOrigin);
+
             res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc });
           })
           .catch(err => console.error('Error fetching movie details:', err));
@@ -213,19 +328,12 @@ app.get('/movie/:name', (req, res) => {
     .catch(err => console.error('Error fetching movie:', err));
 });
 
+// HAALT RECEPT OP UIT HETZELFDE LAND ALS DE FILM
+const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
+  const apiKey = process.env.FOOD_API_KEY;
+  const apiUrl = `https://api.spoonacular.com/recipes/random?number=1&apiKey=${apiKey}&cuisine=${countryOfOrigin}`;
 
-// HAALT RECEPT OP UIT WILLEKEURIG LAND (ALLEEN WAARVAN LAND BESCHIKBAAR IS)
-
-const fetch = require('node-fetch');
-
-const apiKey = process.env.FOOD_API_KEY;
-const apiUrl = `https://api.spoonacular.com/recipes/random?number=1&apiKey=${apiKey}`;
-
-const fetchRandomRecipe = (retryCount = 0) => {
-  const maxRetries = 3;
-  const recipesToFetch = 15;
-
-  fetch(`${apiUrl}&number=${recipesToFetch}`)
+  fetch(apiUrl)
     .then(response => {
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.status}`);
@@ -233,36 +341,446 @@ const fetchRandomRecipe = (retryCount = 0) => {
       return response.json();
     })
     .then(data => {
-      // Checks if there are recipes.
-      if (data && data.recipes && data.recipes.length > 0) {
-        let foundRecipe = false;
-        for (const recipe of data.recipes) {
-          // Checking if country of origin is available.
-          if (recipe.hasOwnProperty('cuisines') && recipe.cuisines.length > 0) {
-            console.log('Country of origin:', recipe.cuisines[0]);
-            // Console log recipe.
-            console.log('Receptinformatie:', recipe);
-            foundRecipe = true;
-            break; // Stop loop when correct recipe is found.
-          }
-        }
-        if (!foundRecipe && retryCount < maxRetries) {
-          // Als er geen recept is gevonden met bekend land van herkomst, probeer opnieuw
-          console.log(`Geen recepten gevonden met bekend land van herkomst. Poging ${retryCount + 1} van ${maxRetries}...`);
-          fetchRandomRecipe(retryCount + 1);
-        } else if (!foundRecipe) {
-          console.log(`Geen recepten gevonden met bekend land van herkomst na ${maxRetries} pogingen.`);
-        }
+      // Checks if there are recipes and if cuisine is available
+      if (data && data.recipes && data.recipes.length > 0 && data.recipes[0].cuisines && data.recipes[0].cuisines.length > 0) {
+        const recipeCountry = data.recipes[0].cuisines[0]; // Neem het eerste land in de lijst
+        console.log('Recept komt uit:', recipeCountry);
+        console.log('Receptinformatie:', data.recipes[0]);
+                //Testfunctie
+                let cuisineFunction = (countryOfOriginParam) => {
+                  const cuisines = {
+                    "Algeria": "african",
+                    "Angola": "african",
+                    "Benin": "african",
+                    "Botswana": "african",
+                    "Burkina Faso": "african",
+                    "Burundi": "african",
+                    "Central African Republic": "african",
+                    "Comoros": "african",
+                    "Congo": "african",
+                    "Djibouti": "african",
+                    "Equatorial Guinea": "african",
+                    "Eritrea": "african",
+                    "Ethiopia": "african",
+                    "Gabon": "african",
+                    "Gambia": "african",
+                    "Ghana": "african",
+                    "Guinea": "african",
+                    "Guinea-Bissau": "african",
+                    "Ivory Coast": "african",
+                    "Cape Verde": "african",
+                    "Cameroon": "african",
+                    "Kenya": "african",
+                    "Lesotho": "african",
+                    "Liberia": "african",
+                    "Madagascar": "african",
+                    "Malawi": "african",
+                    "Mali": "african",
+                    "Mauritania": "african",
+                    "Mauritius": "african",
+                    "Mozambique": "african",
+                    "Namibia": "african",
+                    "Niger": "african",
+                    "Nigeria": "african",
+                    "Uganda": "african",
+                    "Rwanda": "african",
+                    "Sao Tome and Principe": "african",
+                    "Senegal": "african",
+                    "Seychelles": "african",
+                    "Sierra Leone": "african",
+                    "Somalia": "african",
+                    "Sudan": "african",
+                    "South Africa": "african",
+                    "South Sudan": "african",
+                    "Swaziland": "african",
+                    "Tanzania": "african",
+                    "Togo": "african",
+                    "Chad": "african",
+                    "Zambia": "african",
+                    "Zimbabwe": "african",
+                    "Indonesia": "asian",
+                    "Pakistan": "asian",
+                    "Bangladesh": "asian",
+                    "Philippines": "asian",
+                    "Afghanistan": "asian",
+                    "Saudi Arabia": "asian",
+                    "Uzbekistan": "asian",
+                    "Malaysia": "asian",
+                    "Yemen": "asian",
+                    "Nepal": "asian",
+                    "Sri Lanka": "asian",
+                    "Kazakhstan": "asian",
+                    "Syria": "asian",
+                    "Cambodia": "asian",
+                    "Jordan": "asian",
+                    "Azerbaijan": "asian",
+                    "United Arab Emirates": "asian",
+                    "Tajikistan": "asian",
+                    "Laos": "asian",
+                    "Kyrgyzstan": "asian",
+                    "Turkmenistan": "asian",
+                    "Singapore": "asian",
+                    "Oman": "asian",
+                    "State of Palestine": "asian",
+                    "Kuwait": "asian",
+                    "Georgia": "asian",
+                    "Mongolia": "asian",
+                    "Armenia": "asian",
+                    "Qatar": "asian",
+                    "Bahrain": "asian",
+                    "Timor-Leste": "asian",
+                    "United States": "american",
+                    "United Kingdom": "british",
+                    "Antigua and Barbuda": "caribbean",
+                    "The Bahamas": "caribbean",
+                    "Barbados": "caribbean",
+                    "Cuba": "caribbean",
+                    "Curaçao": "caribbean",
+                    "Dominica": "caribbean",
+                    "Dominican Republic": "caribbean",
+                    "Grenada": "caribbean",
+                    "Haiti": "caribbean",
+                    "Jamaica": "caribbean",
+                    "Saint Kitts and Nevis": "caribbean",
+                    "Saint Lucia": "caribbean",
+                    "Saint Vincent and the Grenadines": "caribbean",
+                    "Trinidad and Tobago": "caribbean",
+                    "China": "chinese",
+                    "Belarus": "easternEuropean",
+                    "Bulgaria": "easternEuropean",
+                    "Czech Republic": "easternEuropean",
+                    "Estonia": "easternEuropean",
+                    "Hungary": "easternEuropean",
+                    "Latvia": "easternEuropean",
+                    "Lithuania": "easternEuropean",
+                    "Moldova": "easternEuropean",
+                    "Poland": "easternEuropean",
+                    "Romania": "easternEuropean",
+                    "Russia": "easternEuropean",
+                    "Slovakia": "easternEuropean",
+                    "Ukraine": "easternEuropean",
+                    "Andorra": "european",
+                    "Austria": "european",
+                    "Belgium": "european",
+                    "Denmark": "european",
+                    "Finland": "european",
+                    "Iceland": "european",
+                    "Luxembourg": "european",
+                    "Malta": "european",
+                    "Monaco": "european",
+                    "Netherlands": "european",
+                    "Norway": "european",
+                    "Portugal": "european",
+                    "San Marino": "european",
+                    "Sweden": "european",
+                    "Switzerland": "european",
+                    "Vatican City": "european",
+                    "France": "french",
+                    "Germany": "german",
+                    "Greece": "greek",
+                    "India": "indian",
+                    "Ireland": "irish",
+                    "Italy": "italian",
+                    "Japan": "japanese",
+                    "Israel": "jewish",
+                    "South Korea": "korean",
+                    "North Korea": "korean",
+                    "Argentina": "latinAmerican",
+                    "Belize": "latinAmerican",
+                    "Bolivia": "latinAmerican",
+                    "Brazil": "latinAmerican",
+                    "Chile": "latinAmerican",
+                    "Colombia": "latinAmerican",
+                    "Costa Rica": "latinAmerican",
+                    "Ecuador": "latinAmerican",
+                    "El Salvador": "latinAmerican",
+                    "Guatemala": "latinAmerican",
+                    "Guyana": "latinAmerican",
+                    "Honduras": "latinAmerican",
+                    "Mexico": "latinAmerican",
+                    "Nicaragua": "latinAmerican",
+                    "Panama": "latinAmerican",
+                    "Paraguay": "latinAmerican",
+                    "Peru": "latinAmerican",
+                    "Suriname": "latinAmerican",
+                    "Uruguay": "latinAmerican",
+                    "Venezuela": "latinAmerican"
+                  };
+                
+                  return cuisines[countryOfOriginParam] || "Country of origin not found";
+                }
+                
+                // Voorbeeldgebruik
+                console.log(cuisineFunction(countryOfOrigin)); // Output: european
+        
+      } else if (retryCount < maxRetries) {
+        console.log(`Geen recepten gevonden uit ${countryOfOrigin}. Poging ${retryCount + 1} van ${maxRetries}...`);
+        fetchRandomRecipe(countryOfOrigin, retryCount + 1);
+        
+
+
       } else {
-        console.log('Geen recepten gevonden.');
+        console.log(`Geen recepten gevonden uit ${countryOfOrigin} na ${maxRetries} pogingen.`);
       }
     })
     .catch(error => {
       console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
     });
+
 };
 
-// fetchRandomRecipe();
+
+
+
+
+const african = [  
+  "Algeria", 
+  "Angola", 
+  "Benin", 
+  "Botswana", 
+  "Burkina Faso", 
+  "Burundi", 
+  "Central African Republic", 
+  "Comoros", 
+  "Congo", 
+  "Djibouti", 
+  "Equatorial Guinea", 
+  "Eritrea", 
+  "Ethiopia",
+  "Gabon",
+  "Gambia",
+  "Ghana",
+  "Guinea",
+  "Guinea-Bissau",
+  "Ivory Coast",
+  "Cape Verde",
+  "Cameroon",
+  "Kenya",
+  "Lesotho",
+  "Liberia",
+  "Madagascar",
+  "Malawi",
+  "Mali",
+  "Mauritania",
+  "Mauritius",
+  "Mozambique",
+  "Namibia",
+  "Niger",
+  "Nigeria",
+  "Uganda",
+  "Rwanda",
+  "Sao Tome and Principe",
+  "Senegal",
+  "Seychelles",
+  "Sierra Leone",
+  "Somalia",
+  "Sudan",
+  "South Africa",
+  "South Sudan",
+  "Swaziland",
+  "Tanzania",
+  "Togo",
+  "Chad",
+  "Zambia",
+  "Zimbabwe"];
+  
+  const asian = [
+    "Indonesia",
+    "Pakistan",
+    "Bangladesh",
+    "Philippines",
+    "Afghanistan",
+    "Saudi Arabia",
+    "Uzbekistan",
+    "Malaysia",
+    "Yemen",
+    "Nepal",
+    "Sri Lanka",
+    "Kazakhstan",
+    "Syria",
+    "Cambodia",
+    "Jordan",
+    "Azerbaijan",
+    "United Arab Emirates",
+    "Tajikistan",
+    "Laos",
+    "Kyrgyzstan",
+    "Turkmenistan",
+    "Singapore",
+    "Oman",
+    "State of Palestine",
+    "Kuwait",
+    "Georgia",
+    "Mongolia",
+    "Armenia",
+    "Qatar",
+    "Bahrain",
+    "Timor-Leste"
+  ];
+  
+  const american = ["United States"];
+  
+  const british = ["United Kingdom"];
+  
+  const caribbean = [
+    'Antigua and Barbuda',
+    'The Bahamas',
+    'Barbados',
+    'Cuba',
+    'Curaçao',
+    'Dominica',
+    'Dominican Republic',
+    'Grenada',
+    'Haiti',
+    'Jamaica',
+    'Saint Kitts and Nevis',
+    'Saint Lucia',
+    'Saint Vincent and the Grenadines',
+    'Trinidad and Tobago'
+  ];
+  
+  const chinese = ["China"];
+  
+  const easternEuropean = [
+    'Belarus',
+    'Bulgaria',
+    'Czech Republic',
+    'Estonia',
+    'Hungary',
+    'Latvia',
+    'Lithuania',
+    'Moldova',
+    'Poland',
+    'Romania',
+    'Russia',
+    'Slovakia',
+    'Ukraine'
+  ];
+  
+  const european = [
+    'Andorra',
+    'Austria',
+    'Belgium',
+    'Denmark',
+    'Finland',
+    'Iceland',
+    'Luxembourg',
+    'Malta',
+    'Monaco',
+    'Netherlands',
+    'Norway',
+    'Portugal',
+    'San Marino',
+    'Sweden',
+    'Switzerland',
+    'Vatican City'
+  ];
+  
+  const french = ["France"];
+  
+  const german = ["Germany"];
+  
+  const greek = ["Greece"];
+  
+  const indian = ["India"];
+  
+  const irish = ["Ireland"];
+  
+  const italian = ["Italy"];
+  
+  const japanese = ["Japan"];
+  
+  const jewish = ["Israel"];
+  
+  const korean = [  
+  "South Korea",
+  "North Korea"];
+  
+  const latinAmerican = [
+    'Argentina',
+    'Belize',
+    'Bolivia',
+    'Brazil',
+    'Chile',
+    'Colombia',
+    'Costa Rica',
+    'Ecuador',
+    'El Salvador',
+    'Guatemala',
+    'Guyana',
+    'Honduras',
+    'Mexico',
+    'Nicaragua',
+    'Panama',
+    'Paraguay',
+    'Peru',
+    'Suriname',
+    'Uruguay',
+    'Venezuela'
+  ];
+  
+  const mediterranean = [
+    'Albania',
+    'Algeria',
+    'Egypt',
+    'Lebanon',
+    'Libya',
+    'Montenegro',
+    'Morocco',
+    'Slovenia',
+    'Syria',
+    'Tunisia',
+    'Turkey'
+  ];
+  
+  const mexican = ["Mexico"];
+  
+  const middleEastern = [
+    'Bahrain',
+    'Iran',
+    'Iraq',
+    'Jordan',
+    'Kuwait',
+    'Oman',
+    'Palestine',
+    'Qatar',
+    'Saudi Arabia',
+    'United Arab Emirates',
+    'Yemen'
+  ];
+  
+  const nordic = [
+    'Denmark',
+    'Finland',
+    'Iceland',
+    'Norway',
+    'Sweden'
+  ];
+  
+  const southern = [
+    'Andorra',
+    'Croatia',
+    'Cyprus',
+    'Greece',
+    'Italy',
+    'Malta',
+    'Portugal',
+    'San Marino',
+    'Serbia',
+    'Spain'
+  ];
+  
+  const spanish = ["Spain"];
+  
+  const thai = ["Thailand"];
+  
+  const vietnamese = ["Vietnam"];
+  
+
+
+
+
+
 
 
 app.get('/logout', (req, res) => {
