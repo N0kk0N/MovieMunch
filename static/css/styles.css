@@ -221,6 +221,7 @@ body{
     height: 100%;
     width: 100vw;
     position: absolute;
+    object-fit: cover;
     z-index: -1;
 }
 
@@ -251,10 +252,12 @@ body{
     text-transform: uppercase;
     margin: 0;
     font-size: 2.5em;
+    color: white;
 }
 
 .filmdetail-poster div p {
     font-family: archivo-light;
+    color: white;
     font-size: 0.9em;
     margin: 0;
     margin-bottom: 1em
@@ -267,13 +270,11 @@ body{
     width: 100vw;
     height: 20em;
     z-index: -1;
-    opacity: 30%;
+    opacity: 50%;
 }
 
 .filmdetail-favorite-icon {
-    color: black;
     max-width: 100%;
-    /* height: 2em; */
     z-index: 1;
 }
 
@@ -310,13 +311,15 @@ body{
     border: none;
     border-radius: 25px;
     background-color: rgb(255, 103, 63);
-    box-shadow: 0px 1px 15px rgba(255, 103, 63, 1); /* Adjust values as needed */
-    font-family: archivo-bold
+    box-shadow: 0px 1px 15px rgba(255, 103, 63, 1);
+    font-family: archivo-bold;
 }
 
-.filmdetail-aangebodenrecepten {
+.filmdetail-recepten-button{
     font-family: archivo-light;
+    margin: 0;
     margin-left: 1em;
+
 }
 /* Recipe */
 .filmdetail-recipe {
@@ -330,6 +333,12 @@ body{
     font-family: clash-bold;
     text-transform: uppercase;
     font-size: 2em;
+}
+
+.filmdetail-recipe ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
 }
 
 /* ingredients */
@@ -355,36 +364,49 @@ body{
 
 
 /* Swiper function / instructions */
+main .filmdetail-swiper {
+    position: relative;
+}
+
+main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
+    display: flex;
+}
+
+.filmdetail-instructies-titel {
+    font-family: clash-medium;
+    text-transform: capitalize;
+    text-align: center;
+}
+
 .filmdetail-swiper {
     color: white;
-    text-align: center;
     justify-content: space-between;
-    height: 15em;
-    text-align: center;
-    border-radius: 25px;
     align-items: center;
+    height: 15em;
+    border-radius: 25px;
 }
 
 .filmdetail-wrapper {
-    text-align: center;
     width: 70vw;
     padding: 0;
     margin: 0;
+    text-align: center
 }
 
-.filmdetail-slide {
-    width: 80vw;
-    justify-content: center;
+.filmdetail-swiper .filmdetail-slide {
+    width: 50vw;
     background-color: rgb(183, 166, 158);
-} 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .filmdetail-slide p {
-    margin: 0;
     margin-left: 1em;
+    width: 50vw;
     margin-right: 1em;
-    text-align: center;
     font-family: archivo-medium;
-} 
+}
 
 .filmdetail-button-prev, .filmdetail-button-next {
     background-color: white;
@@ -394,9 +416,3 @@ body{
     border-radius: 1em;
     border: none;
 }
-
-
-/* .filmdetail-button-next {
-    position: absolute;
-
-} */
