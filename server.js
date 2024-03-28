@@ -266,8 +266,6 @@ app.get('/overview/all', (req, res) => {
 });
 
 
-
-
 app.get('/favourites', (req, res) => {
   const request = require('request');
   const { json } = require('express')
@@ -398,31 +396,254 @@ app.post('/profile/settingsnew', upload.single('avatar'), async function (req, r
 })
 
 app.get('/movie/:name', (req, res) => {
-  // HIER MOETEN WE ZORGEN DAT WE UIT DE URL DE FILM KRIJGEN
-  const movieName = req.params.name
-  // DAARNA MOETEN WE ZORGEN DAT WE GEGEVENS UIT DE API KRIJGEN
-  const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&api_key=${process.env.API_KEY}`
-  
-  const options = {
+  const movieName = req.params.name;
+  const searchUrl = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
+  const apiKey = process.env.API_KEY;
+  const searchOptions = {
     method: 'GET',
-    headers: {accept: 'application/json', Authorization: `Bearer ${process.env.API_KEY}`}
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${apiKey}`
+    }
   };
-  
-  fetch(url, options)
-  .then(res => res.json())
-  .then(json => {
-    const title = json.results[0].title
-    const overview = json.results[0].overview
-    const imageURL = json.results[0].poster_path
-    const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`
-    const backdropURL = json.results[0].backdrop_path
-    const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`
-    console.log(json.results[0])
-    res.render('shrek.ejs', {title, overview, posterSrc, backdropSrc})
-  })
-  .catch(err => console.error('error:' + err));
+
+  // Haalt details op van de film (country of origin)
+  fetch(searchUrl, searchOptions)
+    .then(res => res.json())
+    .then(json => {
+      if (json.results.length > 0) {
+        const movieId = json.results[0].id;
+        const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
+        const movieDetailsOptions = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${apiKey}`
+          }
+        };
+
+        // Haalt filmposter op
+        fetch(movieDetailsUrl, movieDetailsOptions)
+          .then(res => res.json())
+          .then(json => {
+            const title = json.title;
+            const overview = json.overview;
+            const imageURL = json.poster_path;
+            const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`;
+            const backdropURL = json.backdrop_path;
+            const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`;
+            const originalLanguage = json.original_language;
+
+            // Haal land van herkomst op
+            const countryOfOrigin = json.production_countries[0].name; // Neem het eerste land in de lijst
+            console.log('Film komt uit:', countryOfOrigin);
+            console.log('Film informatie:', { title, overview, posterSrc, backdropSrc });
+
+            // Roep de functie aan om een recept op te halen uit hetzelfde land
+            fetchRandomRecipe(countryOfOrigin);
+
+            res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc });
+          })
+          .catch(err => console.error('Error fetching movie details:', err));
+      } else {
+        res.status(404).send('Movie not found');
+      }
+    })
+});
+
+// HAALT RECEPT OP UIT HETZELFDE LAND ALS DE FILM
+const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
+
+
+//Testfunctie
+let cuisineFunction = (country) => {
+  const cuisines = {
+    "Algeria": "african",
+    "Angola": "african",
+    "Benin": "african",
+    "Botswana": "african",
+    "Burkina Faso": "african",
+    "Burundi": "african",
+    "Central African Republic": "african",
+    "Comoros": "african",
+    "Congo": "african",
+    "Djibouti": "african",
+    "Equatorial Guinea": "african",
+    "Eritrea": "african",
+    "Ethiopia": "african",
+    "Gabon": "african",
+    "Gambia": "african",
+    "Ghana": "african",
+    "Guinea": "african",
+    "Guinea-Bissau": "african",
+    "Ivory Coast": "african",
+    "Cape Verde": "african",
+    "Cameroon": "african",
+    "Kenya": "african",
+    "Lesotho": "african",
+    "Liberia": "african",
+    "Madagascar": "african",
+    "Malawi": "african",
+    "Mali": "african",
+    "Mauritania": "african",
+    "Mauritius": "african",
+    "Mozambique": "african",
+    "Namibia": "african",
+    "Niger": "african",
+    "Nigeria": "african",
+    "Uganda": "african",
+    "Rwanda": "african",
+    "Sao Tome and Principe": "african",
+    "Senegal": "african",
+    "Seychelles": "african",
+    "Sierra Leone": "african",
+    "Somalia": "african",
+    "Sudan": "african",
+    "South Africa": "african",
+    "South Sudan": "african",
+    "Swaziland": "african",
+    "Tanzania": "african",
+    "Togo": "african",
+    "Chad": "african",
+    "Zambia": "african",
+    "Zimbabwe": "african",
+    "Indonesia": "asian",
+    "Pakistan": "asian",
+    "Bangladesh": "asian",
+    "Philippines": "asian",
+    "Afghanistan": "asian",
+    "Saudi Arabia": "asian",
+    "Uzbekistan": "asian",
+    "Malaysia": "asian",
+    "Yemen": "asian",
+    "Nepal": "asian",
+    "Sri Lanka": "asian",
+    "Kazakhstan": "asian",
+    "Syria": "asian",
+    "Cambodia": "asian",
+    "Jordan": "asian",
+    "Azerbaijan": "asian",
+    "United Arab Emirates": "asian",
+    "Tajikistan": "asian",
+    "Laos": "asian",
+    "Kyrgyzstan": "asian",
+    "Turkmenistan": "asian",
+    "Singapore": "asian",
+    "Oman": "asian",
+    "State of Palestine": "asian",
+    "Kuwait": "asian",
+    "Georgia": "asian",
+    "Mongolia": "asian",
+    "Armenia": "asian",
+    "Qatar": "asian",
+    "Bahrain": "asian",
+    "Timor-Leste": "asian",
+    "United States of America": "american",
+    "United Kingdom": "british",
+    "Antigua and Barbuda": "caribbean",
+    "The Bahamas": "caribbean",
+    "Barbados": "caribbean",
+    "Cuba": "caribbean",
+    "Curaçao": "caribbean",
+    "Dominica": "caribbean",
+    "Dominican Republic": "caribbean",
+    "Grenada": "caribbean",
+    "Haiti": "caribbean",
+    "Jamaica": "caribbean",
+    "Saint Kitts and Nevis": "caribbean",
+    "Saint Lucia": "caribbean",
+    "Saint Vincent and the Grenadines": "caribbean",
+    "Trinidad and Tobago": "caribbean",
+    "China": "chinese",
+    "Belarus": "easternEuropean",
+    "Bulgaria": "easternEuropean",
+    "Czech Republic": "easternEuropean",
+    "Estonia": "easternEuropean",
+    "Hungary": "easternEuropean",
+    "Latvia": "easternEuropean",
+    "Lithuania": "easternEuropean",
+    "Moldova": "easternEuropean",
+    "Poland": "easternEuropean",
+    "Romania": "easternEuropean",
+    "Russia": "easternEuropean",
+    "Slovakia": "easternEuropean",
+    "Ukraine": "easternEuropean",
+    "Andorra": "european",
+    "Austria": "european",
+    "Belgium": "european",
+    "Denmark": "european",
+    "Finland": "european",
+    "Iceland": "european",
+    "Luxembourg": "european",
+    "Malta": "european",
+    "Monaco": "european",
+    "Netherlands": "european",
+    "Norway": "european",
+    "Portugal": "european",
+    "San Marino": "european",
+    "Sweden": "european",
+    "Switzerland": "european",
+    "Vatican City": "european",
+    "France": "french",
+    "Germany": "german",
+    "Greece": "greek",
+    "India": "indian",
+    "Ireland": "irish",
+    "Italy": "italian",
+    "Japan": "japanese",
+    "Israel": "jewish",
+    "South Korea": "korean",
+    "North Korea": "korean",
+    "Argentina": "latinAmerican",
+    "Belize": "latinAmerican",
+    "Bolivia": "latinAmerican",
+    "Brazil": "latinAmerican",
+    "Chile": "latinAmerican",
+    "Colombia": "latinAmerican",
+    "Costa Rica": "latinAmerican",
+    "Ecuador": "latinAmerican",
+    "El Salvador": "latinAmerican",
+    "Guatemala": "latinAmerican",
+    "Guyana": "latinAmerican",
+    "Honduras": "latinAmerican",
+    "Mexico": "latinAmerican",
+    "Nicaragua": "latinAmerican",
+    "Panama": "latinAmerican",
+    "Paraguay": "latinAmerican",
+    "Peru": "latinAmerican",
+    "Suriname": "latinAmerican",
+    "Uruguay": "latinAmerican",
+    "Venezuela": "latinAmerican"
+  };
+
+  return cuisines[country] || "Country of origin not found";
 }
-);
+
+// Voorbeeldgebruik
+const cuisineOfOrigin = cuisineFunction(countryOfOrigin) // Output: european dit is 
+
+
+console.log(`ik ga zoeken naar een recept uit de cuisine ${cuisineOfOrigin}`)
+  const apiKey = process.env.FOOD_API_KEY
+  const apiUrlFood = `https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisineOfOrigin}&number=5&apiKey=${apiKey}`
+
+  fetch(apiUrlFood)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+
+      console.log(data)})
+
+             
+    .catch(error => {
+      console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+  });
+};
+
 
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
@@ -434,6 +655,7 @@ app.get('/logout', (req, res) => {
     }
   });
 });
+
 
 // MOETEN DEZE VERWIJDEREN ZODRA HET AF IS!
 app.get('/filmdetail', (req, res) => {
@@ -514,3 +736,4 @@ app.use((err, req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening at port ${process.env.PORT}`);
 });
+
