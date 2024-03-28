@@ -716,55 +716,98 @@ app.post('/login-confirmation', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server error');
+    res.status(500).send('Server error')
   }
-});
+})
 
 app.get('/filmlijst', (req, res) => {
   res.send('test');
-});
-
-app.use((req, res) => {
-  console.error('404 error at URL: ' + req.url);
-  res.status(404).send('404 error at URL: ' + req.url);
-});
-
-app.use((err, req, res) => {
-  console.error(err.stack);
-  res.status(500).send('500: server error');
-});
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server is listening at port ${process.env.PORT}`);
-});
+})
 
 
-
-
-
-
+// WORKING ON SEARCH BAR
 
 app.get('/search', (req, res) => {
-  const request = require('request');
   const query = req.query.q;
-  const apiKey = process.env.API_KEY; // replace with your TMDB API key
+  const apiKey = process.env.API_KEY;
 
+  const url = `https://api.themoviedb.org/3/search/movie?query=${query}`
   const options = {
-      method: 'GET',
-      url: `https://api.themoviedb.org/3/search/movie`,
-      qs: {
-          query: query,
-          api_key: apiKey
-      },
-      headers: {
-          accept: 'application/json'
-      },
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${apiKey}`
+    }
   };
 
-  request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-      const movies = JSON.parse(body).results;
-      res.render('search-results', { movies }); // replace 'search-results' with your results view
-  });
+  fetch(url, options)
+    .then(response => response.json())
+    .then(json => {
+
+      const movies = JSON.parse(json).results;
+      const adultArray = []
+      const backdropPath = []
+      const movieGenreIds = []
+      const idArray = []
+      const originalTitleArray = []
+      const posterPathArray = []
+    
+      movies.forEach(movie => {
+    
+        const movieAdult = movie.adult
+        adultArray.push(adult)
+    
+        const movieBackdropPath = movie.backdrop_path
+        backdropPathArray.push(backdropPath)
+    
+        const movieGenreIds = movie.genre_ids
+        movieGenreIds.push(genreIds)
+    
+        const movieId = movie.id
+        movieId.push(id)
+    
+        const originalTitle = movie.original_title
+        originalTitleArray.push(originalTitle)
+
+        const moviePosterPath = movie.poster_path
+        posterPathArray.push(posterPath)
+  
+        res.render('searchresults.ejs', {movieAdult, originalTitle, movieId, movieBackdropPath, movieGenreIds, movieAdult, moviePosterPath})
+
+      });
+
+    })
+    .catch(err => {
+      console.error('error:', err);
+      res.status(500).send('Er is een fout opgetreden bij het verwerken van uw verzoek.');
+    });
 });
 
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  app.use((req, res) => {
+    console.error('404 error at URL: ' + req.url);
+    res.status(404).send('404 error at URL: ' + req.url);
+  });
+  
+  app.use((err, req, res) => {
+    console.error(err.stack);
+    res.status(500).send('500: server error');
+  });
+  
+  app.listen(process.env.PORT, () => {
+    console.log(`Server is listening at port ${process.env.PORT}`);
+  });
+  
+  
