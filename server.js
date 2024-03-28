@@ -458,191 +458,192 @@ const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
 //Testfunctie
 let cuisineFunction = (country) => {
   const cuisines = {
-    "Algeria": "african",
-    "Angola": "african",
-    "Benin": "african",
-    "Botswana": "african",
-    "Burkina Faso": "african",
-    "Burundi": "african",
-    "Central African Republic": "african",
-    "Comoros": "african",
-    "Congo": "african",
-    "Djibouti": "african",
-    "Equatorial Guinea": "african",
-    "Eritrea": "african",
-    "Ethiopia": "african",
-    "Gabon": "african",
-    "Gambia": "african",
-    "Ghana": "african",
-    "Guinea": "african",
-    "Guinea-Bissau": "african",
-    "Ivory Coast": "african",
-    "Cape Verde": "african",
-    "Cameroon": "african",
-    "Kenya": "african",
-    "Lesotho": "african",
-    "Liberia": "african",
-    "Madagascar": "african",
-    "Malawi": "african",
-    "Mali": "african",
-    "Mauritania": "african",
-    "Mauritius": "african",
-    "Mozambique": "african",
-    "Namibia": "african",
-    "Niger": "african",
-    "Nigeria": "african",
-    "Uganda": "african",
-    "Rwanda": "african",
-    "Sao Tome and Principe": "african",
-    "Senegal": "african",
-    "Seychelles": "african",
-    "Sierra Leone": "african",
-    "Somalia": "african",
-    "Sudan": "african",
-    "South Africa": "african",
-    "South Sudan": "african",
-    "Swaziland": "african",
-    "Tanzania": "african",
-    "Togo": "african",
-    "Chad": "african",
-    "Zambia": "african",
-    "Zimbabwe": "african",
-    "Indonesia": "asian",
-    "Pakistan": "asian",
-    "Bangladesh": "asian",
-    "Philippines": "asian",
-    "Afghanistan": "asian",
-    "Saudi Arabia": "asian",
-    "Uzbekistan": "asian",
-    "Malaysia": "asian",
-    "Yemen": "asian",
-    "Nepal": "asian",
-    "Sri Lanka": "asian",
-    "Kazakhstan": "asian",
-    "Syria": "asian",
-    "Cambodia": "asian",
-    "Jordan": "asian",
-    "Azerbaijan": "asian",
-    "United Arab Emirates": "asian",
-    "Tajikistan": "asian",
-    "Laos": "asian",
-    "Kyrgyzstan": "asian",
-    "Turkmenistan": "asian",
-    "Singapore": "asian",
-    "Oman": "asian",
-    "State of Palestine": "asian",
-    "Kuwait": "asian",
-    "Georgia": "asian",
-    "Mongolia": "asian",
-    "Armenia": "asian",
-    "Qatar": "asian",
-    "Bahrain": "asian",
-    "Timor-Leste": "asian",
-    "United States of America": "american",
-    "United Kingdom": "british",
-    "Antigua and Barbuda": "caribbean",
-    "The Bahamas": "caribbean",
+    "Algeria": "African",
+    "Angola": "African",
+    "Benin": "African",
+    "Botswana": "African",
+    "Burkina Faso": "African",
+    "Burundi": "African",
+    "Central African Republic": "African",
+    "Comoros": "African",
+    "Congo": "African",
+    "Djibouti": "African",
+    "Equatorial Guinea": "African",
+    "Eritrea": "African",
+    "Ethiopia": "African",
+    "Gabon": "African",
+    "Gambia": "African",
+    "Ghana": "African",
+    "Guinea": "African",
+    "Guinea-Bissau": "African",
+    "Ivory Coast": "African",
+    "Cape Verde": "African",
+    "Cameroon": "African",
+    "Kenya": "African",
+    "Lesotho": "African",
+    "Liberia": "African",
+    "Madagascar": "African",
+    "Malawi": "African",
+    "Mali": "African",
+    "Mauritania": "African",
+    "Mauritius": "African",
+    "Mozambique": "African",
+    "Namibia": "African",
+    "Niger": "African",
+    "Nigeria": "African",
+    "Uganda": "African",
+    "Rwanda": "African",
+    "Sao Tome and Principe": "African",
+    "Senegal": "African",
+    "Seychelles": "African",
+    "Sierra Leone": "African",
+    "Somalia": "African",
+    "Sudan": "African",
+    "South Africa": "African",
+    "South Sudan": "African",
+    "Swaziland": "African",
+    "Tanzania": "African",
+    "Togo": "African",
+    "Chad": "African",
+    "Zambia": "African",
+    "Zimbabwe": "African",
+    "Indonesia": "Asian",
+    "Pakistan": "Asian",
+    "Bangladesh": "Asian",
+    "Philippines": "Asian",
+    "Afghanistan": "Asian",
+    "Saudi Arabia": "Asian",
+    "Uzbekistan": "Asian",
+    "Malaysia": "Asian",
+    "Yemen": "Asian",
+    "Nepal": "Asian",
+    "Sri Lanka": "Asian",
+    "Kazakhstan": "Asian",
+    "Syria": "Asian",
+    "Cambodia": "Asian",
+    "Jordan": "Asian",
+    "Azerbaijan": "Asian",
+    "United Arab Emirates": "Asian",
+    "Tajikistan": "Asian",
+    "Laos": "Asian",
+    "Kyrgyzstan": "Asian",
+    "Turkmenistan": "Asian",
+    "Singapore": "Asian",
+    "Oman": "Asian",
+    "State of Palestine": "Asian",
+    "Kuwait": "Asian",
+    "Georgia": "Asian",
+    "Mongolia": "Asian",
+    "Armenia": "Asian",
+    "Qatar": "Asian",
+    "Bahrain": "Asian",
+    "Timor-Leste": "Asian",
+    "United States of America": "American",
+    "United Kingdom": "British",
+    "Antigua and Barbuda": "Caribbean",
+    "The Bahamas": "Caribbean",
     "Barbados": "caribbean",
     "Cuba": "caribbean",
     "Curaçao": "caribbean",
     "Dominica": "caribbean",
     "Dominican Republic": "caribbean",
-    "Grenada": "caribbean",
+    "Grenada": "Caribbean",
     "Haiti": "caribbean",
-    "Jamaica": "caribbean",
-    "Saint Kitts and Nevis": "caribbean",
-    "Saint Lucia": "caribbean",
-    "Saint Vincent and the Grenadines": "caribbean",
-    "Trinidad and Tobago": "caribbean",
-    "China": "chinese",
-    "Belarus": "easternEuropean",
-    "Bulgaria": "easternEuropean",
-    "Czech Republic": "easternEuropean",
-    "Estonia": "easternEuropean",
-    "Hungary": "easternEuropean",
-    "Latvia": "easternEuropean",
-    "Lithuania": "easternEuropean",
-    "Moldova": "easternEuropean",
-    "Poland": "easternEuropean",
-    "Romania": "easternEuropean",
-    "Russia": "easternEuropean",
-    "Slovakia": "easternEuropean",
-    "Ukraine": "easternEuropean",
-    "Andorra": "european",
-    "Austria": "european",
-    "Belgium": "european",
-    "Denmark": "european",
-    "Finland": "european",
-    "Iceland": "european",
-    "Luxembourg": "european",
-    "Malta": "european",
-    "Monaco": "european",
-    "Netherlands": "european",
-    "Norway": "european",
-    "Portugal": "european",
-    "San Marino": "european",
-    "Sweden": "european",
-    "Switzerland": "european",
-    "Vatican City": "european",
-    "France": "french",
-    "Germany": "german",
-    "Greece": "greek",
-    "India": "indian",
-    "Ireland": "irish",
-    "Italy": "italian",
-    "Japan": "japanese",
-    "Israel": "jewish",
-    "South Korea": "korean",
-    "North Korea": "korean",
-    "Argentina": "latinAmerican",
-    "Belize": "latinAmerican",
-    "Bolivia": "latinAmerican",
-    "Brazil": "latinAmerican",
-    "Chile": "latinAmerican",
-    "Colombia": "latinAmerican",
-    "Costa Rica": "latinAmerican",
-    "Ecuador": "latinAmerican",
-    "El Salvador": "latinAmerican",
-    "Guatemala": "latinAmerican",
-    "Guyana": "latinAmerican",
-    "Honduras": "latinAmerican",
-    "Mexico": "latinAmerican",
-    "Nicaragua": "latinAmerican",
-    "Panama": "latinAmerican",
-    "Paraguay": "latinAmerican",
-    "Peru": "latinAmerican",
-    "Suriname": "latinAmerican",
-    "Uruguay": "latinAmerican",
-    "Venezuela": "latinAmerican"
+    "Jamaica": "Caribbean",
+    "Saint Kitts and Nevis": "Caribbean",
+    "Saint Lucia": "Caribbean",
+    "Saint Vincent and the Grenadines": "Caribbean",
+    "Trinidad and Tobago": "Caribbean",
+    "China": "CHinese",
+    "Belarus": "Eastern European",
+    "Bulgaria": "Eastern European",
+    "Czech Republic": "Eastern European",
+    "Estonia": "Eastern European",
+    "Hungary": "Eastern European",
+    "Latvia": "Eastern European",
+    "Lithuania": "Eastern European",
+    "Moldova": "Eastern European",
+    "Poland": "Eastern European",
+    "Romania": "Eastern European",
+    "Russia": "Eastern European",
+    "Slovakia": "Eastern European",
+    "Ukraine": "Eastern European",
+    "Andorra": "European",
+    "Austria": "European",
+    "Belgium": "European",
+    "Denmark": "European",
+    "Finland": "European",
+    "Iceland": "European",
+    "Luxembourg": "European",
+    "Malta": "European",
+    "Monaco": "European",
+    "Netherlands": "European",
+    "Norway": "European",
+    "Portugal": "European",
+    "San Marino": "European",
+    "Sweden": "European",
+    "Switzerland": "European",
+    "Vatican City": "European",
+    "France": "French",
+    "Germany": "German",
+    "Greece": "Greek",
+    "India": "Indian",
+    "Ireland": "Irish",
+    "Italy": "Italian",
+    "Japan": "Japanese",
+    "Israel": "Jewish",
+    "South Korea": "Korean",
+    "North Korea": "Korean",
+    "Argentina": "Latin American",
+    "Belize": "Latin American",
+    "Bolivia": "Latin American",
+    "Brazil": "Latin American",
+    "Chile": "Latin American",
+    "Colombia": "Latin American",
+    "Costa Rica": "Latin American",
+    "Ecuador": "Latin American",
+    "El Salvador": "Latin American",
+    "Guatemala": "Latin American",
+    "Guyana": "Latin American",
+    "Honduras": "Latin American",
+    "Mexico": "Latin American",
+    "Nicaragua": "Latin American",
+    "Panama": "Latin American",
+    "Paraguay": "Latin American",
+    "Peru": "Latin American",
+    "Suriname": "Latin American",
+    "Uruguay": "Latin American",
+    "Venezuela": "Latin American"
   };
 
   return cuisines[country] || "Country of origin not found";
 }
 
 // Voorbeeldgebruik
-const cuisineOfOrigin = cuisineFunction(countryOfOrigin) // Output: european dit is 
 
+const cuisineOfOrigin = cuisineFunction(countryOfOrigin);
+console.log(`Ik ga zoeken naar een recept uit de cuisine ${cuisineOfOrigin}`);
 
-console.log(`ik ga zoeken naar een recept uit de cuisine ${cuisineOfOrigin}`)
-  const apiKey = process.env.FOOD_API_KEY
-  const apiUrlFood = `https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisineOfOrigin}&number=5&apiKey=${apiKey}`
+const apiKey = process.env.FOOD_API_KEY;
+const numRecipes = 5; // Aantal recepten dat je wilt ophalen
+const randomOffset = Math.floor(Math.random() * 100); // Genereer een willekeurige offset waarde
 
-  fetch(apiUrlFood)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Network response was not ok: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
+const apiUrlFood = `https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisineOfOrigin}&number=${numRecipes}&offset=${randomOffset}&apiKey=${apiKey}`;
 
-      console.log(data)})
-
-             
-    .catch(error => {
-      console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+fetch(apiUrlFood)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
   });
-};
+}
 
 
 app.get('/logout', (req, res) => {
@@ -735,5 +736,35 @@ app.use((err, req, res) => {
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening at port ${process.env.PORT}`);
+});
+
+
+
+
+
+
+
+app.get('/search', (req, res) => {
+  const request = require('request');
+  const query = req.query.q;
+  const apiKey = process.env.API_KEY; // replace with your TMDB API key
+
+  const options = {
+      method: 'GET',
+      url: `https://api.themoviedb.org/3/search/movie`,
+      qs: {
+          query: query,
+          api_key: apiKey
+      },
+      headers: {
+          accept: 'application/json'
+      },
+  };
+
+  request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      const movies = JSON.parse(body).results;
+      res.render('search-results', { movies }); // replace 'search-results' with your results view
+  });
 });
 
