@@ -164,7 +164,7 @@ app.get('/profile/settings', (req, res) => {
 
 // HAALT FILMPOSTER OP EN GEEFT DAARBIJ COUNTRY OF ORIGIN
 
-const maxRetries = 1; // Maximaal aantal pogingen om een recept op te halen
+// const maxRetries = 1; // Maximaal aantal pogingen om een recept op te halen
 
 app.get('/movie/:name', (req, res) => {
   const movieName = req.params.name;
@@ -220,7 +220,6 @@ app.get('/movie/:name', (req, res) => {
         res.status(404).send('Movie not found');
       }
     })
-    .catch(err => console.error('Error fetching movie:', err));
 });
 
 // HAALT RECEPT OP UIT HETZELFDE LAND ALS DE FILM
