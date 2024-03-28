@@ -41,6 +41,52 @@ body{
     margin: 0;
 }
 
+.nav {
+    display: flex;
+    padding-left: 4em;
+    padding-right: 4em;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    width: 16em;
+    height: 4em;
+    position: fixed;
+    bottom: 0;
+    z-index: 200;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 2em;
+    box-shadow: 0px 14px 14px 0px rgba(0, 0, 0, 0.25);
+}
+
+.nav ul {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    width: 80%;
+    justify-content: space-between;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.nav li {
+    list-style: none;
+    width: 2em;
+    height: 2em;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav li img{
+    height: 2rem;
+}
+
 .overview {
     overflow-x: hidden;
     padding: 0;
@@ -50,11 +96,6 @@ body{
     flex-direction: column;
 }
 
-.swiper-container {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
 
 .overview-film-hero {
     flex-shrink: 0;
@@ -83,7 +124,7 @@ body{
 
 .overlay-content {
     position: absolute;
-    top: 60%;
+    top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
@@ -142,6 +183,7 @@ body{
 .gsap-wrapper {
     display: flex;
     overflow-x: scroll;
+    overflow-y: hidden;
     padding-left: 20px;
     box-sizing: border-box;
 }
@@ -170,7 +212,7 @@ body{
     height: 48px;
     border-radius: 30px;
     padding-left: 35px;
-    background-image: url('../images/Search.png');
+    background-image: url('../images/search.svg');
     background-position: 7px center;
     background-repeat: no-repeat;
 }
@@ -202,6 +244,6 @@ body{
 
 .movie-card img{
     height: 100%;
-    width: 9em;
+    width: 10em;
     object-fit: cover;
 }
