@@ -1,4 +1,3 @@
-
 const swiper = new Swiper('.filmdetail-swiper', {
 
     direction: 'horizontal',
@@ -18,25 +17,27 @@ const swiper = new Swiper('.filmdetail-swiper', {
   });
   
 
-// const dropDownButton = document.querySelector('.filmdetail-recepten-button')
-// const menu = document.querySelector('.menu')
+const selectBtn = document.querySelector('.filmdetail-recipe-button')
+const selectMenu = document.querySelector('.filmdetail-recipe1')
+const selectBtn2 = document.querySelector('.filmdetail-recipe-button2')
+const selectMenu2 = document.querySelector('.filmdetail-recipe2')
 
-// button.addEventListener('click', () => {
-//     menu.classList.toggle('activated');
+selectBtn.addEventListener('click', () => {
+    selectMenu.classList.toggle('filmdetail-active')
+    closeAllMenus(selectMenu)
+})
+  selectBtn2.addEventListener('click', () => {
+    selectMenu2.classList.toggle('filmdetail-active')
+    closeAllMenus(selectMenu2)
+})
 
-// });
+const closeAllMenus = (currentMenu) => {
+    const allMenus = document.querySelectorAll('.filmdetail-recipe-lists')
+    allMenus.forEach( menu => {
+        if (menu !== currentMenu) {
+            menu.classList.add('filmdetail-active')
+        }
+    })
+}
 
-const dropDownButtons = document.querySelector('.filmdetail-dropdown-button')
-
-
-const menuButtonsArray = Array.from(menuButtons);
-
-menuButtonsArray.forEach(button => {
-
-    button.addEventListener('click', () => {
-       closeAnotherButtons(button);       
-       button.classList.toggle('activated');       
-              
-    });
-}); 
 
