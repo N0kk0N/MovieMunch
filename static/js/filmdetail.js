@@ -41,3 +41,17 @@ const closeAllMenus = (currentMenu) => {
 }
 
 
+   document.addEventListener("DOMContentLoaded", (event) => {
+    var circle = document.querySelector('.filmdetail-cursor');
+
+    const moveCircle = (e) => {
+     gsap.to(circle, 0.4, {
+         css: {
+              left: e.pageX,
+              top: e.pageY
+        }
+     });
+    }
+
+    (window).addEventListener('mousemove', moveCircle);
+});  

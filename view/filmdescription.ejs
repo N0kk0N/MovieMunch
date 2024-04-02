@@ -13,6 +13,14 @@
    
     <!-- HEADER -->
     <header>
+        <nav>
+            <ul class="nav">
+                <li><a href="/overview"><img src="../static/images/film.svg" alt="description1"></a></li>
+                <li><a href="/search"><img src="../static/images/search.svg" alt="description2"></a></li>
+                <li><a href="/favourites"><img src="../static/images/ticket.svg" alt="description3"></a></li>
+                <li><a href="/profile"><img src="../static/images/user.svg" alt="description3"></a></li>
+            </ul>
+        </nav>
         <section class="filmdetail-poster">
             <img class="filmdetail-poster-img" src="https://image.tmdb.org/t/p/w500<%= imageURL %>" alt="poster of movie">
 
@@ -142,36 +150,18 @@
                         </section>
                     </li>
                 </ul>
+                <div class="filmdetail-space"></div>
         </article>
 
     </main>
 
     <!-- FOOTER -->
-    <footer>
-        <nav></nav>
-    </footer>
+    <footer></footer>
 
 
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 
-    <script>
-        // use a script tag or an external JS file
-        document.addEventListener("DOMContentLoaded", (event) => {
-            var $circle = document.querySelector('.filmdetail-cursor');
 
-            function moveCircle(e) {
-             gsap.to($circle, 0.4, {
-                 css: {
-                      left: e.pageX,
-                      top: e.pageY
-                }
-             });
-            }
-
-            (window).addEventListener('mousemove', moveCircle);
-        });
-       
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script type="module" src="../static/js/filmdetail.js"></script>
     <!-- <script src="js/TweenMax.min.js"></script> -->
