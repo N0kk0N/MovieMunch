@@ -677,10 +677,24 @@ app.post('/new-user', async (req, res) => {
 
         username: xss(req.body.username),
         password: xss(hashedPassword),
-        color: xss(req.body.color),
+
+// adult, genres, release date, average vote count 
+        adult: req.body.adult,
+        genre: req.body.genre,
+        rating: req.body.rating,
+        date: req.body.date,
+
         creationDate: new Date(),
         fileName: ""
       });
+
+
+   
+
+
+
+
+
 
       res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
 
