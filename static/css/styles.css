@@ -45,8 +45,8 @@ body{
 
 .nav {
     display: flex;
-    padding-left: 4em;
-    padding-right: 4em;
+    padding-left: 3em;
+    padding-right: 3em;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -126,7 +126,7 @@ body{
 
 .overlay-content {
     position: absolute;
-    top: 65%;
+    top: 55%;
     left: 50%;
     width: 80%;
     transform: translate(-50%, -50%);
@@ -168,7 +168,7 @@ body{
     background-color: white;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
-    margin-top: -30px;
+    margin-top: -4em;
     z-index: 100;
 }
 
