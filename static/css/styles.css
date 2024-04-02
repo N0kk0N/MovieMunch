@@ -41,6 +41,8 @@ body{
     margin: 0;
 }
 
+/* css nav component */
+
 .nav {
     display: flex;
     padding-left: 4em;
@@ -124,8 +126,9 @@ body{
 
 .overlay-content {
     position: absolute;
-    top: 70%;
+    top: 65%;
     left: 50%;
+    width: 80%;
     transform: translate(-50%, -50%);
     color: white;
     text-align: center;
