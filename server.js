@@ -726,7 +726,7 @@ app.get('/filmlijst', (req, res) => {
 
 
 // WORKING ON SEARCH BAR
-
+  
 app.get('/search', (req, res) => {
   const query = req.query.q;
   const apiKey = process.env.API_KEY;
@@ -744,37 +744,38 @@ app.get('/search', (req, res) => {
     .then(response => response.json())
     .then(json => {
 
-      const movies = JSON.parse(json).results;
+      console.log(json.results)
+
+      const movies = json.results;
       const adultArray = []
-      const backdropPath = []
+      const backdropPathArray = []
       const movieGenreIds = []
       const idArray = []
       const originalTitleArray = []
       const posterPathArray = []
     
       movies.forEach(movie => {
-    
         const movieAdult = movie.adult
-        adultArray.push(adult)
+        adultArray.push(movieAdult)
     
         const movieBackdropPath = movie.backdrop_path
-        backdropPathArray.push(backdropPath)
+        backdropPathArray.push(movieBackdropPath)
     
-        const movieGenreIds = movie.genre_ids
-        movieGenreIds.push(genreIds)
+        const movieGenreId = movie.genre_ids
+        movieGenreIds.push(movieGenreId)
     
         const movieId = movie.id
-        movieId.push(id)
+        idArray.push(movieId)
     
         const originalTitle = movie.original_title
         originalTitleArray.push(originalTitle)
 
         const moviePosterPath = movie.poster_path
-        posterPathArray.push(posterPath)
+        posterPathArray.push(moviePosterPath)
   
-        res.render('searchresults.ejs', {movieAdult, originalTitle, movieId, movieBackdropPath, movieGenreIds, movieAdult, moviePosterPath})
 
       });
+      res.render('searchresults.ejs', {adultArray, backdropPathArray, movieGenreIds, idArray, originalTitleArray, posterPathArray})
 
     })
     .catch(err => {
