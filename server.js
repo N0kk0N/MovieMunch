@@ -739,7 +739,7 @@ app.get('/filmlijst', (req, res) => {
 })
 
 
-// WORKING ON SEARCH BAR
+// SEARCH BAR
   
 app.get('/search', (req, res) => {
   const query = req.query.q;
@@ -798,19 +798,6 @@ app.get('/search', (req, res) => {
     });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-  
-  
   app.use((req, res) => {
     console.error('404 error at URL: ' + req.url);
     res.status(404).send('404 error at URL: ' + req.url);
