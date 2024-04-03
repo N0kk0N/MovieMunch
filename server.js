@@ -689,14 +689,6 @@ app.post('/new-user', async (req, res) => {
         fileName: ""
       });
 
-
-   
-
-
-
-
-
-
       res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
 
     } else {
@@ -799,19 +791,6 @@ app.get('/search', (req, res) => {
     });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-  
-  
   app.use((req, res) => {
     console.error('404 error at URL: ' + req.url);
     res.status(404).send('404 error at URL: ' + req.url);
