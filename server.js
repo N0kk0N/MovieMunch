@@ -427,6 +427,7 @@ app.get('/movie/:name', (req, res) => {
           .then(res => res.json())
           .then(json => {
             const title = json.title;
+            const movieId = json.id;
             const overview = json.overview;
             const imageURL = json.poster_path;
             const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`;
@@ -442,7 +443,7 @@ app.get('/movie/:name', (req, res) => {
             // Roep de functie aan om een recept op te halen uit hetzelfde land
             fetchRandomRecipe(countryOfOrigin);
 
-            res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc });
+            res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId });
           })
           .catch(err => console.error('Error fetching movie details:', err));
       } else {
