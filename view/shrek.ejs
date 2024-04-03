@@ -2,8 +2,11 @@
 <img src="<%= backdropSrc %>" alt="Backdrop Image">
 <h1><%= title %></h1>
 <p><%= overview %></p>
-<button type="button" id="favorite-btn"data-id="<%= movieId %>" class="favorite-btn inactive">Add to favorites</button>
 
+<form action="/movie/<%= movieName %>" method="POST">
+
+<button type="submit" id="favorite-btn"data-id="<%= movieId %>" class="favorite-btn inactive">Add to favorites</button>
+</form>
 <script>
     const favButton = document.getElementById("favorite-btn");
     favButton.addEventListener("click", ()=>{

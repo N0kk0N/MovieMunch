@@ -443,7 +443,7 @@ app.get('/movie/:name', (req, res) => {
             // Roep de functie aan om een recept op te halen uit hetzelfde land
             fetchRandomRecipe(countryOfOrigin);
 
-            res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId });
+            res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName });
           })
           .catch(err => console.error('Error fetching movie details:', err));
       } else {
@@ -451,6 +451,7 @@ app.get('/movie/:name', (req, res) => {
       }
     })
 });
+
 
 // HAALT RECEPT OP UIT HETZELFDE LAND ALS DE FILM
 const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
@@ -804,5 +805,4 @@ app.get('/search', (req, res) => {
   app.listen(process.env.PORT, () => {
     console.log(`Server is listening at port ${process.env.PORT}`);
   });
-  
   
