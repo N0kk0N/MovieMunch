@@ -5,7 +5,7 @@
 
 <form action="/movie/<%= movieName %>" method="POST">
 
-<button type="submit" id="favorite-btn"data-id="<%= movieId %>" class="favorite-btn inactive">Add to favorites</button>
+<button type="submit" name="favoriteBtn" id="favoriteBtn" class="favorite-btn inactive" value="<%= movieId %>">Add to favorites</button>
 </form>
 <script>
     const favButton = document.getElementById("favorite-btn");
@@ -13,11 +13,12 @@
     if (favButton.classList.contains("inactive")) {
         favButton.innerHTML = "Added to favorites"
         favButton.classList.replace("inactive", "active");
-
+        favButton.value = "active"
     }
     else {
         favButton.innerHTML = "Add to favorites"
         favButton.classList.replace("active", "inactive");
+        favButton.value = "inactive"
     }
     });
 </script>

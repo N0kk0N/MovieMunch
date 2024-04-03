@@ -452,6 +452,93 @@ app.get('/movie/:name', (req, res) => {
     })
 });
 
+app.post('/movie/:name', (req, res) => {
+  const userIdSession = req.session.users
+  const movieIdDetail = req.body.favoriteBtn
+  console.log(`Gebruikers ID = ${userIdSession}`)
+  console.log(`Film ID = ${movieIdDetail}`)
+
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+  const favFunction = async () => {   
+    try {
+    const userMongo = await collection.findOne(
+      { "_id": new ObjectId(userIdSession) }
+    );
+    const favoritesArray = userMongo.favorites;
+    console.log(`Gekoppelde Favorites: ${favoritesArray}`)
+    // Continue with your code logic here
+    if (favoritesArray.includes(movieIdDetail)){
+      console.log("deze film staat in je lijst.")
+    }
+    else (
+      console.log("deze staat nog niet in je lijst.")
+    )
+  } catch (error) {
+    // Handle the error
+    console.error("Failed to retrieve favorites:", error);
+  }}
+
+favFunction()
+    
+
+  const movieName = req.params.name;
+  const searchUrl = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
+  const apiKey = process.env.API_KEY;
+  const searchOptions = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${apiKey}`
+    }
+  };
+
+  // Haalt details op van de film (country of origin)
+  fetch(searchUrl, searchOptions)
+    .then(res => res.json())
+    .then(json => {
+      if (json.results.length > 0) {
+        const movieId = json.results[0].id;
+        const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
+        const movieDetailsOptions = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${apiKey}`
+          }
+        };
+
+        // Haalt filmposter op
+        fetch(movieDetailsUrl, movieDetailsOptions)
+          .then(res => res.json())
+          .then(json => {
+            const title = json.title;
+            const movieId = json.id;
+            const overview = json.overview;
+            const imageURL = json.poster_path;
+            const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`;
+            const backdropURL = json.backdrop_path;
+            const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`;
+            const originalLanguage = json.original_language;
+
+            // Haal land van herkomst op
+            const countryOfOrigin = json.production_countries[0].name; // Neem het eerste land in de lijst
+            console.log('Film komt uit:', countryOfOrigin);
+            console.log('Film informatie:', { title, overview, posterSrc, backdropSrc });
+
+            // Roep de functie aan om een recept op te halen uit hetzelfde land
+            fetchRandomRecipe(countryOfOrigin);
+
+            res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName });
+          })
+          .catch(err => console.error('Error fetching movie details:', err));
+      } else {
+        res.status(404).send('Movie not found');
+      }
+    })
+})
+
 
 // HAALT RECEPT OP UIT HETZELFDE LAND ALS DE FILM
 const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
@@ -687,7 +774,8 @@ app.post('/new-user', async (req, res) => {
         date: req.body.date,
 
         creationDate: new Date(),
-        fileName: ""
+        fileName: "",
+        favorites: []
       });
 
       res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
