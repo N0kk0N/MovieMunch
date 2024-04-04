@@ -3,22 +3,12 @@
 <h1><%= title %></h1>
 <p><%= overview %></p>
 
-<form action="/movie/<%= movieName %>" method="POST">
-
-<button type="submit" name="favoriteBtn" id="favoriteBtn" class="favorite-btn inactive" value="<%= movieId %>">Add to favorites</button>
-</form>
-<script>
-    const favButton = document.getElementById("favorite-btn");
-    favButton.addEventListener("click", ()=>{
-    if (favButton.classList.contains("inactive")) {
-        favButton.innerHTML = "Added to favorites"
-        favButton.classList.replace("inactive", "active");
-        favButton.value = "active"
-    }
-    else {
-        favButton.innerHTML = "Add to favorites"
-        favButton.classList.replace("active", "inactive");
-        favButton.value = "inactive"
-    }
-    });
-</script>
+<% if(inList){ %>
+    <form action="/favorite-deleted" method="POST">
+        <button style="background-color: red; color: white; font-size: x-large;" type="submit" name="favoriteBtn" value="<%= movieId %>">Delete from favorites</button>
+        </form>
+  <% } else{ %>  
+    <form action="/favorite-added" method="POST">
+        <button style="background-color: green; color: white; font-size: x-large;" type="submit" name="favoriteBtn" value="<%= movieId %>">Add to favorites</button>
+        </form>
+ <% } %>
