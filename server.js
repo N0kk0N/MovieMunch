@@ -448,10 +448,8 @@ app.get('/movie/:name', (req, res) => {
 const userIdSession = req.session.users
 console.log(`Gebruikers ID = ${userIdSession}`)
 console.log(`Film ID = ${movieId}`)
-
 const db = client.db(process.env.MONGODB_NAME);
 const collection = db.collection(process.env.MONGODB_COLLECTION);
-let inList
 
 const favFunction = async () => {   
   try {
@@ -459,16 +457,17 @@ const favFunction = async () => {
       { "_id": new ObjectId(userIdSession) }
     );
     const favoritesArray = userMongo.favorites;
-    console.log(favoritesArray)
+    const cleanArray = favoritesArray.map(str => parseInt(str, 10));
+    console.log(cleanArray)
     console.log(movieId)
     let inList
-    if (favoritesArray.includes(movieId)) {
-      console.log("Deze zit erin")
+
+
+    if (cleanArray.includes(movieId)) {
       inList = true
       res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName, inList});
     }
     else{
-      console.log("deze niet")
       inList = false
       res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName, inList});
     }
@@ -489,6 +488,32 @@ favFunction()
 });
 
 app.post('/favorite-deleted', (req, res) => {
+  const userIdSession = req.session.users
+  const movieIdDetail = req.body.favoriteBtn
+
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+  const favDeleteFunction = async () => {   
+    try {
+      const userMongo = await collection.findOne(
+        { "_id": new ObjectId(userIdSession) }
+      );
+      const favoritesArray = userMongo.favorites;
+      const newArray = favoritesArray.filter(str => String(str) !== String(movieIdDetail));
+      await collection.updateOne(
+        { "_id": new ObjectId(userIdSession) },
+        { $set: { "favorites": newArray } }
+      );
+
+    } catch (error) {
+      // Handle the error
+      console.error("Failed to retrieve favorites:", error);
+    }
+  }
+
+favDeleteFunction()
+
 res.send("Deleted movie")
 }
 )
@@ -500,7 +525,7 @@ app.post('/favorite-added', (req, res) => {
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-  const favFunction = async () => {   
+  const favAddFunction = async () => {   
     try {
       const userMongo = await collection.findOneAndUpdate(
         { "_id" : new ObjectId(userIdSession) },
@@ -514,7 +539,7 @@ app.post('/favorite-added', (req, res) => {
     }
   }
 
-favFunction()
+favAddFunction()
 
 res.send("Added movie")
 })
