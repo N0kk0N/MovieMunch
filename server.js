@@ -464,7 +464,42 @@ app.get('/movie/:name', (req, res) => {
             // Roep de functie aan om een recept op te halen uit hetzelfde land
             fetchRandomRecipe(countryOfOrigin);
 
-            res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName });
+// // check if movie is in favorites
+const userIdSession = req.session.users
+console.log(`Gebruikers ID = ${userIdSession}`)
+console.log(`Film ID = ${movieId}`)
+const db = client.db(process.env.MONGODB_NAME);
+const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+const favFunction = async () => {   
+  try {
+    const userMongo = await collection.findOne(
+      { "_id": new ObjectId(userIdSession) }
+    );
+    const favoritesArray = userMongo.favorites;
+    const cleanArray = favoritesArray.map(str => parseInt(str, 10));
+    console.log(cleanArray)
+    console.log(movieId)
+    let inList
+
+
+    if (cleanArray.includes(movieId)) {
+      inList = true
+      res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName, inList});
+    }
+    else{
+      inList = false
+      res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName, inList});
+    }
+  } catch (error) {
+    // Handle the error
+    console.error("Failed to retrieve favorites:", error);
+  }
+}
+
+favFunction()
+
+
           })
           .catch(err => console.error('Error fetching movie details:', err));
       } else {
@@ -473,9 +508,63 @@ app.get('/movie/:name', (req, res) => {
     })
 });
 
-app.post('/movie/:name', (req, res) => {
-  console
-});
+app.post('/favorite-deleted', (req, res) => {
+  const userIdSession = req.session.users
+  const movieIdDetail = req.body.favoriteBtn
+
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+  const favDeleteFunction = async () => {   
+    try {
+      const userMongo = await collection.findOne(
+        { "_id": new ObjectId(userIdSession) }
+      );
+      const favoritesArray = userMongo.favorites;
+      const newArray = favoritesArray.filter(str => String(str) !== String(movieIdDetail));
+      await collection.updateOne(
+        { "_id": new ObjectId(userIdSession) },
+        { $set: { "favorites": newArray } }
+      );
+
+    } catch (error) {
+      // Handle the error
+      console.error("Failed to retrieve favorites:", error);
+    }
+  }
+
+favDeleteFunction()
+
+res.render('delete-confirmation.ejs', { initialDetailPageURL: req.headers.referer })
+}
+)
+
+app.post('/favorite-added', (req, res) => {
+  const userIdSession = req.session.users
+  const movieIdDetail = req.body.favoriteBtn
+
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+  const favAddFunction = async () => {   
+    try {
+      const userMongo = await collection.findOneAndUpdate(
+        { "_id" : new ObjectId(userIdSession) },
+        { $push: { "favorites" : movieIdDetail } },
+        { returnOriginal: false } // Ensure to return the updated document
+      );
+      // Continue with your code logic here
+    } catch (error) {
+      // Handle the error
+      console.error("Failed to retrieve favorites:", error);
+    }
+  }
+
+favAddFunction()
+
+res.render('add-confirmation.ejs', { initialDetailPageURL: req.headers.referer })
+})
+
 
 // HAALT RECEPT OP UIT HETZELFDE LAND ALS DE FILM
 const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
@@ -709,7 +798,8 @@ app.post('/new-user', async (req, res) => {
         rating: req.body.rating,
 
         creationDate: new Date(),
-        fileName: ""
+        fileName: "",
+        favorites: []
       });
 
       res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
