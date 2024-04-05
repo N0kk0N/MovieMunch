@@ -15,7 +15,7 @@ const swiper = new Swiper('.filmdetail-swiper', {
     },
 
   });
-  
+
 
 const selectBtn = document.querySelector('.filmdetail-recipe-button')
 const selectMenu = document.querySelector('.filmdetail-recipe1')
@@ -26,7 +26,7 @@ selectBtn.addEventListener('click', () => {
     selectMenu.classList.toggle('filmdetail-active')
     closeAllMenus(selectMenu)
 })
-  selectBtn2.addEventListener('click', () => {
+selectBtn2.addEventListener('click', () => {
     selectMenu2.classList.toggle('filmdetail-active')
     closeAllMenus(selectMenu2)
 })
@@ -39,7 +39,6 @@ const closeAllMenus = (currentMenu) => {
         }
     })
 }
-
 
 document.addEventListener("DOMContentLoaded", (event) => {
   var circle = document.querySelector('.filmdetail-cursor');
@@ -56,5 +55,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
     (window).addEventListener('mousemove', moveCircle);
 });  
 
-
+const observer =  new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    console.log(entry)
+    if (entry.isIntersecting) {
+      entry.target.classList.add('filmdetail-show')
+    } else {
+      entry.target.classList.remove('filmdetail-show')
+    }
+  })
+})
 const hiddenElements = document.querySelectorAll('.filmdetail-hidden')
+hiddenElements.forEach((el) => observer.observe(el))
+

@@ -357,7 +357,7 @@ body{
 .filmdetail-description p:first-of-type{
     margin-bottom: 3em;
     font-family: archivo-bold;
-    font-size:0.8em;
+    font-size: 0.8em;
 }
 
 .filmdetail-description p:nth-of-type(2){
@@ -389,7 +389,7 @@ body{
 }
 
 .filmdetail-recepten-button{
-    font-family: clash-light;
+    font-family: clash-bold;
     margin: 0;
     text-align: center;
     text-transform: uppercase;
@@ -405,12 +405,13 @@ body{
 
 .filmdetail-recipe h2{
     margin: 0;
-    font-family: clash-bold;
-    text-transform: uppercase;
+    font-family: clash-light;
+    text-transform: capitalize;
     font-size: 2em;
 }
 
 .filmdetail-recipe-lists {
+    margin: 0;
     margin-bottom: 2em;
     animation: filmdetail-showup 1s ease-in-out;
 }
@@ -419,7 +420,6 @@ body{
 /* first recipe */
 .filmdetail-recipe1 {
     padding: 0;
-    margin: 0;
     list-style-type: none;
 }
 
@@ -441,9 +441,10 @@ body{
 }
 
 .filmdetail-recipe-buttons {
-    background-color: white;
-    border: none;
-    box-shadow: 1px 1px 5px rgba(0,0,0, 0.2);
+    background-color: transparent;
+    border: solid;
+    border-color: rgb(255, 103, 63);
+    border-width: 0.2em;
     border-radius: 10px;
     width: 100%;
     padding: 0.5em;
@@ -451,7 +452,7 @@ body{
 }
 
 .filmdetail-recipe-buttons:hover {
-    animation: filmdetail-glow 2s ease-in-out;
+    animation: filmdetail-border 2s ease-in-out;
 }
 
 .filmdetail-space {
@@ -560,6 +561,17 @@ main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
     width: 20em;
 }
 
+/* Animations */
+.filmdetail-hidden {
+    opacity: 0;
+    transition: all 1s;
+}
+
+.filmdetail-show {
+    opacity: 1;
+    transition: 2s;
+}
+
 @keyframes filmdetail-glow {
     from {
       box-shadow: 0 0 10px rgb(0, 0, 0, 0.1);
@@ -569,21 +581,12 @@ main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
     }
   }
 
-  @keyframes filmdetail-glow2 {
-    from {
-      box-shadow: 0 0 10px rgb(0, 0, 0, 0,1);
-    }
-    to {
-      box-shadow: 0 0 30px rgb(0, 0, 0, 0,5), 0 0 10px rgb(0, 0, 0, 0,5)
-    }
-  }
 
 
   @keyframes filmdetail-showup {
     0% {opacity:0;}
     100% {opacity:1;}
   }
-
 
 
 
@@ -651,6 +654,4 @@ main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
         font-size: 1.20em;
         max-width: 60%;
     }
-
-
 }
