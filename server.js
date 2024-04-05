@@ -98,6 +98,7 @@ app.get('/overview', (req, res) => {
       );
       const genreArray = userMongo.genre
       const userRating = userMongo.rating
+      return { genreArray, userRating };
       // Continue with your code logic here
     } catch (error) {
       // Handle the error
@@ -105,11 +106,11 @@ app.get('/overview', (req, res) => {
     }
   }
 
-findGenreFunction()
+findGenreFunction().then(({ genreArray, userRating }) => {
 
   const options = {
     method: 'GET',
-    url: `https://api.themoviedb.org/3/movie/popular?rating=${userRating}&genre=${genreArray}`,
+    url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
     qs: {
       language: 'en-US',
       page: 1,
@@ -183,6 +184,7 @@ findGenreFunction()
     });
     res.render('overview.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
   });
+});
 });
 
 app.get('/overview/all', (req, res) => {
@@ -825,4 +827,3 @@ app.get('/search', (req, res) => {
   app.listen(process.env.PORT, () => {
     console.log(`Server is listening at port ${process.env.PORT}`);
   });
-  
