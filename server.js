@@ -566,6 +566,13 @@ res.render('add-confirmation.ejs', { initialDetailPageURL: req.headers.referer }
 })
 
 
+
+
+
+
+
+
+
 // HAALT RECEPT OP UIT HETZELFDE LAND ALS DE FILM
 const fetchRandomRecipe = (countryOfOrigin, retryCount = 0) => {
 
@@ -735,12 +742,11 @@ let cuisineFunction = (country) => {
 }
 
 // Voorbeeldgebruik
-
 const cuisineOfOrigin = cuisineFunction(countryOfOrigin);
 console.log(`Ik ga zoeken naar een recept uit de cuisine ${cuisineOfOrigin}`);
 
 const apiKey = process.env.FOOD_API_KEY;
-const numRecipes = 5; // Aantal recepten dat je wilt ophalen
+const numRecipes = 2; // Aantal recepten dat je wilt ophalen
 const randomOffset = Math.floor(Math.random() * 100); // Genereer een willekeurige offset waarde
 
 const apiUrlFood = `https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisineOfOrigin}&number=${numRecipes}&offset=${randomOffset}&apiKey=${apiKey}`;
@@ -753,12 +759,163 @@ fetch(apiUrlFood)
     return response.json();
   })
   .then(data => {
-    console.log(data);
+    // Array maken om de recept-ID's op te slaan
+    const recipeIds = data.results.map(recipe => recipe.id);
+    
+    // Voor elk recept-ID de uitgebreide informatie en stapsgewijze instructies ophalen
+    recipeIds.forEach(recipeId => {
+      // Fetch-request voor de uitgebreide informatie
+      const recipeInfoUrl = `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKey}`;
+      fetch(recipeInfoUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Netwerk response was niet ok');
+          }
+          return response.json();
+        })
+        .then(recipeData => {
+          // Titel van het gerecht
+          const recipeTitle = recipeData.title;
+          // Alleen de lijst met ingrediënten loggen
+          const ingredients = recipeData.extendedIngredients.map(ingredient => ingredient.original);
+          console.log(`Ingrediënten voor recept "${recipeTitle}":`);
+          ingredients.forEach(ingredient => {
+            console.log("- " + ingredient);
+          });
+
+          // Fetch-request voor de stapsgewijze instructies
+          const instructionsUrl = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?apiKey=${apiKey}`;
+          fetch(instructionsUrl)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Netwerk response was niet ok');
+              }
+              return response.json();
+            })
+            .then(instructionsData => {
+              // Controleren of er instructies zijn
+              if (instructionsData.length > 0 && instructionsData[0].steps.length > 0) {
+                console.log(`Stapsgewijze instructies voor recept "${recipeTitle}":`);
+                instructionsData[0].steps.forEach(step => {
+                  // Alleen stappen met nummers loggen
+                  if (step.number) {
+                    console.log(`${step.number}. ${step.step}`);
+                  }
+                });
+              } else {
+                console.log(`Geen stapsgewijze instructies beschikbaar voor recept "${recipeTitle}".`);
+              }
+            })
+            .catch(error => {
+              console.error('Er is een fout opgetreden bij het ophalen van de stapsgewijze instructies:', error);
+            });
+        })
+        .catch(error => {
+          console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+        });
+    });
   })
   .catch(error => {
     console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
   });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const cuisineOfOrigin = cuisineFunction(countryOfOrigin);
+// console.log(`Ik ga zoeken naar een recept uit de cuisine ${cuisineOfOrigin}`);
+
+// const apiKey = process.env.FOOD_API_KEY;
+// const numRecipes = 5; // Aantal recepten dat je wilt ophalen
+// const randomOffset = Math.floor(Math.random() * 100); // Genereer een willekeurige offset waarde
+
+// const apiUrlFood = `https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisineOfOrigin}&number=${numRecipes}&offset=${randomOffset}&apiKey=${apiKey}`;
+
+// fetch(apiUrlFood)
+//   .then(response => {
+//     if (!response.ok) {
+//       throw new Error(`Network response was not ok: ${response.status}`);
+//     }
+//     return response.json();
+//   })
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+//   });
+// }
+
+
+
+
+// const recipeId = '10';
+// const apiKey = process.env.FOOD_API_KEY;
+
+// const apiUrl = `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKey}`;
+
+// fetch(apiUrl)
+//   .then(response => {
+//     if (!response.ok) {
+//       throw new Error('Netwerk response was niet ok');
+//     }
+//     return response.json();
+//   })
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.error('Er is een fout opgetreden bij het ophalen van de data:', error);
+//   });
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.get('/logout', (req, res) => {
