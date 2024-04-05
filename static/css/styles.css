@@ -312,3 +312,23 @@ body{
     border-radius: 1rem;
     height: 15rem;
   }
+
+  /* css overviewall page */
+
+  .animate-image{
+    width: 80%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5em;
+  }
+
+  .overview-all{
+    padding-bottom: 6em;
+  }
+
+  .overview-all h2{
+    font-family: 'clash-bold', sans-serif;
+    padding-left: 1em;
+    padding-top: 1em;
+    margin: 0;
+  }

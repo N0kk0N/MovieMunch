@@ -4,10 +4,57 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/styles.css">
     <title>Document</title>
 </head>
 <body>
-    <h1>Overview All</h1>
-    <p><%= titleArray %></p>
+    <%- include('nav') %>
+    <main class="overview-all">
+    <h2>Action Movies</h2>
+    <section class="gsap-wrapper">
+        <% for(let i = 0; i < posterPathArray.length; i++) { %>
+            <% if(genreIdsArray[i].includes(28)) { %>
+                <article class="gsap-slide movie-card">
+                    <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
+                </article>
+            <% } %>
+        <% } %>
+    </section>
+    <h2>This is comedy</h2>
+    <section class="gsap-wrapper">
+        <% for(let i = 0; i < posterPathArray.length; i++) { %>
+            <% if(genreIdsArray[i].includes(35)) { %>
+                <article class="gsap-slide movie-card">
+                    <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
+                </article>
+            <% } %>
+        <% } %>
+    </section>
+    <h2>Drama</h2>
+    <section class="gsap-wrapper">
+        <% for(let i = 0; i < posterPathArray.length; i++) { %>
+            <% if(genreIdsArray[i].includes(18)) { %>
+                <article class="gsap-slide movie-card">
+                    <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
+                </article>
+            <% } %>
+        <% } %>
+    </section>
+    <h2>This is comedy</h2>
+    <section class="gsap-wrapper">
+        <% for(let i = 0; i < posterPathArray.length; i++) { %>
+            <% if(genreIdsArray[i].includes(27)) { %>
+                <article class="gsap-slide movie-card">
+                    <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
+                </article>
+            <% } %>
+        <% } %>
+    </section>
+</main>
+<script src="../static/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+<script>
+</script>
 </body>
 </html>
