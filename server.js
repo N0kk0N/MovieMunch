@@ -87,10 +87,30 @@ app.get('/overview', (req, res) => {
   };
 
   
+  const userIdSession = req.session.users
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+  const findGenreFunction = async () => {   
+    try {
+      const userMongo = await collection.findOne(
+        { "_id" : new ObjectId(userIdSession) }
+      );
+      const genreArray = userMongo.genre
+      const userRating = userMongo.rating
+      return { genreArray, userRating };
+      // Continue with your code logic here
+    } catch (error) {
+      // Handle the error
+      console.error("Failed to retrieve favorites:", error);
+    }
+  }
+
+findGenreFunction().then(({ genreArray, userRating }) => {
 
   const options = {
     method: 'GET',
-    url: 'https://api.themoviedb.org/3/movie/popular',
+    url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
     qs: {
       language: 'en-US',
       page: 1,
@@ -164,6 +184,7 @@ app.get('/overview', (req, res) => {
     });
     res.render('overview.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
   });
+});
 });
 
 app.get('/overview/all', (req, res) => {
@@ -443,7 +464,6 @@ app.get('/movie/:name', (req, res) => {
             // Roep de functie aan om een recept op te halen uit hetzelfde land
             fetchRandomRecipe(countryOfOrigin);
 
-
 // // check if movie is in favorites
 const userIdSession = req.session.users
 console.log(`Gebruikers ID = ${userIdSession}`)
@@ -478,6 +498,7 @@ const favFunction = async () => {
 }
 
 favFunction()
+
 
           })
           .catch(err => console.error('Error fetching movie details:', err));
@@ -773,10 +794,8 @@ app.post('/new-user', async (req, res) => {
         password: xss(hashedPassword),
 
 // adult, genres, release date, average vote count 
-        adult: req.body.adult,
-        genre: req.body.genre,
+        genre: req.body.genre, 
         rating: req.body.rating,
-        date: req.body.date,
 
         creationDate: new Date(),
         fileName: "",
@@ -898,4 +917,3 @@ app.get('/search', (req, res) => {
   app.listen(process.env.PORT, () => {
     console.log(`Server is listening at port ${process.env.PORT}`);
   });
-  
