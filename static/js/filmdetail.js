@@ -41,10 +41,10 @@ const closeAllMenus = (currentMenu) => {
 }
 
 
-   document.addEventListener("DOMContentLoaded", (event) => {
-    var circle = document.querySelector('.filmdetail-cursor');
+document.addEventListener("DOMContentLoaded", (event) => {
+  var circle = document.querySelector('.filmdetail-cursor');
 
-    const moveCircle = (e) => {
+  const moveCircle = (e) => {
      gsap.to(circle, 0.4, {
          css: {
               left: e.pageX,
@@ -55,3 +55,6 @@ const closeAllMenus = (currentMenu) => {
 
     (window).addEventListener('mousemove', moveCircle);
 });  
+
+
+const hiddenElements = document.querySelectorAll('.filmdetail-hidden')
