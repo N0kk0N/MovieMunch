@@ -514,7 +514,7 @@ app.post('/favorite-deleted', (req, res) => {
 
 favDeleteFunction()
 
-res.send("Deleted movie")
+res.render('delete-confirmation.ejs', { initialDetailPageURL: req.headers.referer })
 }
 )
 
@@ -541,7 +541,7 @@ app.post('/favorite-added', (req, res) => {
 
 favAddFunction()
 
-res.send("Added movie")
+res.render('add-confirmation.ejs', { initialDetailPageURL: req.headers.referer })
 })
 
 
