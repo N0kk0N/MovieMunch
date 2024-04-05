@@ -393,28 +393,115 @@ app.get('/movies', (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
-  res.render('profile.ejs');
+  const userIdSession = req.session.users
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+  const getAccountDetails = async () => {   
+    try {
+      const userMongo = await collection.findOne(
+        { "_id" : new ObjectId(userIdSession) }
+      );
+      const pictureFilename = userMongo.fileName
+      const username = userMongo.username
+      const genres = userMongo.genre
+      const rating = userMongo.rating
+      return { pictureFilename, username, genres, rating};
+      // Continue with your code logic here
+    } catch (error) {
+      // Handle the error
+      console.error("Failed to retrieve favorites:", error);
+    }
+  }
+
+getAccountDetails().then(({pictureFilename, username, genres, rating}) => {
+  res.render('profile.ejs', {pictureFilename, username, genres, rating});
+}
+)
   console.log(req.session.users);
 });
 
 app.get('/profile/settings', (req, res) => {
-  res.render('profile-settings.ejs');
+  const userIdSession = req.session.users
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+  const getAccountDetails = async () => {   
+    try {
+      const userMongo = await collection.findOne(
+        { "_id" : new ObjectId(userIdSession) }
+      );
+      const pictureFilename = userMongo.fileName
+      const username = userMongo.username
+      const genres = userMongo.genre
+      const rating = userMongo.rating
+      return { pictureFilename, username, genres, rating};
+      // Continue with your code logic here
+    } catch (error) {
+      // Handle the error
+      console.error("Failed to retrieve favorites:", error);
+    }
+  }
+
+getAccountDetails().then(({pictureFilename, username, genres, rating}) => {
+  res.render('profile-settings.ejs', {pictureFilename, username, genres, rating});
+}
+)
   console.log(req.session.users);
 });
 
-app.post('/profile/settingsnew', upload.single('avatar'), async function (req, res, next) {
+app.post('/profile-picture', upload.single('avatar'), async function (req, res, next) {
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
-  const picture = req.file.filename
+  const rating = req.body.rating;
+  const username = xss(req.body.username);
+  const genre = req.body.genre; // Let op: verandering van genres naar genre
+
   try {
-    collection.findOneAndUpdate( { "_id" : new ObjectId(req.session.users) },
-    { $set: { "fileName" : picture } });
+    // Retrieve existing profile data
+    const existingProfile = await collection.findOne({ "_id" : new ObjectId(req.session.users) });
+
+    // Update profile data
+    const updateData = {
+      "rating": rating,
+      // Retain the existing username if not updated
+      "username": username ? username : existingProfile.username,
+      // Retain the existing genre if not updated
+      "genre": genre ? (Array.isArray(genre) ? genre : [genre]) : existingProfile.genre
+    };
+
+    // Check if a new avatar has been uploaded
+    let picture = req.file ? req.file.filename : null;
+    if (picture) {
+      updateData.fileName = picture;
+    } else {
+      // If no new picture is uploaded, retain the existing picture
+      updateData.fileName = existingProfile.fileName;
+    }
+
+    // Only perform username check if the username has been updated
+    if (username && username !== existingProfile.username) {
+      const checkAvailable = await collection.findOne({ username: xss(req.body.username) });
+      if (checkAvailable) {
+        return res.send('User with this username already exists.');
+      }
+    }
+
+    // Update the profile in the database
+    await collection.findOneAndUpdate(
+      { "_id" : new ObjectId(req.session.users) },
+      { $set: updateData }
+    );
+    res.send("Profile updated");
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
   }
-  res.send(`<img src="../static/uploads/${req.file.filename}" alt="Profile picture">`)
-})
+});
+
+
+
+
 
 app.get('/movie/:name', (req, res) => {
   const movieName = req.params.name;
