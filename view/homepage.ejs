@@ -11,63 +11,67 @@
 
 </head>
 <body>
-  <form>
-    <label id="username" class="is-visible">
+  <form >
+    <label id="username" class="register is-visible">
       <label class="label-heading" for="username">What's will be your username?</label>
       <input name="username" type="text" placeholder="username" required />
-      <div class="nav-btn-div">
+
+      <div class="input-btn">
         <button type="button" class="form-button" value="next" onclick="next('username','email')">OK <i
             class="fa fa-check" aria-hidden="true"></i></button>
         Press <strong>Enter ↵</strong>
       </div>
-      <div class="nav-btn-div">
+      <div class="input-btn">
         <i class="fa fa-arrow-down" style="font-size:24px" onclick="next('username','email')"></i>
       </div>
     </label>
-    <label id="email">
+    <label id="email" class="register">
       <label class="label-heading" for="email">Your email address</label>
       <input type="email" name="email" placeholder="email" required />
       <br>
-      <div class="nav-btn-div">
+      <div class="input-btn">
         <button type="button" class="form-button" value="next" onclick="next('email','password')">OK</button>
         Press <strong>Enter ↵</strong>
       </div>
-      <div class="nav-btn-div">
+      <div class="input-btn">
         <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('email', 'email')"></i>
         <i class="fa fa-arrow-down" style="font-size:2em" onclick="next('email','password')"></i>
       </div>
     </label>
-    <label id="password">
+    <label id="password" class="register">
       <label class="label-heading" for="password">Password</label>
       <input type="password" name="password" placeholder="password" required />
       <br>
-      <div class="nav-btn-div">
+      <div class="input-btn">
         <button type="button" class="form-button" value="next" onclick="next('password','genre')">OK <i
             class="fa fa-check" aria-hidden="true"></i></button>
         Press <strong>Enter ↵</strong>
       </div>
-      <div class="nav-btn-div">
+      <div class="input-btn">
         <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('password', 'email')"></i>
         <i class="fa fa-arrow-down" style="font-size:2em" onclick="next('password','genre')"></i>
       </div>
     </label>
-    <label id="genre">
+    <label id="genre" class="register">
       <label class="label-heading" for="genre">What genre's do you like</label>
-
+      <input type="checkbox" value="1"<span>History</span>
+      <input type="checkbox" value="1"<span>Action</span>
+      <input type="checkbox" value="1"<span>Romantic</span>
+      <input type="checkbox" value="1"<span>Family</span>
       <br>
-      <div class="nav-btn-div">
+      <div class="input-btn">
         <button type="button" class="form-button" value="next" onclick="next('age','address')">OK <i class="fa fa-check"
             aria-hidden="true"></i></button>
         Press <strong>Enter ↵</strong>
       </div>
-      <div class="nav-btn-div">
+      <div class="input-btn">
         <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('genre', 'password')"></i>
       </div>
     </label>
     <p id="validate"></p>
   </form>
 </body>
-<script>// Define the upform function
+<script>
   let error = document.getElementById('validate');
   let label = document.getElementsByTagName("label");
 

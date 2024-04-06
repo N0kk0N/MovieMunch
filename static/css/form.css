@@ -19,28 +19,7 @@ body {
   opacity: 1; /* Firefox */
 }
 
-:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  color: white;
-}
-
-::-ms-input-placeholder {
-  /* Microsoft Edge */
-  color: white;
-}
-
-
-h1 {
-  color: white;
-}
-
-/* form design */
-
-form {
-  padding: 30px;
-}
-
-label {
+label.register{
   display: none;
   padding-top: 30px;
   text-align: center;
@@ -55,7 +34,7 @@ label.label-heading p {
   color: white;
 }
 
-/* error text */
+/* error popup */
 label .label-text {
   color: #fff;
   cursor: text;
@@ -69,76 +48,17 @@ label .label-text {
   transition: all 0.3s;
 }
 
-/* remove the input box styling */
+/* input box styling*/
 label input {
   background-color: transparent;
   border: 0;
   border-bottom: 2px solid #fff;
   color: white;
-  font-size: 20px;
-  letter-spacing: 1px;
-  outline: 0;
-  padding: 5px 20px;
+  font-size: 1.2em;
+  letter-spacing: .05em;
+  padding: .1rem 1.3rem;
   text-align: center;
-  transition: all 0.3s;
-  width: 15rem;
-}
-
-/* once you click in the input the input width box animates */
-
-label input:focus {
-  max-width: 80vw;
-  width: 400px;
-}
-
-/* the text floats up and turns white */
-
-label input:focus + .label-text {
-  color: #f0f0f0;
-  font-size: 13px;
-  margin-top: 10px;
-  -moz-transform: translateY(-74px);
-  -ms-transform: translateY(-74px);
-  -webkit-transform: translateY(-74px);
-  transform: translateY(-74px);
-}
-
-/* the text floats up during form validation */
-
-label input:valid + .label-text {
-  font-size: 13px;
-  -moz-transform: translateY(-74px);
-  -ms-transform: translateY(-74px);
-  -webkit-transform: translateY(-74px);
-  transform: translateY(-74px);
-}
-
-input:-internal-autofill-selected {
-  background-color: transparent;
-}
-
-/* button styling */
-
-/* button {
-  background: transparent;
-  color: #f0f0f0;
-  border: 2px solid #f0f0f0;
-  font-size: 15px;
-  letter-spacing: 2px;
-  padding: 20px 75px;
-  text-transform: uppercase;
-  cursor: pointer;
-  display: inline-block;
-  margin: 15px 30px;
-  -webkit-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-  transition: all 0.4s;
-} */
-
-button:hover,
-button:focus {
-  background-color: white;
-  color: #fefefe;
+    width: 15rem;
 }
 
 select {
@@ -157,46 +77,33 @@ button:focus {
   outline: none;
 }
 
-select.multiple {
-  min-height: 220px;
-}
-
-select.multiple option {
-  margin-top: 4%;
-}
-
 #validate {
   color: #f3f3f3;
   font-weight: 700;
   text-align: center;
 }
 
-i {
-  color: white;
-  cursor: pointer;
-  
-}
-
-select[name='availability-days'] {
-  min-height: 100px;
-}
-
 label.label-heading {
   display: block;
-  padding: 5px 20px;
-  font-size: 20px;
-  margin: 3%;
+  padding: .2rem 1.1rem;
+  font-size: 1.3em;
   color: #f0f0f0;
   text-align: center;
 }
 
-.nav-btn-div {
+.is-visible input:checked{
+  color: #ffffff;
+  text-shadow: 0 0  6px rgba(0, 0, 0, 0.8)
+}
+
+
+.input-btn {
   margin-top: 2rem;
   color: #ffffff;
 }
 
-.nav-btn-div ::selection,
-.nav-btn-div :hover {
+.input-btn ::selection,
+.input-btn :hover {
   background-color: #ffffff;
   color: #000;
 }
@@ -216,4 +123,7 @@ label.label-heading {
   -moz-transition: all 0.4s;
   transition: all 0.4s;
 }
+
+
+
 
