@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>Profile Change</h1>
+<form action="/profile-picture" method="post" enctype="multipart/form-data">
+    <img src="../static/uploads/<%= pictureFilename %>" style="width: 100%" alt="">
+    <p>Change profile picture</p>
+    <input type="file" name="avatar" accept="image/png, image/jpeg, image/gif"/>
+    <p>Accepted file types: png, jpeg and gif</p>
+
+    <p>Account name</p>
+    <input type="text" name="username" value="<%= username %>">
+
+    <p>Genre's</p>
+    <input type="checkbox" id="action" name="genre" value="28">
+    <label for="action">Action</label>
+    <input type="checkbox" id="adventure" name="genre" value="12">
+    <label for="adventure">Adventure</label>
+    <input type="checkbox" id="animation" name="genre" value="16">
+    <label for="animation">Action</label>
+    <input type="checkbox" id="comedy" name="genre" value="35">
+    <label for="comedy">Adventure</label>
+    <input type="checkbox" id="crime" name="genre" value="80">
+    <label for="crime">Crime</label>
+    <input type="checkbox" id="documentary" name="genre" value="99">
+    <label for="documentary">Documentary</label>
+    <input type="checkbox" id="drama" name="genre" value="18">
+    <label for="drama">Drama</label>
+    <input type="checkbox" id="family" name="genre" value="10751">
+    <label for="family">Family</label>
+    <input type="checkbox" id="fantasy" name="genre" value="14">
+    <label for="fantasy">Fantasy</label>
+    <input type="checkbox" id="history" name="genre" value="36">
+    <label for="history">History</label>
+    <input type="checkbox" id="horror" name="genre" value="27">
+    <label for="horror">Horror</label>
+    <input type="checkbox" id="music" name="genre" value="10402">
+    <label for="music">Music</label>
+    <input type="checkbox" id="mystery" name="genre" value="9648">
+    <label for="mystery">Mystery</label>
+    <input type="checkbox" id="romance" name="genre" value="10749">
+    <label for="romance">Romance</label>
+    <input type="checkbox" id="sciencefiction" name="genre" value="878">
+    <label for="sciencefiction">Science Fiction</label>
+    <input type="checkbox" id="tvmovie" name="genre" value="10770">
+    <label for="tvmovie">Tv Movie</label>
+    <input type="checkbox" id="thriller" name="genre" value="53">
+    <label for="thriller">Thriller</label>
+    <input type="checkbox" id="war" name="genre" value="10752">
+    <label for="war">War</label>
+    <input type="checkbox" id="western" name="genre" value="37">
+    <label for="western">Western</label>
+
+
+
+    <p>Minimum rating</p>
+    <input type="range" min="1" max="10" value="<%= rating %>" name="rating">
+
+    <input type="submit" value="Save changes">
+</form>
+</body>
+
+<script>
+    // stringify the data passed from router to ejs (within the EJS template only)
+    var genresArray = <%- JSON.stringify(genres) %>;
+
+    // Loop through genresArray and check corresponding checkboxes
+    genresArray.forEach(function(genreId) {
+        var checkbox = document.querySelector('input[type="checkbox"][value="' + genreId + '"]');
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+    });
+</script>
+
+
+</html>
