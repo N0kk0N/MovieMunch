@@ -1,11 +1,12 @@
-require('dotenv').config() 
+require('dotenv').config()
 
 // Initialise Express webserver
 const express = require('express')
+const request = require('request');
 const session = require('express-session')
 const xss = require('xss')
 const bcrypt = require('bcrypt')
-const multer  = require('multer')
+const multer = require('multer')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/uploads')
@@ -14,7 +15,7 @@ const storage = multer.diskStorage({
     const extension = file.originalname.split(".").pop()
     const date = new Date
     const dateISO = date.toISOString()
-    cb(null, `${req.session.users}${dateISO}.${extension}` )
+    cb(null, `${req.session.users}${dateISO}.${extension}`)
   }
 })
 
@@ -86,15 +87,15 @@ app.get('/overview', (req, res) => {
     37: 'Western'
   };
 
-  
+
   const userIdSession = req.session.users
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-  const findGenreFunction = async () => {   
+  const findGenreFunction = async () => {
     try {
       const userMongo = await collection.findOne(
-        { "_id" : new ObjectId(userIdSession) }
+        { "_id": new ObjectId(userIdSession) }
       );
       const genreArray = userMongo.genre
       const userRating = userMongo.rating
@@ -106,92 +107,92 @@ app.get('/overview', (req, res) => {
     }
   }
 
-findGenreFunction().then(({ genreArray, userRating }) => {
+  findGenreFunction().then(({ genreArray, userRating }) => {
 
-  const options = {
-    method: 'GET',
-    url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
-    qs: {
-      language: 'en-US',
-      page: 1,
-    },
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-  };
+    const options = {
+      method: 'GET',
+      url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
+      qs: {
+        language: 'en-US',
+        page: 1,
+      },
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+    };
 
-  request(options, function (error, response, body) {
-    if (error) throw new Error(error);
-    const movies = JSON.parse(body).results;
-    const adultArray = []
-    const backdropPathArray = []
-    const genreIdsArray = []
-    const idArray = []
-    const originalLanguageArray = []
-    const originalTitleArray = []
-    const overviewArray = []
-    const popularityArray = []
-    const posterPathArray = []
-    const releaseDateArray = []
-    const titleArray = []
-    const videoArray = []
-    const voteAverageArray = []
-    const voteCountArray = []
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      const movies = JSON.parse(body).results;
+      const adultArray = []
+      const backdropPathArray = []
+      const genreIdsArray = []
+      const idArray = []
+      const originalLanguageArray = []
+      const originalTitleArray = []
+      const overviewArray = []
+      const popularityArray = []
+      const posterPathArray = []
+      const releaseDateArray = []
+      const titleArray = []
+      const videoArray = []
+      const voteAverageArray = []
+      const voteCountArray = []
 
-    movies.forEach(movie => {
-      const adult = movie.adult
-      adultArray.push(adult)
+      movies.forEach(movie => {
+        const adult = movie.adult
+        adultArray.push(adult)
 
-      const backdropPath = movie.backdrop_path
-      backdropPathArray.push(backdropPath)
+        const backdropPath = movie.backdrop_path
+        backdropPathArray.push(backdropPath)
 
-      const genreIds = movie.genre_ids.map(id => genreMap[id]);
-      genreIdsArray.push(genreIds)
+        const genreIds = movie.genre_ids.map(id => genreMap[id]);
+        genreIdsArray.push(genreIds)
 
-      const id = movie.id
-      idArray.push(id)
+        const id = movie.id
+        idArray.push(id)
 
-      const originalLanguage = movie.original_language
-      originalLanguageArray.push(originalLanguage)
+        const originalLanguage = movie.original_language
+        originalLanguageArray.push(originalLanguage)
 
-      const originalTitle = movie.original_title
-      originalTitleArray.push(originalTitle)
+        const originalTitle = movie.original_title
+        originalTitleArray.push(originalTitle)
 
-      const overview = movie.overview
-      overviewArray.push(overview)
-      
-      const popularity = movie.popularity
-      popularityArray.push(popularity)
+        const overview = movie.overview
+        overviewArray.push(overview)
 
-      const posterPath = movie.poster_path
-      posterPathArray.push(posterPath)
-      
-      const releaseDate = movie.release_date
-      releaseDateArray.push(releaseDate)
+        const popularity = movie.popularity
+        popularityArray.push(popularity)
 
-      const title = movie.title
-      titleArray.push(title)
+        const posterPath = movie.poster_path
+        posterPathArray.push(posterPath)
 
-      const video = movie.video
-      videoArray.push(video)
-      
-      const voteAverage = movie.vote_average
-      voteAverageArray.push(voteAverage)
+        const releaseDate = movie.release_date
+        releaseDateArray.push(releaseDate)
 
-      const voteCount  = movie.vote_count
-      voteCountArray.push(voteCount)
+        const title = movie.title
+        titleArray.push(title)
+
+        const video = movie.video
+        videoArray.push(video)
+
+        const voteAverage = movie.vote_average
+        voteAverageArray.push(voteAverage)
+
+        const voteCount = movie.vote_count
+        voteCountArray.push(voteCount)
+      });
+      res.render('overview.ejs', { adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray });
     });
-    res.render('overview.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
   });
-});
 });
 
 app.get('/overview/all', (req, res) => {
   const request = require('request');
   const { json } = require('express');
   const apiKey = process.env.API_KEY;
-  
+
   // Arrays om gegevens van films op te slaan
   const adultArray = [];
   const backdropPathArray = [];
@@ -209,7 +210,7 @@ app.get('/overview/all', (req, res) => {
   const voteCountArray = [];
 
   let page = 1;
-  
+
   // Functie om films op te halen en gegevens in arrays op te slaan
   function fetchMovies() {
     const options = {
@@ -227,7 +228,7 @@ app.get('/overview/all', (req, res) => {
 
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
-      
+
       const movies = JSON.parse(body).results;
 
       // Loop door de films en sla gegevens op in de arrays
@@ -286,91 +287,86 @@ app.get('/overview/all', (req, res) => {
   fetchMovies();
 });
 
-
 app.get('/favourites', (req, res) => {
-  const request = require('request');
-  const { json } = require('express')
-  const apiKey = process.env.API_KEY;
-  const options = {
-    method: 'GET',
-    url: 'https://api.themoviedb.org/3/movie/popular',
-    qs: {
-      language: 'en-US',
-      page: 1,
-    },
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-  };
+
+  /// VIND DE ARRAY MET FAVORITE ID's
+
+  const userIdSession = req.session.users
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+  const findFavoriteGenresFunction = async () => {
+    try {
+      const userMongo = await collection.findOne(
+        { "_id": new ObjectId(userIdSession) }
+      );
+      const favoritesArray = userMongo.favorites
+      return { favoritesArray };
+      // Continue with your code logic here
+    } catch (error) {
+      // Handle the error
+      console.error("Failed to retrieve favorites:", error);
+    }
+  }
+
+  // ARRAY MET FAVORITES = favoritesArray
+
+
+  // const genreIdsArray = []
+
+
+  findFavoriteGenresFunction().then(({ favoritesArray }) => {
+    const idArray = [];
+    const posterPathArray = [];
+    const titleArray = [];
   
-  request(options, function (error, response, body) {
-    if (error) throw new Error(error);
-    const movies = JSON.parse(body).results;
-    const adultArray = []
-    const backdropPathArray = []
-    const genreIdsArray = []
-    const idArray = []
-    const originalLanguageArray = []
-    const originalTitleArray = []
-    const overviewArray = []
-    const popularityArray = []
-    const posterPathArray = []
-    const releaseDateArray = []
-    const titleArray = []
-    const videoArray = []
-    const voteAverageArray = []
-    const voteCountArray = []
+    let completedRequests = 0;
+    const totalRequests = favoritesArray.length;
   
-    movies.forEach(movie => {
+    favoritesArray.forEach(favoriteId => {
+      const apiKey = process.env.API_KEY;
+      const options = {
+        method: 'GET',
+        url: `https://api.themoviedb.org/3/movie/${favoriteId}?language=en-US`,
+        qs: {
+          language: 'en-US',
+          page: 1,
+        },
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+      };
   
-      const adult = movie.adult
-      adultArray.push(adult)
+      request(options, function (error, response, body) {
+        if (error) {
+          console.error('Error fetching movie data:', error);
+          // Handle error appropriately
+          return;
+        }
+        const favMovie = JSON.parse(body);
   
-      const backdropPath = movie.backdrop_path
-      backdropPathArray.push(backdropPath)
+        const id = favMovie.id;
+        idArray.push(id);
   
-      const genreIds = movie.genre_ids
-      genreIdsArray.push(genreIds)
+        const posterPath = favMovie.poster_path;
+        posterPathArray.push(posterPath);
   
-      const id = movie.id
-      idArray.push(id)
+        const title = favMovie.title;
+        titleArray.push(title);
   
-      const originalLanguage = movie.original_language
-      originalLanguageArray.push(originalLanguage)
+        completedRequests++;
   
-      const originalTitle = movie.original_title
-      originalTitleArray.push(originalTitle)
+        // Controleer of alle verzoeken zijn voltooid
+        if (completedRequests === totalRequests) {
+
+          res.render('favourites.ejs', { idArray, posterPathArray, titleArray });
+        }
+      })
+    })
+  })
+})
   
-      const overview = movie.overview
-      overviewArray.push(overview)
-      
-      const popularity = movie.popularity
-      popularityArray.push(popularity)
-  
-      const posterPath = movie.poster_path
-      posterPathArray.push(posterPath)
-      
-      const releaseDate = movie.release_date
-      releaseDateArray.push(releaseDate)
-  
-      const title = movie.title
-      titleArray.push(title)
-  
-      const video = movie.video
-      videoArray.push(video)
-      
-      const voteAverage = movie.vote_average
-      voteAverageArray.push(voteAverage)
-  
-      const voteCount  = movie.vote_count
-      voteCountArray.push(voteCount)
-  
-    });
-  
-    res.render('favourites.ejs', {adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray});
-  });
-});
 
 app.get('/signup', (req, res) => {
   res.render('signup.ejs');
@@ -392,16 +388,19 @@ app.get('/profile', (req, res) => {
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-  const getAccountDetails = async () => {   
+  const getAccountDetails = async () => {
     try {
       const userMongo = await collection.findOne(
-        { "_id" : new ObjectId(userIdSession) }
+        { "_id": new ObjectId(userIdSession) }
+
       );
       const pictureFilename = userMongo.fileName
       const username = userMongo.username
       const genres = userMongo.genre
       const rating = userMongo.rating
-      return { pictureFilename, username, genres, rating};
+      
+      return { pictureFilename, username, genres, rating };
+      
       // Continue with your code logic here
     } catch (error) {
       // Handle the error
@@ -409,10 +408,11 @@ app.get('/profile', (req, res) => {
     }
   }
 
-getAccountDetails().then(({pictureFilename, username, genres, rating}) => {
-  res.render('profile.ejs', {pictureFilename, username, genres, rating});
-}
-)
+  getAccountDetails().then(({ pictureFilename, username, genres, rating }) => {
+    res.render('profile.ejs', { pictureFilename, username, genres, rating });
+  }
+  )
+
   console.log(req.session.users);
 });
 
@@ -421,16 +421,19 @@ app.get('/profile/settings', (req, res) => {
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-  const getAccountDetails = async () => {   
+  const getAccountDetails = async () => {
     try {
       const userMongo = await collection.findOne(
-        { "_id" : new ObjectId(userIdSession) }
+        { "_id": new ObjectId(userIdSession) }
+        
       );
       const pictureFilename = userMongo.fileName
       const username = userMongo.username
       const genres = userMongo.genre
       const rating = userMongo.rating
-      return { pictureFilename, username, genres, rating};
+
+      return { pictureFilename, username, genres, rating };
+
       // Continue with your code logic here
     } catch (error) {
       // Handle the error
@@ -438,10 +441,11 @@ app.get('/profile/settings', (req, res) => {
     }
   }
 
-getAccountDetails().then(({pictureFilename, username, genres, rating}) => {
-  res.render('profile-settings.ejs', {pictureFilename, username, genres, rating});
-}
-)
+  getAccountDetails().then(({ pictureFilename, username, genres, rating }) => {
+    res.render('profile-settings.ejs', { pictureFilename, username, genres, rating });
+  }
+  )
+
   console.log(req.session.users);
 });
 
@@ -454,7 +458,8 @@ app.post('/profile-picture', upload.single('avatar'), async function (req, res, 
 
   try {
     // Retrieve existing profile data
-    const existingProfile = await collection.findOne({ "_id" : new ObjectId(req.session.users) });
+    const existingProfile = await collection.findOne({ "_id": new ObjectId(req.session.users) });
+
 
     // Update profile data
     const updateData = {
@@ -484,7 +489,7 @@ app.post('/profile-picture', upload.single('avatar'), async function (req, res, 
 
     // Update the profile in the database
     await collection.findOneAndUpdate(
-      { "_id" : new ObjectId(req.session.users) },
+      { "_id": new ObjectId(req.session.users) },
       { $set: updateData }
     );
     res.send("Profile updated");
@@ -493,9 +498,6 @@ app.post('/profile-picture', upload.single('avatar'), async function (req, res, 
     res.status(500).send('Server error');
   }
 });
-
-
-
 
 
 app.get('/movie/:name', async (req, res) => {
@@ -802,7 +804,7 @@ app.post('/favorite-deleted', (req, res) => {
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-  const favDeleteFunction = async () => {   
+  const favDeleteFunction = async () => {
     try {
       const userMongo = await collection.findOne(
         { "_id": new ObjectId(userIdSession) }
@@ -820,9 +822,9 @@ app.post('/favorite-deleted', (req, res) => {
     }
   }
 
-favDeleteFunction()
+  favDeleteFunction()
 
-res.render('delete-confirmation.ejs', { initialDetailPageURL: req.headers.referer })
+  res.render('delete-confirmation.ejs', { initialDetailPageURL: req.headers.referer })
 }
 )
 
@@ -833,11 +835,11 @@ app.post('/favorite-added', (req, res) => {
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-  const favAddFunction = async () => {   
+  const favAddFunction = async () => {
     try {
       const userMongo = await collection.findOneAndUpdate(
-        { "_id" : new ObjectId(userIdSession) },
-        { $push: { "favorites" : movieIdDetail } },
+        { "_id": new ObjectId(userIdSession) },
+        { $push: { "favorites": movieIdDetail } },
         { returnOriginal: false } // Ensure to return the updated document
       );
       // Continue with your code logic here
@@ -847,9 +849,9 @@ app.post('/favorite-added', (req, res) => {
     }
   }
 
-favAddFunction()
+  favAddFunction()
 
-res.render('add-confirmation.ejs', { initialDetailPageURL: req.headers.referer })
+  res.render('add-confirmation.ejs', { initialDetailPageURL: req.headers.referer })
 })
 
 
@@ -885,8 +887,8 @@ app.post('/new-user', async (req, res) => {
         username: xss(req.body.username),
         password: xss(hashedPassword),
 
-// adult, genres, release date, average vote count 
-        genre: req.body.genre, 
+        // adult, genres, release date, average vote count 
+        genre: req.body.genre,
         rating: req.body.rating,
 
         creationDate: new Date(),
@@ -938,7 +940,7 @@ app.get('/filmlijst', (req, res) => {
 
 
 // WORKING ON SEARCH BAR
-  
+
 app.get('/search', (req, res) => {
   const query = req.query.q;
   const apiKey = process.env.API_KEY;
@@ -965,29 +967,29 @@ app.get('/search', (req, res) => {
       const idArray = []
       const originalTitleArray = []
       const posterPathArray = []
-    
+
       movies.forEach(movie => {
         const movieAdult = movie.adult
         adultArray.push(movieAdult)
-    
+
         const movieBackdropPath = movie.backdrop_path
         backdropPathArray.push(movieBackdropPath)
-    
+
         const movieGenreId = movie.genre_ids
         movieGenreIds.push(movieGenreId)
-    
+
         const movieId = movie.id
         idArray.push(movieId)
-    
+
         const originalTitle = movie.original_title
         originalTitleArray.push(originalTitle)
 
         const moviePosterPath = movie.poster_path
         posterPathArray.push(moviePosterPath)
-  
+
 
       });
-      res.render('searchresults.ejs', {adultArray, backdropPathArray, movieGenreIds, idArray, originalTitleArray, posterPathArray})
+      res.render('searchresults.ejs', { adultArray, backdropPathArray, movieGenreIds, idArray, originalTitleArray, posterPathArray })
 
     })
     .catch(err => {
@@ -996,16 +998,16 @@ app.get('/search', (req, res) => {
     });
 });
 
-  app.use((req, res) => {
-    console.error('404 error at URL: ' + req.url);
-    res.status(404).send('404 error at URL: ' + req.url);
-  });
-  
-  app.use((err, req, res) => {
-    console.error(err.stack);
-    res.status(500).send('500: server error');
-  });
-  
-  app.listen(process.env.PORT, () => {
-    console.log(`Server is listening at port ${process.env.PORT}`);
-  });
+app.use((req, res) => {
+  console.error('404 error at URL: ' + req.url);
+  res.status(404).send('404 error at URL: ' + req.url);
+});
+
+app.use((err, req, res) => {
+  console.error(err.stack);
+  res.status(500).send('500: server error');
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server is listening at port ${process.env.PORT}`);
+});
