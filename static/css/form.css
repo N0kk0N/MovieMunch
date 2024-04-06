@@ -58,16 +58,6 @@ label input {
   letter-spacing: .05em;
   padding: .1rem 1.3rem;
   text-align: center;
-    width: 15rem;
-}
-
-select {
-  width: 240px;
-  font-size: 18px;
-  min-height: 40px;
-  padding: 5px 20px;
-  background-color: transparent;
-  color: #ffffff;
 }
 
 button:hover,
@@ -96,7 +86,6 @@ label.label-heading {
   text-shadow: 0 0  6px rgba(0, 0, 0, 0.8)
 }
 
-
 .input-btn {
   margin-top: 2rem;
   color: #ffffff;
@@ -123,6 +112,25 @@ label.label-heading {
   -moz-transition: all 0.4s;
   transition: all 0.4s;
 }
+
+/* Genre Checkboxxes */
+.genre-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  color: white;
+}
+
+.genre-grid li {
+  margin: 4px;
+  background-color: #000;
+  border-radius: 4px;
+  border: 1px solid #fff;
+  overflow: hidden;
+  justify-content: center;
+}
+
+
 
 
 

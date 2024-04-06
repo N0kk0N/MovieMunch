@@ -10,8 +10,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
+
 <body>
-  <form >
+  <form>
     <label id="username" class="register is-visible">
       <label class="label-heading" for="username">What's will be your username?</label>
       <input name="username" type="text" placeholder="username" required />
@@ -28,7 +29,6 @@
     <label id="email" class="register">
       <label class="label-heading" for="email">Your email address</label>
       <input type="email" name="email" placeholder="email" required />
-      <br>
       <div class="input-btn">
         <button type="button" class="form-button" value="next" onclick="next('email','password')">OK</button>
         Press <strong>Enter ↵</strong>
@@ -41,7 +41,6 @@
     <label id="password" class="register">
       <label class="label-heading" for="password">Password</label>
       <input type="password" name="password" placeholder="password" required />
-      <br>
       <div class="input-btn">
         <button type="button" class="form-button" value="next" onclick="next('password','genre')">OK <i
             class="fa fa-check" aria-hidden="true"></i></button>
@@ -54,11 +53,66 @@
     </label>
     <label id="genre" class="register">
       <label class="label-heading" for="genre">What genre's do you like</label>
-      <input type="checkbox" value="1"<span>History</span>
-      <input type="checkbox" value="1"<span>Action</span>
-      <input type="checkbox" value="1"<span>Romantic</span>
-      <input type="checkbox" value="1"<span>Family</span>
-      <br>
+      <!-- Need to make this optimized to pickup all genre's not hardcoded! (for each)-->
+      <ul class="genre-grid">
+        <li>
+          <input type="checkbox" id="action" value="action">
+          <label for="action">Action</label>
+        </li>
+        <li>
+          <input type="checkbox" id="adventure" value="adventure">
+          <label for="adventure">Adventure</label>
+        </li>
+        <li>
+          <input type="checkbox" id="animation" value="animation">
+          <label for="animation">Animation</label>
+        </li>
+        <li>
+          <input type="checkbox" id="comedy" value="comedy">
+          <label for="comedy">Comedy</label>
+        </li>
+        <li>
+          <input type="checkbox" id="crime" value="crime">
+          <label for="crime">Crime</label>
+        </li>
+        <li>
+          <input type="checkbox" id="documentary" value="documentary">
+          <label for="documentary">Documentary</label>
+        </li>
+        <li>
+          <input type="checkbox" id="drama" value="drama">
+          <label for="drama">Drama</label>
+        </li>
+        <li>
+          <input type="checkbox" id="family" value="family">
+          <label for="family">Family</label>
+        </li>
+        <li>
+          <input type="checkbox" id="fantasy" value="fantasy">
+          <label for="fantasy">Fantasy</label>
+        </li>
+        <li>
+          <input type="checkbox" id="history" value="history">
+          <label for="history">History</label>
+        </li>
+        <li>
+          <input type="checkbox" id="horror" value="horror">
+          <label for="horror">Horror</label>
+        </li>
+        <li>
+          <input type="checkbox" id="music" value="music">
+          <label for="music">Music</label>
+        </li>
+        <li>
+          <input type="checkbox" id="mystery" value="mystery">
+          <label for="mystery">Mystery</label>
+        </li>
+        <li>
+          <input type="checkbox" id="romance" value="romance">
+          <label for="romance">Romance</label>
+        </li>
+      </ul>
+
       <div class="input-btn">
         <button type="button" class="form-button" value="next" onclick="next('age','address')">OK <i class="fa fa-check"
             aria-hidden="true"></i></button>
@@ -72,8 +126,15 @@
   </form>
 </body>
 <script>
+document.querySelectorAll('.genre-grid input[type="checkbox"]').forEach((checkbox) => {
+    checkbox.addEventListener('change', (event) => {
+        event.target.nextElementSibling.classList.toggle('checked', checkbox.checked);
+    });
+});
+
   let error = document.getElementById('validate');
   let label = document.getElementsByTagName("label");
+
 
   document.getElementById("username")
     .addEventListener("keyup", function (e) {
@@ -135,6 +196,11 @@
     document.getElementById(from).classList.remove('is-visible');
     document.getElementById(to).classList.add('is-visible');
   }
+
+
 </script>
+
+
+
 
 </html>
