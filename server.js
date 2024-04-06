@@ -504,360 +504,392 @@ app.post('/profile-picture', upload.single('avatar'), async function (req, res, 
 
 
 app.get('/movie/:name', (req, res) => {
-  const movieName = req.params.name;
-  const searchUrl = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
-  const apiKey = process.env.API_KEY;
-  const searchOptions = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${apiKey}`
-    }
-  };
 
-  // Haalt details op van de film (country of origin)
-  fetch(searchUrl, searchOptions)
+  // FUNCTIE FILM ZOEKEN MET NAAM
+
+  const movieQuery = () => {
+    const movieName = req.params.name;
+    const searchUrl = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
+    const apiKey = process.env.API_KEY;
+    const searchOptions = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${apiKey}`
+      }
+    };
+  
+    fetch(searchUrl, searchOptions)
     .then(res => res.json())
     .then(json => {
       if (json.results.length > 0) {
         const movieId = json.results[0].id;
-        const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
-        const movieDetailsOptions = {
-          method: 'GET',
-          headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${apiKey}`
-          }
-        };
+        return movieId
+    }})
+  }
 
-        // Haalt filmposter op
-        fetch(movieDetailsUrl, movieDetailsOptions)
-          .then(res => res.json())
-          .then(json => {
-            const title = json.title;
-            const movieId = json.id;
-            const overview = json.overview;
-            const imageURL = json.poster_path;
-            const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`;
-            const backdropURL = json.backdrop_path;
-            const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`;
-            const originalLanguage = json.original_language;
+  console.log(movieQuery())
+    
+  // FUNCTIE FILM DETAILS OPHALEN --> OPSLAAN VAN ORIGIN COUNTRY
 
-            // Haal land van herkomst op
-            const countryOfOrigin = json.production_countries[0].name; // Neem het eerste land in de lijst
-            console.log('Film komt uit:', countryOfOrigin);
-            console.log('Film informatie:', { title, overview, posterSrc, backdropSrc });
+  // FUNCTIE OMZETTEN IN CUISINE
 
-            // Roep de functie aan om een recept op te halen uit hetzelfde land
-            console.log(fetchRandomRecipe(countryOfOrigin));
+  // CUISINE INVULLEN EN RECEPTEN IN ARRAY's ZETTEN
+
+  // RES.RENDER MET GEGEVENS
+
+//   const movieName = req.params.name;
+//   const searchUrl = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
+//   const apiKey = process.env.API_KEY;
+//   const searchOptions = {
+//     method: 'GET',
+//     headers: {
+//       accept: 'application/json',
+//       Authorization: `Bearer ${apiKey}`
+//     }
+//   };
+
+//   // Haalt details op van de film (country of origin)
+//   fetch(searchUrl, searchOptions)
+//     .then(res => res.json())
+//     .then(json => {
+//       if (json.results.length > 0) {
+//         const movieId = json.results[0].id;
+//         const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
+        
+//         const movieDetailsOptions = {
+//           method: 'GET',
+//           headers: {
+//             accept: 'application/json',
+//             Authorization: `Bearer ${apiKey}`
+//           }
+//         };
+
+//         // Haalt filmposter op
+//         fetch(movieDetailsUrl, movieDetailsOptions)
+//           .then(res => res.json())
+//           .then(json => {
+//             const title = json.title;
+//             const movieId = json.id;
+//             const overview = json.overview;
+//             const imageURL = json.poster_path;
+//             const posterSrc = `https://image.tmdb.org/t/p/w500${imageURL}`;
+//             const backdropURL = json.backdrop_path;
+//             const backdropSrc = `https://image.tmdb.org/t/p/w500${backdropURL}`;
+//             const originalLanguage = json.original_language;
+
+//             // Haal land van herkomst op
+//             const countryOfOrigin = json.production_countries[0].name; // Neem het eerste land in de lijst
+//             console.log('Film komt uit:', countryOfOrigin);
+//             console.log('Film informatie:', { title, overview, posterSrc, backdropSrc });
+
+//             // Roep de functie aan om een recept op te halen uit hetzelfde land
+//             console.log(fetchRandomRecipe(countryOfOrigin));
           
 
-// // check if movie is in favorites
-const userIdSession = req.session.users
-console.log(`Gebruikers ID = ${userIdSession}`)
-console.log(`Film ID = ${movieId}`)
-const db = client.db(process.env.MONGODB_NAME);
-const collection = db.collection(process.env.MONGODB_COLLECTION);
+// // // check if movie is in favorites
+// const userIdSession = req.session.users
+// console.log(`Gebruikers ID = ${userIdSession}`)
+// console.log(`Film ID = ${movieId}`)
+// const db = client.db(process.env.MONGODB_NAME);
+// const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-const favFunction = async () => {   
-  try {
-    const userMongo = await collection.findOne(
-      { "_id": new ObjectId(userIdSession) }
-    );
-    const favoritesArray = userMongo.favorites;
-    const cleanArray = favoritesArray.map(str => parseInt(str, 10));
-    console.log(cleanArray)
-    console.log(movieId)
-    let inList
-
-
-    if (cleanArray.includes(movieId)) {
-      inList = true
-      res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName, inList});
-    }
-    else{
-      inList = false
-      res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName, inList});
-    }
-  } catch (error) {
-    // Handle the error
-    console.error("Failed to retrieve favorites:", error);
-  }
-}
-
-favFunction()
+// const favFunction = async () => {   
+//   try {
+//     const userMongo = await collection.findOne(
+//       { "_id": new ObjectId(userIdSession) }
+//     );
+//     const favoritesArray = userMongo.favorites;
+//     const cleanArray = favoritesArray.map(str => parseInt(str, 10));
+//     console.log(cleanArray)
+//     console.log(movieId)
+//     let inList
 
 
-          })
-          .catch(err => console.error('Error fetching movie details:', err));
-      } else {
-        res.status(404).send('Movie not found');
-      }
-    })
-});
+//     if (cleanArray.includes(movieId)) {
+//       inList = true
+//       res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName, inList});
+//     }
+//     else{
+//       inList = false
+//       res.render('shrek.ejs', { title, overview, posterSrc, backdropSrc, movieId, movieName, inList});
+//     }
+//   } catch (error) {
+//     // Handle the error
+//     console.error("Failed to retrieve favorites:", error);
+//   }
+// }
+
+// favFunction()
+
+
+//           })
+//           .catch(err => console.error('Error fetching movie details:', err));
+//       } else {
+//         res.status(404).send('Movie not found');
+//       }
+//     })
+// });
 
 
 
-// HAALT RECEPT OP UIT HETZELFDE LAND ALS DE FILM
-const fetchRandomRecipe = (countryOfOrigin) => {
+// // HAALT RECEPT OP UIT HETZELFDE LAND ALS DE FILM
+// const fetchRandomRecipe = (countryOfOrigin) => {
 
-//Testfunctie
-let cuisineFunction = (country) => {
-  const cuisines = {
-    "Algeria": "African",
-    "Angola": "African",
-    "Benin": "African",
-    "Botswana": "African",
-    "Burkina Faso": "African",
-    "Burundi": "African",
-    "Central African Republic": "African",
-    "Comoros": "African",
-    "Congo": "African",
-    "Djibouti": "African",
-    "Equatorial Guinea": "African",
-    "Eritrea": "African",
-    "Ethiopia": "African",
-    "Gabon": "African",
-    "Gambia": "African",
-    "Ghana": "African",
-    "Guinea": "African",
-    "Guinea-Bissau": "African",
-    "Ivory Coast": "African",
-    "Cape Verde": "African",
-    "Cameroon": "African",
-    "Kenya": "African",
-    "Lesotho": "African",
-    "Liberia": "African",
-    "Madagascar": "African",
-    "Malawi": "African",
-    "Mali": "African",
-    "Mauritania": "African",
-    "Mauritius": "African",
-    "Mozambique": "African",
-    "Namibia": "African",
-    "Niger": "African",
-    "Nigeria": "African",
-    "Uganda": "African",
-    "Rwanda": "African",
-    "Sao Tome and Principe": "African",
-    "Senegal": "African",
-    "Seychelles": "African",
-    "Sierra Leone": "African",
-    "Somalia": "African",
-    "Sudan": "African",
-    "South Africa": "African",
-    "South Sudan": "African",
-    "Swaziland": "African",
-    "Tanzania": "African",
-    "Togo": "African",
-    "Chad": "African",
-    "Zambia": "African",
-    "Zimbabwe": "African",
-    "Indonesia": "Asian",
-    "Pakistan": "Asian",
-    "Bangladesh": "Asian",
-    "Philippines": "Asian",
-    "Afghanistan": "Asian",
-    "Saudi Arabia": "Asian",
-    "Uzbekistan": "Asian",
-    "Malaysia": "Asian",
-    "Yemen": "Asian",
-    "Nepal": "Asian",
-    "Sri Lanka": "Asian",
-    "Kazakhstan": "Asian",
-    "Syria": "Asian",
-    "Cambodia": "Asian",
-    "Jordan": "Asian",
-    "Azerbaijan": "Asian",
-    "United Arab Emirates": "Asian",
-    "Tajikistan": "Asian",
-    "Laos": "Asian",
-    "Kyrgyzstan": "Asian",
-    "Turkmenistan": "Asian",
-    "Singapore": "Asian",
-    "Oman": "Asian",
-    "State of Palestine": "Asian",
-    "Kuwait": "Asian",
-    "Georgia": "Asian",
-    "Mongolia": "Asian",
-    "Armenia": "Asian",
-    "Qatar": "Asian",
-    "Bahrain": "Asian",
-    "Timor-Leste": "Asian",
-    "United States of America": "American",
-    "United Kingdom": "British",
-    "Antigua and Barbuda": "Caribbean",
-    "The Bahamas": "Caribbean",
-    "Barbados": "caribbean",
-    "Cuba": "caribbean",
-    "Curaçao": "caribbean",
-    "Dominica": "caribbean",
-    "Dominican Republic": "caribbean",
-    "Grenada": "Caribbean",
-    "Haiti": "caribbean",
-    "Jamaica": "Caribbean",
-    "Saint Kitts and Nevis": "Caribbean",
-    "Saint Lucia": "Caribbean",
-    "Saint Vincent and the Grenadines": "Caribbean",
-    "Trinidad and Tobago": "Caribbean",
-    "China": "CHinese",
-    "Belarus": "Eastern European",
-    "Bulgaria": "Eastern European",
-    "Czech Republic": "Eastern European",
-    "Estonia": "Eastern European",
-    "Hungary": "Eastern European",
-    "Latvia": "Eastern European",
-    "Lithuania": "Eastern European",
-    "Moldova": "Eastern European",
-    "Poland": "Eastern European",
-    "Romania": "Eastern European",
-    "Russia": "Eastern European",
-    "Slovakia": "Eastern European",
-    "Ukraine": "Eastern European",
-    "Andorra": "European",
-    "Austria": "European",
-    "Belgium": "European",
-    "Denmark": "European",
-    "Finland": "European",
-    "Iceland": "European",
-    "Luxembourg": "European",
-    "Malta": "European",
-    "Monaco": "European",
-    "Netherlands": "European",
-    "Norway": "European",
-    "Portugal": "European",
-    "San Marino": "European",
-    "Sweden": "European",
-    "Switzerland": "European",
-    "Vatican City": "European",
-    "France": "French",
-    "Germany": "German",
-    "Greece": "Greek",
-    "India": "Indian",
-    "Ireland": "Irish",
-    "Italy": "Italian",
-    "Japan": "Japanese",
-    "Israel": "Jewish",
-    "South Korea": "Korean",
-    "North Korea": "Korean",
-    "Argentina": "Latin American",
-    "Belize": "Latin American",
-    "Bolivia": "Latin American",
-    "Brazil": "Latin American",
-    "Chile": "Latin American",
-    "Colombia": "Latin American",
-    "Costa Rica": "Latin American",
-    "Ecuador": "Latin American",
-    "El Salvador": "Latin American",
-    "Guatemala": "Latin American",
-    "Guyana": "Latin American",
-    "Honduras": "Latin American",
-    "Mexico": "Latin American",
-    "Nicaragua": "Latin American",
-    "Panama": "Latin American",
-    "Paraguay": "Latin American",
-    "Peru": "Latin American",
-    "Suriname": "Latin American",
-    "Uruguay": "Latin American",
-    "Venezuela": "Latin American"
-  };
+// //Testfunctie
+// let cuisineFunction = (country) => {
+//   const cuisines = {
+//     "Algeria": "African",
+//     "Angola": "African",
+//     "Benin": "African",
+//     "Botswana": "African",
+//     "Burkina Faso": "African",
+//     "Burundi": "African",
+//     "Central African Republic": "African",
+//     "Comoros": "African",
+//     "Congo": "African",
+//     "Djibouti": "African",
+//     "Equatorial Guinea": "African",
+//     "Eritrea": "African",
+//     "Ethiopia": "African",
+//     "Gabon": "African",
+//     "Gambia": "African",
+//     "Ghana": "African",
+//     "Guinea": "African",
+//     "Guinea-Bissau": "African",
+//     "Ivory Coast": "African",
+//     "Cape Verde": "African",
+//     "Cameroon": "African",
+//     "Kenya": "African",
+//     "Lesotho": "African",
+//     "Liberia": "African",
+//     "Madagascar": "African",
+//     "Malawi": "African",
+//     "Mali": "African",
+//     "Mauritania": "African",
+//     "Mauritius": "African",
+//     "Mozambique": "African",
+//     "Namibia": "African",
+//     "Niger": "African",
+//     "Nigeria": "African",
+//     "Uganda": "African",
+//     "Rwanda": "African",
+//     "Sao Tome and Principe": "African",
+//     "Senegal": "African",
+//     "Seychelles": "African",
+//     "Sierra Leone": "African",
+//     "Somalia": "African",
+//     "Sudan": "African",
+//     "South Africa": "African",
+//     "South Sudan": "African",
+//     "Swaziland": "African",
+//     "Tanzania": "African",
+//     "Togo": "African",
+//     "Chad": "African",
+//     "Zambia": "African",
+//     "Zimbabwe": "African",
+//     "Indonesia": "Asian",
+//     "Pakistan": "Asian",
+//     "Bangladesh": "Asian",
+//     "Philippines": "Asian",
+//     "Afghanistan": "Asian",
+//     "Saudi Arabia": "Asian",
+//     "Uzbekistan": "Asian",
+//     "Malaysia": "Asian",
+//     "Yemen": "Asian",
+//     "Nepal": "Asian",
+//     "Sri Lanka": "Asian",
+//     "Kazakhstan": "Asian",
+//     "Syria": "Asian",
+//     "Cambodia": "Asian",
+//     "Jordan": "Asian",
+//     "Azerbaijan": "Asian",
+//     "United Arab Emirates": "Asian",
+//     "Tajikistan": "Asian",
+//     "Laos": "Asian",
+//     "Kyrgyzstan": "Asian",
+//     "Turkmenistan": "Asian",
+//     "Singapore": "Asian",
+//     "Oman": "Asian",
+//     "State of Palestine": "Asian",
+//     "Kuwait": "Asian",
+//     "Georgia": "Asian",
+//     "Mongolia": "Asian",
+//     "Armenia": "Asian",
+//     "Qatar": "Asian",
+//     "Bahrain": "Asian",
+//     "Timor-Leste": "Asian",
+//     "United States of America": "American",
+//     "United Kingdom": "British",
+//     "Antigua and Barbuda": "Caribbean",
+//     "The Bahamas": "Caribbean",
+//     "Barbados": "caribbean",
+//     "Cuba": "caribbean",
+//     "Curaçao": "caribbean",
+//     "Dominica": "caribbean",
+//     "Dominican Republic": "caribbean",
+//     "Grenada": "Caribbean",
+//     "Haiti": "caribbean",
+//     "Jamaica": "Caribbean",
+//     "Saint Kitts and Nevis": "Caribbean",
+//     "Saint Lucia": "Caribbean",
+//     "Saint Vincent and the Grenadines": "Caribbean",
+//     "Trinidad and Tobago": "Caribbean",
+//     "China": "CHinese",
+//     "Belarus": "Eastern European",
+//     "Bulgaria": "Eastern European",
+//     "Czech Republic": "Eastern European",
+//     "Estonia": "Eastern European",
+//     "Hungary": "Eastern European",
+//     "Latvia": "Eastern European",
+//     "Lithuania": "Eastern European",
+//     "Moldova": "Eastern European",
+//     "Poland": "Eastern European",
+//     "Romania": "Eastern European",
+//     "Russia": "Eastern European",
+//     "Slovakia": "Eastern European",
+//     "Ukraine": "Eastern European",
+//     "Andorra": "European",
+//     "Austria": "European",
+//     "Belgium": "European",
+//     "Denmark": "European",
+//     "Finland": "European",
+//     "Iceland": "European",
+//     "Luxembourg": "European",
+//     "Malta": "European",
+//     "Monaco": "European",
+//     "Netherlands": "European",
+//     "Norway": "European",
+//     "Portugal": "European",
+//     "San Marino": "European",
+//     "Sweden": "European",
+//     "Switzerland": "European",
+//     "Vatican City": "European",
+//     "France": "French",
+//     "Germany": "German",
+//     "Greece": "Greek",
+//     "India": "Indian",
+//     "Ireland": "Irish",
+//     "Italy": "Italian",
+//     "Japan": "Japanese",
+//     "Israel": "Jewish",
+//     "South Korea": "Korean",
+//     "North Korea": "Korean",
+//     "Argentina": "Latin American",
+//     "Belize": "Latin American",
+//     "Bolivia": "Latin American",
+//     "Brazil": "Latin American",
+//     "Chile": "Latin American",
+//     "Colombia": "Latin American",
+//     "Costa Rica": "Latin American",
+//     "Ecuador": "Latin American",
+//     "El Salvador": "Latin American",
+//     "Guatemala": "Latin American",
+//     "Guyana": "Latin American",
+//     "Honduras": "Latin American",
+//     "Mexico": "Latin American",
+//     "Nicaragua": "Latin American",
+//     "Panama": "Latin American",
+//     "Paraguay": "Latin American",
+//     "Peru": "Latin American",
+//     "Suriname": "Latin American",
+//     "Uruguay": "Latin American",
+//     "Venezuela": "Latin American"
+//   };
 
-  return cuisines[country] || "Country of origin not found";
-}
-
-
-// Voorbeeldgebruik
-
-const cuisineOfOrigin = cuisineFunction(countryOfOrigin);
-console.log(`Ik ga zoeken naar een recept uit de cuisine ${cuisineOfOrigin}`);
-
-const apiKey = process.env.FOOD_API_KEY;
-const numRecipes = 2; // Aantal recepten dat je wilt ophalen
-const randomOffset = Math.floor(Math.random() * 100); // Genereer een willekeurige offset waarde
-
-const apiUrlFood = `https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisineOfOrigin}&number=${numRecipes}&offset=${randomOffset}&apiKey=${apiKey}`;
-
-let ingredientArray = [];
-let stepArray = [];
+//   return cuisines[country] || "Country of origin not found";
+// }
 
 
-fetch(apiUrlFood)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`Network response was not ok: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => {
-    // Array maken om de recept-ID's op te slaan
-    const recipeIds = data.results.map(recipe => recipe.id);
+// // Voorbeeldgebruik
+
+// const cuisineOfOrigin = cuisineFunction(countryOfOrigin);
+// console.log(`Ik ga zoeken naar een recept uit de cuisine ${cuisineOfOrigin}`);
+
+// const apiKey = process.env.FOOD_API_KEY;
+// const numRecipes = 2; // Aantal recepten dat je wilt ophalen
+// const randomOffset = Math.floor(Math.random() * 100); // Genereer een willekeurige offset waarde
+
+// const apiUrlFood = `https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisineOfOrigin}&number=${numRecipes}&offset=${randomOffset}&apiKey=${apiKey}`;
+
+// let ingredientArray = [];
+// let stepArray = [];
+
+
+// fetch(apiUrlFood)
+//   .then(response => {
+//     if (!response.ok) {
+//       throw new Error(`Network response was not ok: ${response.status}`);
+//     }
+//     return response.json();
+//   })
+//   .then(data => {
+//     // Array maken om de recept-ID's op te slaan
+//     const recipeIds = data.results.map(recipe => recipe.id);
     
-    // Voor elk recept-ID de uitgebreide informatie en stapsgewijze instructies ophalen
-    recipeIds.forEach(recipeId => {
-      // Fetch-request voor de uitgebreide informatie
-      const recipeInfoUrl = `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKey}`;
-      fetch(recipeInfoUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Netwerk response was niet ok');
-          }
-          return response.json();
-        })
-        .then(recipeData => {
-          // Titel van het gerecht
-          const recipeTitle = recipeData.title;
-          // Alleen de lijst met ingrediënten loggen
-          const ingredients = recipeData.extendedIngredients.map(ingredient => ingredient.original)
-          console.log(`Ingrediënten voor recept "${recipeTitle}":`)
+//     // Voor elk recept-ID de uitgebreide informatie en stapsgewijze instructies ophalen
+//     recipeIds.forEach(recipeId => {
+//       // Fetch-request voor de uitgebreide informatie
+//       const recipeInfoUrl = `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKey}`;
+//       fetch(recipeInfoUrl)
+//         .then(response => {
+//           if (!response.ok) {
+//             throw new Error('Netwerk response was niet ok');
+//           }
+//           return response.json();
+//         })
+//         .then(recipeData => {
+//           // Titel van het gerecht
+//           const recipeTitle = recipeData.title;
+//           // Alleen de lijst met ingrediënten loggen
+//           const ingredients = recipeData.extendedIngredients.map(ingredient => ingredient.original)
+//           console.log(`Ingrediënten voor recept "${recipeTitle}":`)
 
-          ingredients.forEach(ingredient => {
-            ingredientArray.push(ingredient)
-          })
-          console.log(ingredientArray)
-          // Fetch-request voor de stapsgewijze instructies
-          const instructionsUrl = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?apiKey=${apiKey}`;
-          fetch(instructionsUrl)
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Netwerk response was niet ok');
-              }
-              return response.json();
-            })
-            .then(instructionsData => {
-              // Controleren of er instructies zijn
-              if (instructionsData.length > 0 && instructionsData[0].steps.length > 0) {
-                console.log(`Stapsgewijze instructies voor recept "${recipeTitle}":`);
-                instructionsData[0].steps.forEach(step => {
-                  // Alleen stappen met nummers loggen
-                  if (step.number) {
-                    stepArray.push(`${step.number}. ${step.step}`)
-                  }
-                });
-                console.log(stepArray)
-              } else {
-                console.log(`Geen stapsgewijze instructies beschikbaar voor recept "${recipeTitle}".`);
-              }
-            })
-            .catch(error => {
-              console.error('Er is een fout opgetreden bij het ophalen van de stapsgewijze instructies:', error);
-            });
-        })
-        .catch(error => {
-          console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
-        });
-    });
-  })
-  .then(() => {
-    // Nadat alle fetches zijn voltooid, roep res.render aan en geef de arrays door
-    res.render('template.ejs', { ingredients: ingredientArray, steps: stepArray });
-  })
-  .catch(error => {
-    console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
-  });
-}
-
-
-
+//           ingredients.forEach(ingredient => {
+//             ingredientArray.push(ingredient)
+//           })
+//           console.log(ingredientArray)
+//           // Fetch-request voor de stapsgewijze instructies
+//           const instructionsUrl = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?apiKey=${apiKey}`;
+//           fetch(instructionsUrl)
+//             .then(response => {
+//               if (!response.ok) {
+//                 throw new Error('Netwerk response was niet ok');
+//               }
+//               return response.json();
+//             })
+//             .then(instructionsData => {
+//               // Controleren of er instructies zijn
+//               if (instructionsData.length > 0 && instructionsData[0].steps.length > 0) {
+//                 console.log(`Stapsgewijze instructies voor recept "${recipeTitle}":`);
+//                 instructionsData[0].steps.forEach(step => {
+//                   // Alleen stappen met nummers loggen
+//                   if (step.number) {
+//                     stepArray.push(`${step.number}. ${step.step}`)
+//                   }
+//                 });
+//                 console.log(stepArray)
+//               } else {
+//                 console.log(`Geen stapsgewijze instructies beschikbaar voor recept "${recipeTitle}".`);
+//               }
+//             })
+//             .catch(error => {
+//               console.error('Er is een fout opgetreden bij het ophalen van de stapsgewijze instructies:', error);
+//             });
+//         })
+//         .catch(error => {
+//           console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+//         });
+//     });
+//   })
+//   .then(() => {
+//     // Nadat alle fetches zijn voltooid, roep res.render aan en geef de arrays door
+//     res.render('template.ejs', { ingredients: ingredientArray, steps: stepArray });
+//   })
+//   .catch(error => {
+//     console.error('Er is een fout opgetreden bij het ophalen van de receptinformatie:', error);
+//   });
+// }
 
 
 
@@ -1095,3 +1127,4 @@ app.get('/search', (req, res) => {
   app.listen(process.env.PORT, () => {
     console.log(`Server is listening at port ${process.env.PORT}`);
   });
+})
