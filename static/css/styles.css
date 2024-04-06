@@ -328,7 +328,7 @@ body{
     padding-bottom: 6em;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
-    background-color: white
+    background-color: white;
     z-index: 150;
     top: 38%;
   }
