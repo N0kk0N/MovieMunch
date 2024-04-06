@@ -9,6 +9,13 @@
 </head>
 <body>
     <%- include('nav') %>
+        <section class="overview-all-film-hero">
+            <img src="https://image.tmdb.org/t/p/w500<%= backdropPathArray[0] %>">
+            <div class="overlay-content-all">
+                <h2><%= titleArray[0] %></h2>
+                <button>Watch now</button>
+            </div>
+        </section>
     <main class="overview-all">
     <h2>Action Movies</h2>
     <section class="gsap-wrapper">
@@ -30,7 +37,7 @@
             <% } %>
         <% } %>
     </section>
-    <h2>Drama</h2>
+    <h2>Drama movies</h2>
     <section class="gsap-wrapper">
         <% for(let i = 0; i < posterPathArray.length; i++) { %>
             <% if(genreIdsArray[i].includes(18)) { %>
@@ -40,7 +47,7 @@
             <% } %>
         <% } %>
     </section>
-    <h2>This is comedy</h2>
+    <h2>Horror time</h2>
     <section class="gsap-wrapper">
         <% for(let i = 0; i < posterPathArray.length; i++) { %>
             <% if(genreIdsArray[i].includes(27)) { %>
