@@ -397,9 +397,35 @@ app.get('/profile', (req, res) => {
       const pictureFilename = userMongo.fileName
       const username = userMongo.username
       const genres = userMongo.genre
+      const genresCleanArray = []
+      const genreMap = {
+        28: 'Action',
+        12: 'Adventure',
+        16: 'Animation',
+        35: 'Comedy',
+        80: 'Crime',
+        99: 'Documentary',
+        18: 'Drama',
+        10751: 'Family',
+        14: 'Fantasy',
+        36: 'History',
+        27: 'Horror',
+        10402: 'Music',
+        9648: 'Mystery',
+        10749: 'Romance',
+        878: 'Science Fiction',
+        10770: 'TV Movie',
+        53: 'Thriller',
+        10752: 'War',
+        37: 'Western'
+      }
+      genres.forEach(genreNumber => {
+        genresCleanArray.push(genreMap[genreNumber]);
+      });
+
       const rating = userMongo.rating
       
-      return { pictureFilename, username, genres, rating };
+      return { pictureFilename, username, genresCleanArray, rating };
       
       // Continue with your code logic here
     } catch (error) {
@@ -408,8 +434,9 @@ app.get('/profile', (req, res) => {
     }
   }
 
-  getAccountDetails().then(({ pictureFilename, username, genres, rating }) => {
-    res.render('profile.ejs', { pictureFilename, username, genres, rating });
+
+  getAccountDetails().then(({ pictureFilename, username, genresCleanArray, rating }) => {
+    res.render('profile.ejs', { pictureFilename, username, genresCleanArray, rating });
   }
   )
 
