@@ -513,6 +513,33 @@ app.get('/movie/:name', async (req, res) => {
     .then(movies => {
       const requestedMovie = movies.results[0]
       const movieGenres = requestedMovie.genre_ids
+      const movieGenresClean = []
+      const genreMap = {
+        28: 'Action',
+        12: 'Adventure',
+        16: 'Animation',
+        35: 'Comedy',
+        80: 'Crime',
+        99: 'Documentary',
+        18: 'Drama',
+        10751: 'Family',
+        14: 'Fantasy',
+        36: 'History',
+        27: 'Horror',
+        10402: 'Music',
+        9648: 'Mystery',
+        10749: 'Romance',
+        878: 'Science Fiction',
+        10770: 'TV Movie',
+        53: 'Thriller',
+        10752: 'War',
+        37: 'Western'
+      }
+      movieGenres.forEach(genreNumber => {
+        movieGenresClean.push(genreMap[genreNumber]);
+      });
+  
+
       const movieId = requestedMovie.id
       const movieOverview = requestedMovie.overview
       const moviePosterPath = requestedMovie.poster_path
@@ -531,6 +558,7 @@ app.get('/movie/:name', async (req, res) => {
       fetch(url, options)
         .then(res => res.json())
         .then(movieDetails => {
+          const movieRuntime = movieDetails.runtime
           const originCountry = movieDetails.production_countries[0].name
 
             // MAAK HIER DAT DE ORIGIN COUNTRY WORDT OMGEZET IN CUISINE
@@ -764,11 +792,11 @@ app.get('/movie/:name', async (req, res) => {
                           let inList
                           if (cleanArray.includes(movieId)) {
                             inList = true
-                            res.render('shrek.ejs', { movieGenres, movieId, movieOverview, moviePosterPath, movieReleaseDate, movieTitle, inList, recipeTitle, stepNumberArray, stepOverviewArray, ingredientNameArray, ingredientValueArray, ingredientUnitArray});
+                            res.render('filmdescription.ejs', { movieGenres, movieId, movieOverview, moviePosterPath, movieReleaseDate, movieTitle, inList, recipeTitle, stepNumberArray, stepOverviewArray, ingredientNameArray, ingredientValueArray, ingredientUnitArray, movieGenresClean, movieRuntime});
                           }
                           else{
                             inList = false
-                            res.render('shrek.ejs', { movieGenres, movieId, movieOverview, moviePosterPath, movieReleaseDate, movieTitle, inList, recipeTitle, stepNumberArray, stepOverviewArray, ingredientNameArray, ingredientValueArray, ingredientUnitArray});
+                            res.render('filmdescription.ejs', { movieGenres, movieId, movieOverview, moviePosterPath, movieReleaseDate, movieTitle, inList, recipeTitle, stepNumberArray, stepOverviewArray, ingredientNameArray, ingredientValueArray, ingredientUnitArray, movieGenresClean, movieRuntime});
                           }
                         } catch (error) {
                           // Handle the error
@@ -864,12 +892,6 @@ app.get('/logout', (req, res) => {
       res.redirect('/login');
     }
   });
-});
-
-
-// MOETEN DEZE VERWIJDEREN ZODRA HET AF IS!
-app.get('/filmdetail', (req, res) => {
-  res.render('filmdescription.ejs');
 });
 
 // CREATE NEW USER
