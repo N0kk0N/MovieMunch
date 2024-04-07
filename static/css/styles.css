@@ -776,7 +776,7 @@ button:focus {
 }
 
 #validate {
-  color: #;
+  color: #FF673E;
   font-weight: 700;
   text-align: center;
 }
@@ -840,7 +840,6 @@ label.label-heading {
 }
 
 .slider {
-  -webkit-appearance: none;
   width: 100%;
   height: 15px;
   border-radius: 5px;
@@ -871,7 +870,7 @@ label.label-heading {
   border-radius: 50%;
   background: #FF673E;
   cursor: pointer;
-=======
+}
   /* css overviewall page */
 
   .animate-image{
