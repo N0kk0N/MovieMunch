@@ -13,13 +13,14 @@ MovieMunch is een platform waarbij gebruikers film aanbevelingen krijgen met bij
 ## Handleiding
 
 ## Libraries
+1. https://swiperjs.com/
 
 ## Contributors
-- [Robin Elseman](https://github.com/RobinElseman)
-- [Gylianto Monadjat](https://github.com/gylianto)
-- [Tolga Zorlu](https://github.com/TolgaZZ)
-- [Jacco Mols](https://github.com/Jacco12)
-- [Jesse Kaptein](https://github.com/N0kk0N)
+- [Robin Elseman (Backend)](https://github.com/RobinElseman)
+- [Gylianto Monadjat (Frontend)](https://github.com/gylianto)
+- [Tolga Zorlu (Fullstack)](https://github.com/TolgaZZ)
+- [Jacco Mols (Frontend)](https://github.com/Jacco12)
+- [Jesse Kaptein (Backend)](https://github.com/N0kk0N)
 
 ## Versions
 
