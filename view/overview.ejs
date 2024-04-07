@@ -11,20 +11,21 @@
 </head>
 
 <body>
+    <%- include('loader') %>
     <%- include('nav') %>
     <div class="overview">
         <section class="overview-film-hero">
             <img src="https://image.tmdb.org/t/p/w500<%= backdropPathArray[0] %>">
             <div class="overlay-content">
-                <h2><%= titleArray[0] %></h2>
-                <h3><%= genreIdsArray[0].join(' - ') %></h3>
+                <h2 class="reveal-animation delay"><%= titleArray[0] %></h2>
+                <h3 class="reveal-animation delay"><%= genreIdsArray[0].join(' - ') %></h3>
                 <button onclick="window.location.href='/movie/' + '<%= urlTitleArray[0] %>'">Watch now</button>
             </div>
         </section>
         <main class="film-slider-container">
             <section class="film-slider-container-items">
                 <form class="search-form" action="/search" method="get">
-                    <input type="text" name="q" placeholder="Search for films...">
+                    <input type="text" name="q" placeholder="Search for films">
                 </form>
                 <div class="inline-items">
                     <h2>Your picks</h2>

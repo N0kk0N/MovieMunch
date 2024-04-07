@@ -11,15 +11,16 @@
 </head>
 <body>
     <%- include('nav') %>
+    <h2 class="search-results-h2">Your results</h2>
     <main class="search-results">
-    <h2>Your results</h2>
-    <section class="gsap-wrapper">
+    <section class="search-results-grid">
         <% for(let i = 0; i < posterPathArray.length; i++) { %>
             <% if(posterPathArray[i]) { %>
-                <article class="gsap-slide movie-card">
+                <article class="movie-card-search-results">
                     <a href="/movie/<%= urlTitleArray[i] %>">
                         <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="<%= originalTitleArray[i] %>">
                     </a>
+                    <p><%= originalTitleArray[i] %></p>
                 </article>
             <% } %>
         <% } %>

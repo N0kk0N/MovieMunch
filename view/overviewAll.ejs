@@ -12,8 +12,8 @@
         <section class="overview-all-film-hero">
             <img src="https://image.tmdb.org/t/p/w500<%= backdropPathArray[0] %>">
             <div class="overlay-content-all">
-                <h2><%= titleArray[0] %></h2>
-                <button>Watch now</button>
+                <h2 class="reveal-animation"><%= titleArray[0] %></h2>
+                <button onclick="window.location.href='/movie/' + '<%= urlTitleArray[0] %>'">Watch now</button>
             </div>
         </section>
     <main class="overview-all">
