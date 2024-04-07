@@ -37,6 +37,7 @@
                 <% for(let i = 0; i < posterPathArray.length; i++) { %>
                     <article class="gsap-slide movie-card">
                         <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
+                        <a href="/movie/<%= urlTitleArray[i] %>"><%= titleArray[i] %></a>
 
                     </article>
                 <% } %>
