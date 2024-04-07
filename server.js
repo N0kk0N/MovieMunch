@@ -93,7 +93,6 @@ app.get('/overview', (req, res) => {
     37: 'Western'
   };
 
-
   const userIdSession = req.session.users
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
@@ -236,7 +235,6 @@ app.get('/overview/all', (req, res) => {
 
   findGenreFunction().then(({ genreArray, userRating }) => {
 
-    
   // Arrays om gegevens van films op te slaan
   const adultArray = [];
   const backdropPathArray = [];
@@ -421,9 +419,6 @@ app.get('/favourites', (req, res) => {
     });
   }
 })
-
-
-  
 
 app.get('/signup', (req, res) => {
   res.render('signup.ejs');
@@ -996,7 +991,9 @@ app.post('/new-user', async (req, res) => {
         favorites: []
       });
 
-      res.send(`Signed up with ${xss(req.body.username)} and ${xss(req.body.password)} 🗿`);
+      const existingUser = await collection.findOne({ username: xss(req.body.username) });
+      req.session.users = existingUser._id;
+      res.redirect('/overview');
 
     } else {
       res.send('User with this username already exists.');
@@ -1020,7 +1017,7 @@ app.post('/login-confirmation', async (req, res) => {
 
       if (passwordMatch) {
         req.session.users = existingUser._id;
-        res.render('overview.ejs');
+        res.redirect('/overview');
         console.log(req.session.users);
       } else {
         res.send('Invalid password.');
