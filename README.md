@@ -15,7 +15,7 @@ MovieMunch is een platform waarbij gebruikers film aanbevelingen krijgen met bij
 3. Create an account on MongoDB for database. (Or any other suitable database) (https://www.mongodb.com/)
 4. Create an account on TMDB for a movie API key. (https://www.themoviedb.org/)
 5. Create an account on Spoonacular for a recipe API key. (https://spoonacular.com/food-api)
-6. Insert all required information in the .sample-env file.
+6. Insert all required information in the .env-sample file.
 7. Use nodemon in terminal to run MovieMunch on localhost:3000.
 8. Enjoy!
 
