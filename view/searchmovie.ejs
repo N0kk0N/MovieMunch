@@ -1,18 +1,25 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+
+<body>
+    <%- include('nav') %>
+        <main class="search-movie">
         <form class="search-form" action="/search" method="get">
             <input type="text" name="q" placeholder="Search for films...">
         </form>
-        
+        <div class="centered-content">
+            <h2>MovieMunch</h2>
+        </div>
+    </main>
         <script src="" async defer></script>
     </body>
 </html>
