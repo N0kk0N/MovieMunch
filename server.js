@@ -329,7 +329,7 @@ app.get('/overview/all', (req, res) => {
 
   // Start het ophalen van films
   fetchMovies();
-}});
+})}});
 
 app.get('/favourites', (req, res) => {
   if (req.session.users === undefined) {
