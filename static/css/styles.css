@@ -100,6 +100,14 @@ body {
   background-color: blue;
   position: relative;
 }
+
+.container {
+margin-top: -4rem;
+  width: 100vw;
+  background-color: white;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+}
  
 .swiper-container {
   width: 90vw;
@@ -112,6 +120,10 @@ body {
  
 .swiper-slide {
   width: 10em !important;
+}
+
+.swiper-slide.card{
+  position: relative;
 }
  
 .swiper-slide img {
@@ -161,9 +173,6 @@ body {
 .film-slider-container {
   flex-grow: 1;
   padding-top: 30px;
-  background-color: white;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
   z-index: 100;
 }
  
@@ -247,4 +256,26 @@ body {
   font-size: 1em;
   text-decoration: none;
   color: black;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: red; 
+  display: none;
+}
+
+.overlay.visible {
+  display: flex;
+}
+
+.card {
+  position: relative;
 }

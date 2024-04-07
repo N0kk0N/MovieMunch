@@ -17,68 +17,85 @@
             <h1 class="sublogo">MovieMunch</h1>
             <h1 class="logo">MovieMunch</h1>
         </div>
-        <main class="swiper-container swiper film-slider-container">
-            <div class=" mySwiper">
+        <main class="container">
+            <div class=" swiper-container swiper film-slider-container mySwiper">
                 <ul class="swiper-wrapper">
-                    <% for(let i = 0; i < posterPathArray.length; i++) { %>
-                        <li class="swiper-slide">
-                            <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
+                    <% for(let i=0; i < posterPathArray.length; i++) { %>
+                        <li class="swiper-slide card">
+                            <div class="overlay">
+                                <h1>test</h1>
+                            </div>
+                            <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>"
+                                alt="Image <%= i + 1 %>">
+                            
                         </li>
-                    <% } %>
+                        <% } %>
+
                 </ul>
                 <div class="swiper-pagination"></div>
             </div>
             <section class="film-slider-container-items">
                 <div class="inline-items">
                     <h2>Your picks</h2>
-                    <a href="/film/:id">see all</a>
                 </div>
             </section>
             <section class="gsap-wrapper">
-                <% for(let i = 0; i < posterPathArray.length; i++) { %>
+                <% for(let i=0; i < posterPathArray.length; i++) { %>
                     <article class="gsap-slide movie-card">
                         <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
                     </article>
-                <% } %>
+                    <% } %>
             </section>
-        
+
         </main>
         <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
         <script>
-            var mySwiper = new Swiper('.mySwiper', {
-                loop: true,
-                effect: 'coverflow',
-                grabCursor: true,
-                centeredSlides: true,
-                slidesPerView: 'auto',
-                coverflowEffect: {
-                    rotate: 0,
-                    stretch: 88,
-                    depth: 200,
-                    modifier: 1,
-                    slideShadows: false,
-                },
-            })
+       document.addEventListener('DOMContentLoaded', (event) => {
+    console.log('DOM fully loaded and parsed');
 
-            new Swiper('.swiper-wrapper', {
-                slidesPerView: 'auto',
-                freeMode: false,
-                spaceBetween: 5,
-            });
+    var mySwiper = new Swiper('.mySwiper', {
+        loop: true,
+        effect: 'coverflow',
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 'auto',
+        coverflowEffect: {
+            rotate: 0,
+            stretch: 88,
+            depth: 200,
+            modifier: 1,
+            slideShadows: false,
+        },
+        on: {
+            doubleTap: function () {
+                console.log('Slide double-tapped');
+                const overlay = this.clickedSlide.querySelector('.overlay');
+                overlay.classList.toggle('visible');
+                console.log('Overlay visibility toggled');
+            },
+        },
+    });
 
-            const slides = document.querySelectorAll('.gsap-slide');
-            let currentSlide = 0;
-            const slideWidth = slides[0].offsetWidth;
-            const totalSlides = slides.length;
+    new Swiper('.swiper-wrapper', {
+        slidesPerView: 'auto',
+        freeMode: false,
+        spaceBetween: 5,
+    });
 
-            function slideTo(index) {
-                gsap.to('.gsap-wrapper', {
-                    scrollLeft: slideWidth * index,
-                    duration: 1,
-                    ease: 'power1.inOut'
-                });
-                currentSlide = index;
-            }
+    const slides = document.querySelectorAll('.gsap-slide');
+    let currentSlide = 0;
+    const slideWidth = slides[0].offsetWidth;
+    const totalSlides = slides.length;
+
+    function slideTo(index) {
+        gsap.to('.gsap-wrapper', {
+            scrollLeft: slideWidth * index,
+            duration: 1,
+            ease: 'power1.inOut'
+        });
+        currentSlide = index;
+    }
+});
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     </div>
