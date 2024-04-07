@@ -1063,6 +1063,7 @@ app.get('/search', (req, res) => {
       const idArray = []
       const originalTitleArray = []
       const posterPathArray = []
+      const urlTitleArray = []
 
       movies.forEach(movie => {
         const movieAdult = movie.adult
@@ -1083,9 +1084,18 @@ app.get('/search', (req, res) => {
         const moviePosterPath = movie.poster_path
         posterPathArray.push(moviePosterPath)
 
+        const slugifiedTitle = slugify(movie.title, {
+          replacement: '-',  
+          remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
+          lower: true,      // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
+          strict: false,     // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
+          locale: 'en',      // Taalcode voor Engels, maar dit heeft geen invloed op het resultaat
+          trim: true         // Verwijder eventuele extra spaties aan het begin of einde
+        })
+        urlTitleArray.push(slugifiedTitle)
 
       });
-      res.render('searchresults.ejs', { adultArray, backdropPathArray, movieGenreIds, idArray, originalTitleArray, posterPathArray })
+      res.render('searchresults.ejs', { adultArray, backdropPathArray, movieGenreIds, idArray, originalTitleArray, posterPathArray, urlTitleArray})
 
     })
     .catch(err => {
