@@ -799,7 +799,9 @@ app.get('/movie/:name', async (req, res) => {
               "Suriname": "Latin American",
               "Uruguay": "Latin American",
               "Venezuela": "Latin American",
-              "Vietnam": "Vietnamese"
+              "Vietnam": "Vietnamese",
+              "Spain": "Spanish",
+              "Australia": "European"
             }
             if (cuisines.hasOwnProperty(originCountry)) {
               const cuisine = cuisines[originCountry];
