@@ -12,30 +12,18 @@
 </head>
 
 <body class="signup">
-  <form > 
+  <form action="/new-user" method="POST">
     <label id="username" class="register is-visible">
       <label class="label-heading" for="username">What's will be your username?</label>
       <input name="username" type="text" placeholder="username" required />
 
       <div class="input-btn">
-        <button type="button" class="form-button" value="next" onclick="next('username','email')">OK <i
+        <button type="button" class="form-button" value="next" onclick="next('username','password')">OK <i
             class="fa fa-check" aria-hidden="true"></i></button>
         Press <strong>Enter ↵</strong>
       </div>
       <div class="input-btn">
-        <i class="fa fa-arrow-down" style="font-size:24px" onclick="next('username','email')"></i>
-      </div>
-    </label>
-    <label id="email" class="register">
-      <label class="label-heading" for="email">Your email address</label>
-      <input type="email" name="email" placeholder="email" required />
-      <div class="input-btn">
-        <button type="button" class="form-button" value="next" onclick="next('email','password')">OK</button>
-        Press <strong>Enter ↵</strong>
-      </div>
-      <div class="input-btn">
-        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('email', 'username')"></i>
-        <i class="fa fa-arrow-down" style="font-size:2em" onclick="next('email','password')"></i>
+        <i class="fa fa-arrow-down" style="font-size:24px" onclick="next('username','password')"></i>
       </div>
     </label>
     <label id="password" class="register">
@@ -47,7 +35,7 @@
         Press <strong>Enter ↵</strong>
       </div>
       <div class="input-btn">
-        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('password', 'email')"></i>
+        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('password', 'username')"></i>
         <i class="fa fa-arrow-down" style="font-size:2em" onclick="next('password','genre')"></i>
       </div>
     </label>
@@ -56,60 +44,80 @@
       <!-- Need to make this optimized to pickup all genre's not hardcoded! (for each)-->
       <ul class="genre-grid">
         <li>
-          <input type="checkbox" id="action" value="action">
+          <input type="checkbox" id="action" value="28" name="genre">
           <label for="action">Action</label>
         </li>
         <li>
-          <input type="checkbox" id="adventure" value="adventure">
+          <input type="checkbox" id="adventure" value="12" name="genre">
           <label for="adventure">Adventure</label>
         </li>
         <li>
-          <input type="checkbox" id="animation" value="animation">
+          <input type="checkbox" id="animation" value="16" name="genre">
           <label for="animation">Animation</label>
         </li>
         <li>
-          <input type="checkbox" id="comedy" value="comedy">
+          <input type="checkbox" id="comedy" value="35" name="genre">
           <label for="comedy">Comedy</label>
         </li>
         <li>
-          <input type="checkbox" id="crime" value="crime">
+          <input type="checkbox" id="crime" value="80" name="genre">
           <label for="crime">Crime</label>
         </li>
         <li>
-          <input type="checkbox" id="documentary" value="documentary">
+          <input type="checkbox" id="documentary" value="99" name="genre">
           <label for="documentary">Documentary</label>
         </li>
         <li>
-          <input type="checkbox" id="drama" value="drama">
+          <input type="checkbox" id="drama" value="18" name="genre">
           <label for="drama">Drama</label>
         </li>
         <li>
-          <input type="checkbox" id="family" value="family">
+          <input type="checkbox" id="family" value="10751" name="genre">
           <label for="family">Family</label>
         </li>
         <li>
-          <input type="checkbox" id="fantasy" value="fantasy">
+          <input type="checkbox" id="fantasy" value="14" name="genre">
           <label for="fantasy">Fantasy</label>
         </li>
         <li>
-          <input type="checkbox" id="history" value="history">
+          <input type="checkbox" id="history" value="36" name="genre">
           <label for="history">History</label>
         </li>
         <li>
-          <input type="checkbox" id="horror" value="horror">
+          <input type="checkbox" id="horror" value="27" name="genre">
           <label for="horror">Horror</label>
         </li>
         <li>
-          <input type="checkbox" id="music" value="music">
+          <input type="checkbox" id="music" value="10402" name="genre">
           <label for="music">Music</label>
         </li>
         <li>
-          <input type="checkbox" id="mystery" value="mystery">
+          <input type="checkbox" id="mystery" value="9648" name="genre">
           <label for="mystery">Mystery</label>
         </li>
         <li>
-          <input type="checkbox" id="romance" value="romance">
+          <input type="checkbox" id="romance" value="10749" name="genre">
           <label for="romance">Romance</label>
+        </li>
+        <li>
+          <input type="checkbox" id="sciencefiction" value="878" name="genre">
+          <label for="sciencefiction">Science Fiction</label>
+        </li>
+        <li>
+          <input type="checkbox" id="tvmovie" value="10770" name="genre">
+          <label for="tvmovie">TV Movie</label>
+        </li>
+        <li>
+          <input type="checkbox" id="thriller" value="53" name="genre">
+          <label for="thriller">Thriller</label>
+        </li>
+        <li>
+          <input type="checkbox" id="war" value="10752" name="genre">
+          <label for="war">War</label>
+        </li>
+        <li>
+          <input type="checkbox" id="western" value="37" name="genre">
+          <label for="western">Western</label>
         </li>
       </ul>
       <div class="input-btn">
@@ -125,7 +133,7 @@
     <label id="imdbRating" class="register">
       <label class="label-heading" for="imdbRating">IMDB Rating</label>
       <div class="slidecontainer">
-        <input type="range" min="1" max="10" value="5" class="slider" id="myRange">
+        <input type="range" min="1" max="10" value="5" class="slider" id="myRange" name="rating">
         <p>Value: <span id="rating"></span></p>
       </div>
       <div class="input-btn">
@@ -158,18 +166,10 @@ document.querySelectorAll('.genre-grid input[type="checkbox"]').forEach((checkbo
 
   let error = document.getElementById('validate');
 
-  // Event listeners for keyup events
   document.getElementById("username").addEventListener("keyup", function (e) {
     if (e.keyCode === 13) {
       e.preventDefault();
-      next("username", "email");
-    }
-  });
-
-  document.getElementById("email").addEventListener("keyup", function (e) {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      next('email', 'password');
+      next("username", "password");
     }
   });
 
@@ -193,6 +193,7 @@ document.querySelectorAll('.genre-grid input[type="checkbox"]').forEach((checkbo
       next('imdbRating');
     }
   });
+
 
   // Functions for navigating between sections
   function next(from, to) {
