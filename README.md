@@ -7,10 +7,17 @@ MovieMunch is een platform waarbij gebruikers film aanbevelingen krijgen met bij
 1. [Handleiding](#handleiding)
 2. [Libraries](#libraries)
 3. [Contributors](#contributors)
-4. [Versions](#versions)
-5. [License](#license)
+4. [License](#license)
 
 ## Handleiding
+1. Clone this repository.
+2. Run "npm install" for all the necessary modules.
+3. Create an account on MongoDB for database. (Or any other suitable database) (https://www.mongodb.com/)
+4. Create an account on TMDB for a movie API key. (https://www.themoviedb.org/)
+5. Create an account on Spoonacular for a recipe API key. (https://spoonacular.com/food-api)
+6. Insert all required information in the .env-sample file.
+7. Use nodemon in terminal to run MovieMunch on localhost:3000.
+8. Enjoy!
 
 ## Libraries
 1. https://swiperjs.com/
@@ -21,8 +28,6 @@ MovieMunch is een platform waarbij gebruikers film aanbevelingen krijgen met bij
 - [Tolga Zorlu (Front-end)](https://github.com/TolgaZZ)
 - [Jacco Mols (Front-end)](https://github.com/Jacco12)
 - [Jesse Kaptein (Back-end)](https://github.com/N0kk0N)
-
-## Versions
 
 ## License
 MIT License
