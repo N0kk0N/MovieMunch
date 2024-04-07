@@ -84,7 +84,7 @@ body{
 .nav li img{
     height: 2rem;
 }
- 
+
 .overview {
     overflow-x: hidden;
     padding: 0;
@@ -93,17 +93,17 @@ body{
     display: flex;
     flex-direction: column;
 }
- 
+
 .swiper-container {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
- 
+
 .overview-film-hero {
     flex-shrink: 0;
     width: 100%;
-    height: 40vh;
+    height: 48vh;
     background-color: blue;
     position: relative;
 }
@@ -127,66 +127,71 @@ body{
  
 .overlay-content {
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 50%;
+    width: 80%;
     transform: translate(-50%, -50%);
     color: white;
     text-align: center;
     z-index: 2;
 }
- 
+
 .overlay-content h2 {
     font-family: 'clash-bold', sans-serif;
-    font-size: 1.875em;
+    padding-top: 1em;
+    font-size: 1.5em;
+    line-height: 1em;
     text-shadow: 0px 0px 19px rgba(0, 0, 0, 1);
+    margin-bottom: 0;
 }
- 
+
 .overlay-content h3{
     font-family: 'archivo-light', sans-serif;
     font-size: 0.9375em;
+    margin-top: 0;
 }
- 
+
 .overlay-content button{
     border: none;
     background-color: #FF673E;
     width: 145px;
-    height: 50px;
+    height: 2.5em;
     font-family: 'clash-bold', sans-serif;
     color: white;
     font-size: 0.875em;
     border-radius: 11px;
     text-transform: uppercase;
 }
- 
+
 .film-slider-container {
     flex-grow: 1;
     padding-top: 30px;
-    padding-bottom: 50px;
     background-color: white;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
-    margin-top: -30px;
+    margin-top: -4em;
     z-index: 100;
 }
- 
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .gsap-wrapper::-webkit-scrollbar {
     display: none;
 }
- 
+
 /* Hide scrollbar for IE, Edge and Firefox */
 .gsap-wrapper {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
- 
+
 .gsap-wrapper {
     display: flex;
     overflow-x: scroll;
+    overflow-y: hidden;
     padding-left: 20px;
     box-sizing: border-box;
 }
- 
+
 .gsap-slide {
     flex: 0 0 auto;
     margin-right: 10px;
@@ -211,7 +216,7 @@ body{
     height: 48px;
     border-radius: 30px;
     padding-left: 35px;
-    background-image: url('../images/Search.png');
+    background-image: url('../images/search.svg');
     background-position: 7px center;
     background-repeat: no-repeat;
 }
@@ -226,27 +231,25 @@ body{
     width: 90vw;
     align-items: center;
 }
- 
+
 .inline-items h2 {
     font-family: 'clash-bold', sans-serif;
     font-size: 1.3em;
     text-transform: uppercase;
 }
- 
+
 .inline-items a {
     font-family: 'archivo-regular', sans-serif;
     font-size: 1em;
     text-decoration: none;
     color: black;
 }
- 
- 
+
 .movie-card img{
     height: 100%;
-    width: 15em;
+    width: 11em;
     object-fit: cover;
 }
-
 
 /* FILMDETAIL */
 /* Filmdetail - movie poster */
@@ -653,3 +656,65 @@ main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
         max-width: 60%;
     }
 }
+
+/* css favourites page */
+
+.logo-wrapper {
+    background-color: #ff673e;
+    width: 100vw;
+    height: 20vh;
+    padding-top: 5vh;
+    font-family: 'Clashdisplay', sans-serif;
+    text-transform: uppercase;
+  }
+   
+  .sublogo {
+    color: #fff;
+    font-size: 1.65rem;
+    text-align: center;
+    font-family: clash-bold;
+  }
+   
+  .logo {
+    color: #000;
+    font-size: 2rem;
+    text-align: center;
+    font-family: clash-bold;
+    margin-top: -.7em;
+  }
+  
+  .favourites {
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+   
+  .cta {
+    font-size: 1.5rem;
+    text-align: center;
+    font-family: clash-bold;
+    text-transform: uppercase;
+  }
+  
+  .swiper-container {
+    width: 90vw;
+    padding-top: 4em;
+    padding-bottom: 3em;
+    /* background-color: white; */
+    z-index: 100;
+    overflow: hidden;
+  }
+   
+  .swiper-slide {
+    width: 10em !important;
+  }
+   
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    border-radius: 1rem;
+    height: 15rem;
+  }
+

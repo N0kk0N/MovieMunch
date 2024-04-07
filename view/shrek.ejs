@@ -1,4 +1,42 @@
-<img src="<%= posterSrc %>" alt="Movie Poster">
-<img src="<%= backdropSrc %>" alt="Backdrop Image">
-<h1><%= title %></h1>
-<p><%= overview %></p>
+<img style="width: 100px;" src="https://image.tmdb.org/t/p/w500<%= moviePosterPath %>" alt="Movie Poster">
+<h1><%= movieTitle %></h1>
+<p><%= movieOverview %></p>
+
+genres
+<%= movieGenres %>
+
+movie id
+<%= movieId %>
+
+release date
+<%= movieReleaseDate %>
+
+recepten title
+<%= recipeTitle %>
+
+step numbers
+<%= stepNumberArray %>
+
+step overview
+<%= stepOverviewArray %>
+
+ingredient names
+<%= ingredientNameArray %>
+
+ingredient value
+<%= ingredientValueArray %>
+
+ingredient unit
+<%= ingredientUnitArray %>
+
+
+<% if(inList){ %>
+    <form action="/favorite-deleted" method="POST">
+        <button style="background-color: red; color: white; font-size: x-large;" type="submit" name="favoriteBtn" value="<%= movieId %>">Delete from favorites</button>
+        </form>
+  <% } else{ %>  
+    <form action="/favorite-added" method="POST">
+        <button style="background-color: green; color: white; font-size: x-large;" type="submit" name="favoriteBtn" value="<%= movieId %>">Add to favorites</button>
+        </form>
+ <% } %>
+
