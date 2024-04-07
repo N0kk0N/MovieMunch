@@ -479,6 +479,10 @@ app.get('/profile', (req, res) => {
 }
 });
 
+app.get('/searchmovie', (req, res) => {
+  res.render('searchmovie.ejs');
+});
+
 app.get('/profile/settings', (req, res) => {
   if (req.session.users === undefined) {
     res.redirect('/login');
