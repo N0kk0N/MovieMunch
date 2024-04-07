@@ -193,6 +193,29 @@ app.get('/overview/all', (req, res) => {
   const { json } = require('express');
   const apiKey = process.env.API_KEY;
 
+  const userIdSession = req.session.users
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
+
+  const findGenreFunction = async () => {
+    try {
+      const userMongo = await collection.findOne(
+        { "_id": new ObjectId(userIdSession) }
+      );
+      const genreArray = userMongo.genre
+      const userRating = userMongo.rating
+      return { genreArray, userRating };
+      // Continue with your code logic here
+    } catch (error) {
+      // Handle the error
+      console.error("Failed to retrieve favorites:", error);
+    }
+  }
+
+  findGenreFunction().then(({ genreArray, userRating }) => {
+
+
+
   // Arrays om gegevens van films op te slaan
   const adultArray = [];
   const backdropPathArray = [];
@@ -215,7 +238,7 @@ app.get('/overview/all', (req, res) => {
   function fetchMovies() {
     const options = {
       method: 'GET',
-      url: 'https://api.themoviedb.org/3/movie/popular',
+      url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
       qs: {
         language: 'en-US',
         page: page,
@@ -261,7 +284,7 @@ app.get('/overview/all', (req, res) => {
       }
     });
   }
-
+  
   // Functie om de overzichtspagina te renderen
   function renderOverviewPage() {
     // Render de pagina met de verzamelde gegevens
@@ -285,7 +308,8 @@ app.get('/overview/all', (req, res) => {
 
   // Start het ophalen van films
   fetchMovies();
-});
+});})
+
 
 app.get('/favourites', (req, res) => {
 
