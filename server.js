@@ -345,86 +345,83 @@ app.get('/overview/all', (req, res) => {
 app.get('/favourites', (req, res) => {
   if (req.session.users === undefined) {
     res.redirect('/login');
-  }
-  else{
+  } else {
+    const userIdSession = req.session.users
+    const db = client.db(process.env.MONGODB_NAME);
+    const collection = db.collection(process.env.MONGODB_COLLECTION);
 
-  /// VIND DE ARRAY MET FAVORITE ID's
-
-  const userIdSession = req.session.users
-  const db = client.db(process.env.MONGODB_NAME);
-  const collection = db.collection(process.env.MONGODB_COLLECTION);
-
-  const findFavoriteGenresFunction = async () => {
-    try {
-      const userMongo = await collection.findOne(
-        { "_id": new ObjectId(userIdSession) }
-      );
-      const favoritesArray = userMongo.favorites
-      return { favoritesArray };
-      // Continue with your code logic here
-    } catch (error) {
-      // Handle the error
-      console.error("Failed to retrieve favorites:", error);
+    const findFavoriteGenresFunction = async () => {
+      try {
+        const userMongo = await collection.findOne(
+          { "_id": new ObjectId(userIdSession) }
+        );
+        const favoritesArray = userMongo.favorites || []; // If favorites array is undefined, set it to empty array
+        return favoritesArray
+      } catch (error) {
+        console.error("Failed to retrieve favorites:", error);
+        return []; // Return empty array in case of error
+      }
     }
-  }
 
-  // ARRAY MET FAVORITES = favoritesArray
+    findFavoriteGenresFunction().then((favoritesArray) => {
+      const idArray = [];
+      const posterPathArray = [];
+      const titleArray = [];
 
+      let completedRequests = 0;
+      const totalRequests = favoritesArray.length;
 
-  // const genreIdsArray = []
+      if (totalRequests === 0) {
+        res.render('favourites.ejs', { idArray, posterPathArray, titleArray }); // Render the page with empty arrays
+      }
 
+      favoritesArray.forEach(favoriteId => {
+        const apiKey = process.env.API_KEY;
+        const options = {
+          method: 'GET',
+          url: `https://api.themoviedb.org/3/movie/${favoriteId}?language=en-US`,
+          qs: {
+            language: 'en-US',
+            page: 1,
+          },
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+        };
 
-  findFavoriteGenresFunction().then(({ favoritesArray }) => {
-    const idArray = [];
-    const posterPathArray = [];
-    const titleArray = [];
-  
-    let completedRequests = 0;
-    const totalRequests = favoritesArray.length;
-  
-    favoritesArray.forEach(favoriteId => {
-      const apiKey = process.env.API_KEY;
-      const options = {
-        method: 'GET',
-        url: `https://api.themoviedb.org/3/movie/${favoriteId}?language=en-US`,
-        qs: {
-          language: 'en-US',
-          page: 1,
-        },
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-        },
-      };
-  
-      request(options, function (error, response, body) {
-        if (error) {
-          console.error('Error fetching movie data:', error);
-          // Handle error appropriately
-          return;
-        }
-        const favMovie = JSON.parse(body);
-  
-        const id = favMovie.id;
-        idArray.push(id);
-  
-        const posterPath = favMovie.poster_path;
-        posterPathArray.push(posterPath);
-  
-        const title = favMovie.title;
-        titleArray.push(title);
-  
-        completedRequests++;
-  
-        // Controleer of alle verzoeken zijn voltooid
-        if (completedRequests === totalRequests) {
+        request(options, function (error, response, body) {
+          if (error) {
+            console.error('Error fetching movie data:', error);
+            // Handle error appropriately
+            return;
+          }
+          const favMovie = JSON.parse(body);
 
-          res.render('favourites.ejs', { idArray, posterPathArray, titleArray });
-        }
+          const id = favMovie.id;
+          idArray.push(id);
+
+          const posterPath = favMovie.poster_path;
+          posterPathArray.push(posterPath);
+
+          const title = favMovie.title;
+          titleArray.push(title);
+
+          completedRequests++;
+
+          // Controleer of alle verzoeken zijn voltooid
+          if (completedRequests === totalRequests) {
+            res.render('favourites.ejs', { idArray, posterPathArray, titleArray });
+          }
+        })
       })
-    })
-  })
-}})
+    }).catch(error => {
+      console.error("Error while retrieving favorites:", error);
+      res.status(500).send("Internal server error"); // Render an error page in case of error
+    });
+  }
+})
+
 
   
 
@@ -456,7 +453,6 @@ app.get('/profile', (req, res) => {
     try {
       const userMongo = await collection.findOne(
         { "_id": new ObjectId(userIdSession) }
-
       );
       const pictureFilename = userMongo.fileName
       const username = userMongo.username
@@ -1016,7 +1012,7 @@ app.post('/new-user', async (req, res) => {
         rating: req.body.rating,
 
         creationDate: new Date(),
-        fileName: "",
+        fileName: "defaultAvatar.jpeg",
         favorites: []
       });
 
