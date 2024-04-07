@@ -186,7 +186,7 @@ app.get('/overview', (req, res) => {
           remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
           lower: true,      // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
           strict: false,     // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
-          locale: 'vi',      // Taalcode voor Vietnamees, maar dit heeft geen invloed op het resultaat
+          locale: 'en',      // Taalcode voor Engels, maar dit heeft geen invloed op het resultaat
           trim: true         // Verwijder eventuele extra spaties aan het begin of einde
         })
         urlTitleArray.push(slugifiedTitle)
@@ -252,6 +252,7 @@ app.get('/overview/all', (req, res) => {
   const videoArray = [];
   const voteAverageArray = [];
   const voteCountArray = [];
+  const urlTitleArray = [];
 
   let page = 1;
 
@@ -291,6 +292,15 @@ app.get('/overview/all', (req, res) => {
         videoArray.push(movie.video);
         voteAverageArray.push(movie.vote_average);
         voteCountArray.push(movie.vote_count);
+        const slugifiedTitle = slugify(movie.title, {
+          replacement: '-',  
+          remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
+          lower: true,      // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
+          strict: false,     // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
+          locale: 'en',      // Taalcode voor Vietnamees, maar dit heeft geen invloed op het resultaat
+          trim: true         // Verwijder eventuele extra spaties aan het begin of einde
+        })
+        urlTitleArray.push(slugifiedTitle)
       });
 
       // Verhoog de paginanummer voor de volgende aanvraag
@@ -323,7 +333,8 @@ app.get('/overview/all', (req, res) => {
       titleArray,
       videoArray,
       voteAverageArray,
-      voteCountArray
+      voteCountArray,
+      urlTitleArray
     });
   }
 
@@ -712,6 +723,7 @@ app.get('/movie/:name', async (req, res) => {
               "Saudi Arabia": "Asian",
               "Uzbekistan": "Asian",
               "Malaysia": "Asian",
+              "New Zealand": "Asian",
               "Yemen": "Asian",
               "Nepal": "Asian",
               "Sri Lanka": "Asian",
