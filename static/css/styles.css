@@ -102,7 +102,7 @@ body{
 .overview-film-hero {
     flex-shrink: 0;
     width: 100%;
-    height: 48vh;
+    height: 55vh;
     background-color: blue;
     position: relative;
 }
@@ -184,11 +184,12 @@ body{
 }
 
 .gsap-wrapper {
-    display: flex;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    padding-left: 20px;
-    box-sizing: border-box;
+  display: flex;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  margin-left: 1em;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 10px #000000; /* Adjust color and blur radius as needed */
 }
 
 .gsap-slide {
@@ -246,7 +247,7 @@ body{
 
 .movie-card img{
     height: 100%;
-    width: 11em;
+    width: 8em;
     object-fit: cover;
 }
 
@@ -893,6 +894,8 @@ label.label-heading {
 
   .overview-all h2{
     font-family: 'clash-bold', sans-serif;
+    text-transform: uppercase;
+    font-size: 1.5em;
     padding-left: 1em;
     padding-top: 1em;
     margin: 0;
@@ -950,6 +953,7 @@ label.label-heading {
 }
 
 .overlay-content-all button{
+  margin-top: 0.5em;
     border: none;
     background-color: #FF673E;
     width: 145px;
@@ -1003,4 +1007,17 @@ label.label-heading {
   font-family: 'clash-bold', sans-serif;
   text-transform: uppercase;
   font-size: 2em;
+}
+
+/* css searchresult page */
+
+.search-results h2{
+  margin: 0;
+  padding-top: 1em;
+  padding-left: 0.8em;
+  padding-bottom: 0.5em;
+  font-family: 'clash-bold', sans-serif;
+  text-transform: uppercase;
+  font-size: 1.5em;
+  
 }
