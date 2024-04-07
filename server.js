@@ -2,7 +2,7 @@ require('dotenv').config()
 
 // Initialise Express webserver
 const express = require('express')
-const request = require('request');
+const request = require('request')
 const session = require('express-session')
 const slugify = require('slugify')
 const xss = require('xss')
@@ -13,14 +13,14 @@ const storage = multer.diskStorage({
     cb(null, 'static/uploads')
   },
   filename: function (req, file, cb) {
-    const extension = file.originalname.split(".").pop()
-    const date = new Date
+    const extension = file.originalname.split('.').pop()
+    const date = new Date()
     const dateISO = date.toISOString()
     cb(null, `${req.session.users}${dateISO}.${extension}`)
   }
 })
 
-const upload = multer({ storage: storage })
+const upload = multer({ storage })
 const app = express()
 
 app
@@ -30,106 +30,209 @@ app
     session({
       secret: process.env.SESSION_KEY,
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: false
     })
   )
   .set('view engine', 'ejs')
   .set('views', 'view')
-  .listen(3000, () => console.log('Server is running on port 3000'));
+  .listen(3000, () => console.log('Server is running on port 3000'))
 
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const e = require('express');
-const uri = `${process.env.MONGODB_URL}`;
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
+const e = require('express')
+const uri = `${process.env.MONGODB_URL}`
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
-    deprecationErrors: true,
-  },
-});
+    deprecationErrors: true
+  }
+})
 
 client
   .connect()
   .then(() => {
-    console.log('Database connection established');
+    console.log('Database connection established')
   })
   .catch((err) => {
-    console.log(`Database connection error - ${err}`);
-    console.log(`For uri - ${uri}`);
-  });
+    console.log(`Database connection error - ${err}`)
+    console.log(`For uri - ${uri}`)
+  })
 
 app.get('/', (req, res) => {
-  res.render('homepage.ejs');
-  console.log(req.session.users);
-});
+  res.render('homepage.ejs')
+  console.log(req.session.users)
+})
 
 app.get('/overview', (req, res) => {
   if (req.session.users === undefined) {
-    res.redirect('/login');
-  }
-  else{
-  const request = require('request');
-  const { json } = require('express')
-  const apiKey = process.env.API_KEY;
-  const genreMap = {
-    28: 'Action',
-    12: 'Adventure',
-    16: 'Animation',
-    35: 'Comedy',
-    80: 'Crime',
-    99: 'Documentary',
-    18: 'Drama',
-    10751: 'Family',
-    14: 'Fantasy',
-    36: 'History',
-    27: 'Horror',
-    10402: 'Music',
-    9648: 'Mystery',
-    10749: 'Romance',
-    878: 'Science Fiction',
-    10770: 'TV Movie',
-    53: 'Thriller',
-    10752: 'War',
-    37: 'Western'
-  };
-
-  const userIdSession = req.session.users
-  const db = client.db(process.env.MONGODB_NAME);
-  const collection = db.collection(process.env.MONGODB_COLLECTION);
-
-  const findGenreFunction = async () => {
-    try {
-      const userMongo = await collection.findOne(
-        { "_id": new ObjectId(userIdSession) }
-      );
-      const genreArray = userMongo.genre
-      const userRating = userMongo.rating
-      return { genreArray, userRating };
-      // Continue with your code logic here
-    } catch (error) {
-      // Handle the error
-      console.error("Failed to retrieve favorites:", error);
+    res.redirect('/login')
+  } else {
+    const request = require('request')
+    const { json } = require('express')
+    const apiKey = process.env.API_KEY
+    const genreMap = {
+      28: 'Action',
+      12: 'Adventure',
+      16: 'Animation',
+      35: 'Comedy',
+      80: 'Crime',
+      99: 'Documentary',
+      18: 'Drama',
+      10751: 'Family',
+      14: 'Fantasy',
+      36: 'History',
+      27: 'Horror',
+      10402: 'Music',
+      9648: 'Mystery',
+      10749: 'Romance',
+      878: 'Science Fiction',
+      10770: 'TV Movie',
+      53: 'Thriller',
+      10752: 'War',
+      37: 'Western'
     }
+
+    const userIdSession = req.session.users
+    const db = client.db(process.env.MONGODB_NAME)
+    const collection = db.collection(process.env.MONGODB_COLLECTION)
+
+    const findGenreFunction = async () => {
+      try {
+        const userMongo = await collection.findOne(
+          { _id: new ObjectId(userIdSession) }
+        )
+        const genreArray = userMongo.genre
+        const userRating = userMongo.rating
+        return { genreArray, userRating }
+      // Continue with your code logic here
+      } catch (error) {
+      // Handle the error
+        console.error('Failed to retrieve favorites:', error)
+      }
+    }
+
+    findGenreFunction().then(({ genreArray, userRating }) => {
+      const options = {
+        method: 'GET',
+        url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
+        qs: {
+          language: 'en-US',
+          page: 1
+        },
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${apiKey}`
+        }
+      }
+
+      request(options, function (error, response, body) {
+        if (error) throw new Error(error)
+        const movies = JSON.parse(body).results
+        const adultArray = []
+        const backdropPathArray = []
+        const genreIdsArray = []
+        const idArray = []
+        const originalLanguageArray = []
+        const originalTitleArray = []
+        const overviewArray = []
+        const popularityArray = []
+        const posterPathArray = []
+        const releaseDateArray = []
+        const titleArray = []
+        const urlTitleArray = []
+        const videoArray = []
+        const voteAverageArray = []
+        const voteCountArray = []
+
+        movies.forEach(movie => {
+          const adult = movie.adult
+          adultArray.push(adult)
+
+          const backdropPath = movie.backdrop_path
+          backdropPathArray.push(backdropPath)
+
+          const genreIds = movie.genre_ids.map(id => genreMap[id])
+          genreIdsArray.push(genreIds)
+
+          const id = movie.id
+          idArray.push(id)
+
+          const originalLanguage = movie.original_language
+          originalLanguageArray.push(originalLanguage)
+
+          const originalTitle = movie.original_title
+          originalTitleArray.push(originalTitle)
+
+          const overview = movie.overview
+          overviewArray.push(overview)
+
+          const popularity = movie.popularity
+          popularityArray.push(popularity)
+
+          const posterPath = movie.poster_path
+          posterPathArray.push(posterPath)
+
+          const releaseDate = movie.release_date
+          releaseDateArray.push(releaseDate)
+
+          const title = movie.title
+          titleArray.push(title)
+
+          const slugifiedTitle = slugify(movie.title, {
+            replacement: '-',
+            remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
+            lower: true, // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
+            strict: false, // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
+            locale: 'en', // Taalcode voor Engels, maar dit heeft geen invloed op het resultaat
+            trim: true // Verwijder eventuele extra spaties aan het begin of einde
+          })
+          urlTitleArray.push(slugifiedTitle)
+
+          const video = movie.video
+          videoArray.push(video)
+
+          const voteAverage = movie.vote_average
+          voteAverageArray.push(voteAverage)
+
+          const voteCount = movie.vote_count
+          voteCountArray.push(voteCount)
+        })
+
+        res.render('overview.ejs', { adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray, urlTitleArray })
+      })
+    })
   }
+})
 
-  findGenreFunction().then(({ genreArray, userRating }) => {
+app.get('/overview/all', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login')
+  } else {
+    const request = require('request')
+    const { json } = require('express')
+    const apiKey = process.env.API_KEY
 
-    const options = {
-      method: 'GET',
-      url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
-      qs: {
-        language: 'en-US',
-        page: 1,
-      },
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-    };
+    const userIdSession = req.session.users
+    const db = client.db(process.env.MONGODB_NAME)
+    const collection = db.collection(process.env.MONGODB_COLLECTION)
 
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-      const movies = JSON.parse(body).results;
+    const findGenreFunction = async () => {
+      try {
+        const userMongo = await collection.findOne(
+          { _id: new ObjectId(userIdSession) }
+        )
+        const genreArray = userMongo.genre
+        const userRating = userMongo.rating
+        return { genreArray, userRating }
+      // Continue with your code logic here
+      } catch (error) {
+      // Handle the error
+        console.error('Failed to retrieve favorites:', error)
+      }
+    }
+
+    findGenreFunction().then(({ genreArray, userRating }) => {
+      // Arrays om gegevens van films op te slaan
       const adultArray = []
       const backdropPathArray = []
       const genreIdsArray = []
@@ -141,670 +244,555 @@ app.get('/overview', (req, res) => {
       const posterPathArray = []
       const releaseDateArray = []
       const titleArray = []
-      const urlTitleArray = []
       const videoArray = []
       const voteAverageArray = []
       const voteCountArray = []
+      const urlTitleArray = []
 
-      movies.forEach(movie => {
-        const adult = movie.adult
-        adultArray.push(adult)
+      let page = 1
 
-        const backdropPath = movie.backdrop_path
-        backdropPathArray.push(backdropPath)
+      // Functie om films op te halen en gegevens in arrays op te slaan
+      function fetchMovies () {
+        const options = {
+          method: 'GET',
+          url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
+          qs: {
+            language: 'en-US',
+            page
+          },
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${apiKey}`
+          }
+        }
 
-        const genreIds = movie.genre_ids.map(id => genreMap[id]);
-        genreIdsArray.push(genreIds)
+        request(options, function (error, response, body) {
+          if (error) throw new Error(error)
 
-        const id = movie.id
-        idArray.push(id)
+          const movies = JSON.parse(body).results
 
-        const originalLanguage = movie.original_language
-        originalLanguageArray.push(originalLanguage)
+          // Loop door de films en sla gegevens op in de arrays
+          movies.forEach(movie => {
+            adultArray.push(movie.adult)
+            backdropPathArray.push(movie.backdrop_path)
+            genreIdsArray.push(movie.genre_ids)
+            idArray.push(movie.id)
+            originalLanguageArray.push(movie.original_language)
+            originalTitleArray.push(movie.original_title)
+            overviewArray.push(movie.overview)
+            popularityArray.push(movie.popularity)
+            posterPathArray.push(movie.poster_path)
+            releaseDateArray.push(movie.release_date)
+            titleArray.push(movie.title)
+            videoArray.push(movie.video)
+            voteAverageArray.push(movie.vote_average)
+            voteCountArray.push(movie.vote_count)
+            const slugifiedTitle = slugify(movie.title, {
+              replacement: '-',
+              remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
+              lower: true, // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
+              strict: false, // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
+              locale: 'en', // Taalcode voor Vietnamees, maar dit heeft geen invloed op het resultaat
+              trim: true // Verwijder eventuele extra spaties aan het begin of einde
+            })
+            urlTitleArray.push(slugifiedTitle)
+          })
 
-        const originalTitle = movie.original_title
-        originalTitleArray.push(originalTitle)
+          // Verhoog de paginanummer voor de volgende aanvraag
+          page++
 
-        const overview = movie.overview
-        overviewArray.push(overview)
-
-        const popularity = movie.popularity
-        popularityArray.push(popularity)
-
-        const posterPath = movie.poster_path
-        posterPathArray.push(posterPath)
-
-        const releaseDate = movie.release_date
-        releaseDateArray.push(releaseDate)
-
-        const title = movie.title
-        titleArray.push(title)
-
-        const slugifiedTitle = slugify(movie.title, {
-          replacement: '-',  
-          remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
-          lower: true,      // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
-          strict: false,     // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
-          locale: 'en',      // Taalcode voor Engels, maar dit heeft geen invloed op het resultaat
-          trim: true         // Verwijder eventuele extra spaties aan het begin of einde
+          // Als er nog meer pagina's zijn, blijf films ophalen
+          if (page <= 10) {
+            fetchMovies()
+          } else {
+            // Als alle pagina's zijn opgehaald, render de pagina met alle gegevens
+            renderOverviewPage()
+          }
         })
-        urlTitleArray.push(slugifiedTitle)
-
-        const video = movie.video
-        videoArray.push(video)
-
-        const voteAverage = movie.vote_average
-        voteAverageArray.push(voteAverage)
-
-        const voteCount = movie.vote_count
-        voteCountArray.push(voteCount)
-      });
-
-      res.render('overview.ejs', { adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray, urlTitleArray });
-    });
-  });}
-});
-
-app.get('/overview/all', (req, res) => {
-  if (req.session.users === undefined) {
-    res.redirect('/login');
-  }
-  else {
-  const request = require('request');
-  const { json } = require('express');
-  const apiKey = process.env.API_KEY;
-    
-  const userIdSession = req.session.users
-  const db = client.db(process.env.MONGODB_NAME);
-  const collection = db.collection(process.env.MONGODB_COLLECTION);
-
-  const findGenreFunction = async () => {
-    try {
-      const userMongo = await collection.findOne(
-        { "_id": new ObjectId(userIdSession) }
-      );
-      const genreArray = userMongo.genre
-      const userRating = userMongo.rating
-      return { genreArray, userRating };
-      // Continue with your code logic here
-    } catch (error) {
-      // Handle the error
-      console.error("Failed to retrieve favorites:", error);
-    }
-  }
-
-  findGenreFunction().then(({ genreArray, userRating }) => {
-
-  // Arrays om gegevens van films op te slaan
-  const adultArray = [];
-  const backdropPathArray = [];
-  const genreIdsArray = [];
-  const idArray = [];
-  const originalLanguageArray = [];
-  const originalTitleArray = [];
-  const overviewArray = [];
-  const popularityArray = [];
-  const posterPathArray = [];
-  const releaseDateArray = [];
-  const titleArray = [];
-  const videoArray = [];
-  const voteAverageArray = [];
-  const voteCountArray = [];
-  const urlTitleArray = [];
-
-  let page = 1;
-
-  // Functie om films op te halen en gegevens in arrays op te slaan
-  function fetchMovies() {
-    const options = {
-      method: 'GET',
-      url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
-      qs: {
-        language: 'en-US',
-        page: page,
-      },
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-    };
-
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-
-      const movies = JSON.parse(body).results;
-
-      // Loop door de films en sla gegevens op in de arrays
-      movies.forEach(movie => {
-        adultArray.push(movie.adult);
-        backdropPathArray.push(movie.backdrop_path);
-        genreIdsArray.push(movie.genre_ids);
-        idArray.push(movie.id);
-        originalLanguageArray.push(movie.original_language);
-        originalTitleArray.push(movie.original_title);
-        overviewArray.push(movie.overview);
-        popularityArray.push(movie.popularity);
-        posterPathArray.push(movie.poster_path);
-        releaseDateArray.push(movie.release_date);
-        titleArray.push(movie.title);
-        videoArray.push(movie.video);
-        voteAverageArray.push(movie.vote_average);
-        voteCountArray.push(movie.vote_count);
-        const slugifiedTitle = slugify(movie.title, {
-          replacement: '-',  
-          remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
-          lower: true,      // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
-          strict: false,     // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
-          locale: 'en',      // Taalcode voor Vietnamees, maar dit heeft geen invloed op het resultaat
-          trim: true         // Verwijder eventuele extra spaties aan het begin of einde
-        })
-        urlTitleArray.push(slugifiedTitle)
-      });
-
-      // Verhoog de paginanummer voor de volgende aanvraag
-      page++;
-
-      // Als er nog meer pagina's zijn, blijf films ophalen
-      if (page <= 10) {
-        fetchMovies();
-      } else {
-        // Als alle pagina's zijn opgehaald, render de pagina met alle gegevens
-        renderOverviewPage();
       }
-    });
-  }
-  
-  // Functie om de overzichtspagina te renderen
-  function renderOverviewPage() {
-    // Render de pagina met de verzamelde gegevens
-    res.render('overviewAll.ejs', {
-      adultArray,
-      backdropPathArray,
-      genreIdsArray,
-      idArray,
-      originalLanguageArray,
-      originalTitleArray,
-      overviewArray,
-      popularityArray,
-      posterPathArray,
-      releaseDateArray,
-      titleArray,
-      videoArray,
-      voteAverageArray,
-      voteCountArray,
-      urlTitleArray
-    });
-  }
 
-  // Start het ophalen van films
-  fetchMovies();
-})}});
+      // Functie om de overzichtspagina te renderen
+      function renderOverviewPage () {
+        // Render de pagina met de verzamelde gegevens
+        res.render('overviewAll.ejs', {
+          adultArray,
+          backdropPathArray,
+          genreIdsArray,
+          idArray,
+          originalLanguageArray,
+          originalTitleArray,
+          overviewArray,
+          popularityArray,
+          posterPathArray,
+          releaseDateArray,
+          titleArray,
+          videoArray,
+          voteAverageArray,
+          voteCountArray,
+          urlTitleArray
+        })
+      }
+
+      // Start het ophalen van films
+      fetchMovies()
+    })
+  }
+})
 
 app.get('/favourites', (req, res) => {
   if (req.session.users === undefined) {
-    res.redirect('/login');
+    res.redirect('/login')
   } else {
     const userIdSession = req.session.users
-    const db = client.db(process.env.MONGODB_NAME);
-    const collection = db.collection(process.env.MONGODB_COLLECTION);
+    const db = client.db(process.env.MONGODB_NAME)
+    const collection = db.collection(process.env.MONGODB_COLLECTION)
 
     const findFavoriteGenresFunction = async () => {
       try {
         const userMongo = await collection.findOne(
-          { "_id": new ObjectId(userIdSession) }
-        );
-        const favoritesArray = userMongo.favorites || []; // If favorites array is undefined, set it to empty array
+          { _id: new ObjectId(userIdSession) }
+        )
+        const favoritesArray = userMongo.favorites || [] // If favorites array is undefined, set it to empty array
         return favoritesArray
       } catch (error) {
-        console.error("Failed to retrieve favorites:", error);
-        return []; // Return empty array in case of error
+        console.error('Failed to retrieve favorites:', error)
+        return [] // Return empty array in case of error
       }
     }
 
     findFavoriteGenresFunction().then((favoritesArray) => {
-      const idArray = [];
-      const posterPathArray = [];
-      const titleArray = [];
+      const idArray = []
+      const posterPathArray = []
+      const titleArray = []
 
-      let completedRequests = 0;
-      const totalRequests = favoritesArray.length;
+      let completedRequests = 0
+      const totalRequests = favoritesArray.length
 
       if (totalRequests === 0) {
-        res.render('favourites.ejs', { idArray, posterPathArray, titleArray }); // Render the page with empty arrays
+        res.render('favourites.ejs', { idArray, posterPathArray, titleArray }) // Render the page with empty arrays
       }
 
       favoritesArray.forEach(favoriteId => {
-        const apiKey = process.env.API_KEY;
+        const apiKey = process.env.API_KEY
         const options = {
           method: 'GET',
           url: `https://api.themoviedb.org/3/movie/${favoriteId}?language=en-US`,
           qs: {
             language: 'en-US',
-            page: 1,
+            page: 1
           },
           headers: {
             accept: 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-          },
-        };
+            Authorization: `Bearer ${apiKey}`
+          }
+        }
 
         request(options, function (error, response, body) {
           if (error) {
-            console.error('Error fetching movie data:', error);
+            console.error('Error fetching movie data:', error)
             // Handle error appropriately
-            return;
+            return
           }
-          const favMovie = JSON.parse(body);
+          const favMovie = JSON.parse(body)
 
-          const id = favMovie.id;
-          idArray.push(id);
+          const id = favMovie.id
+          idArray.push(id)
 
-          const posterPath = favMovie.poster_path;
-          posterPathArray.push(posterPath);
+          const posterPath = favMovie.poster_path
+          posterPathArray.push(posterPath)
 
-          const title = favMovie.title;
-          titleArray.push(title);
+          const title = favMovie.title
+          titleArray.push(title)
 
-          completedRequests++;
+          completedRequests++
 
           // Controleer of alle verzoeken zijn voltooid
           if (completedRequests === totalRequests) {
-            res.render('favourites.ejs', { idArray, posterPathArray, titleArray });
+            res.render('favourites.ejs', { idArray, posterPathArray, titleArray })
           }
         })
       })
     }).catch(error => {
-      console.error("Error while retrieving favorites:", error);
-      res.status(500).send("Internal server error"); // Render an error page in case of error
-    });
+      console.error('Error while retrieving favorites:', error)
+      res.status(500).send('Internal server error') // Render an error page in case of error
+    })
   }
 })
 
 app.get('/signup', (req, res) => {
-  res.render('signup.ejs');
-  console.log(req.session.users);
-});
+  res.render('signup.ejs')
+  console.log(req.session.users)
+})
 
 app.get('/signup/preferences', (req, res) => {
-  res.render('signup-preferences.ejs');
-  console.log(req.session.users);
-});
+  res.render('signup-preferences.ejs')
+  console.log(req.session.users)
+})
 
 app.get('/login', (req, res) => {
-  res.render('login.ejs');
-  console.log(req.session.users);
-});
+  res.render('login.ejs')
+  console.log(req.session.users)
+})
 
 app.get('/profile', (req, res) => {
   if (req.session.users === undefined) {
-    res.redirect('/login');
-  }
-  else{
-  const userIdSession = req.session.users
-  const db = client.db(process.env.MONGODB_NAME);
-  const collection = db.collection(process.env.MONGODB_COLLECTION);
+    res.redirect('/login')
+  } else {
+    const userIdSession = req.session.users
+    const db = client.db(process.env.MONGODB_NAME)
+    const collection = db.collection(process.env.MONGODB_COLLECTION)
 
-  const getAccountDetails = async () => {
-    try {
-      const userMongo = await collection.findOne(
-        { "_id": new ObjectId(userIdSession) }
-      );
-      const pictureFilename = userMongo.fileName
-      console.log(`dit is de picture filename: ${pictureFilename}`)
-      const username = userMongo.username
-      console.log(`dit is de username: ${username}`)
-      const genres = userMongo.genre
-      console.log(`dit is de genres: ${genres}`)
-      const rating = userMongo.rating
+    const getAccountDetails = async () => {
+      try {
+        const userMongo = await collection.findOne(
+          { _id: new ObjectId(userIdSession) }
+        )
+        const pictureFilename = userMongo.fileName
+        console.log(`dit is de picture filename: ${pictureFilename}`)
+        const username = userMongo.username
+        console.log(`dit is de username: ${username}`)
+        const genres = userMongo.genre
+        console.log(`dit is de genres: ${genres}`)
+        const rating = userMongo.rating
 
-      return { pictureFilename, username, genres, rating };
-      
+        return { pictureFilename, username, genres, rating }
+
       // Continue with your code logic here
-    } catch (error) {
+      } catch (error) {
       // Handle the error
-      console.error("Failed to retrieve favorites:", error);
+        console.error('Failed to retrieve favorites:', error)
+      }
     }
+
+    getAccountDetails()
+      .then(({ pictureFilename, username, genres, rating }) => {
+        res.render('profile.ejs', { pictureFilename, username, genres, rating })
+      })
+      .catch(error => {
+        res.status(500).send('Internal Server Error')
+      })
+
+    console.log(req.session.users)
   }
-
-
-  getAccountDetails()
-  .then(({ pictureFilename, username, genres, rating }) => {
-    res.render('profile.ejs', { pictureFilename, username, genres, rating });
-  })
-  .catch(error => {
-    res.status(500).send('Internal Server Error');
-  });
-
-  console.log(req.session.users);
-}
-});
+})
 
 app.get('/searchmovie', (req, res) => {
-  res.render('searchmovie.ejs');
-});
+  res.render('searchmovie.ejs')
+})
 
 app.get('/profile/settings', (req, res) => {
   if (req.session.users === undefined) {
-    res.redirect('/login');
-  }
-  else{
+    res.redirect('/login')
+  } else {
+    const userIdSession = req.session.users
+    const db = client.db(process.env.MONGODB_NAME)
+    const collection = db.collection(process.env.MONGODB_COLLECTION)
 
-  const userIdSession = req.session.users
-  const db = client.db(process.env.MONGODB_NAME);
-  const collection = db.collection(process.env.MONGODB_COLLECTION);
+    const getAccountDetails = async () => {
+      try {
+        const userMongo = await collection.findOne(
+          { _id: new ObjectId(userIdSession) }
 
-  const getAccountDetails = async () => {
-    try {
-      const userMongo = await collection.findOne(
-        { "_id": new ObjectId(userIdSession) }
-        
-      );
-      const pictureFilename = userMongo.fileName
-      const username = userMongo.username
-      const genres = userMongo.genre
-      const rating = userMongo.rating
+        )
+        const pictureFilename = userMongo.fileName
+        const username = userMongo.username
+        const genres = userMongo.genre
+        const rating = userMongo.rating
 
-      return { pictureFilename, username, genres, rating };
+        return { pictureFilename, username, genres, rating }
 
       // Continue with your code logic here
-    } catch (error) {
+      } catch (error) {
       // Handle the error
-      console.error("Failed to retrieve favorites:", error);
+        console.error('Failed to retrieve favorites:', error)
+      }
     }
-  }
 
-  getAccountDetails().then(({ pictureFilename, username, genres, rating }) => {
-    res.render('profile-settings.ejs', { pictureFilename, username, genres, rating });
-  }
-  )
+    getAccountDetails().then(({ pictureFilename, username, genres, rating }) => {
+      res.render('profile-settings.ejs', { pictureFilename, username, genres, rating })
+    }
+    )
 
-  console.log(req.session.users);
-}
-});
+    console.log(req.session.users)
+  }
+})
 
 app.post('/profile-picture', upload.single('avatar'), async function (req, res, next) {
-  const db = client.db(process.env.MONGODB_NAME);
-  const collection = db.collection(process.env.MONGODB_COLLECTION);
-  const rating = req.body.rating;
-  const username = xss(req.body.username);
-  const genre = req.body.genre; // Let op: verandering van genres naar genre
+  const db = client.db(process.env.MONGODB_NAME)
+  const collection = db.collection(process.env.MONGODB_COLLECTION)
+  const rating = req.body.rating
+  const username = xss(req.body.username)
+  const genre = req.body.genre // Let op: verandering van genres naar genre
 
   try {
     // Retrieve existing profile data
-    const existingProfile = await collection.findOne({ "_id": new ObjectId(req.session.users) });
-
+    const existingProfile = await collection.findOne({ _id: new ObjectId(req.session.users) })
 
     // Update profile data
     const updateData = {
-      "rating": rating,
+      rating,
       // Retain the existing username if not updated
-      "username": username ? username : existingProfile.username,
+      username: username || existingProfile.username,
       // Retain the existing genre if not updated
-      "genre": genre ? (Array.isArray(genre) ? genre : [genre]) : existingProfile.genre
-    };
+      genre: genre ? (Array.isArray(genre) ? genre : [genre]) : existingProfile.genre
+    }
 
     // Check if a new avatar has been uploaded
-    let picture = req.file ? req.file.filename : null;
+    const picture = req.file ? req.file.filename : null
     if (picture) {
-      updateData.fileName = picture;
+      updateData.fileName = picture
     } else {
       // If no new picture is uploaded, retain the existing picture
-      updateData.fileName = existingProfile.fileName;
+      updateData.fileName = existingProfile.fileName
     }
 
     // Only perform username check if the username has been updated
     if (username && username !== existingProfile.username) {
-      const checkAvailable = await collection.findOne({ username: xss(req.body.username) });
+      const checkAvailable = await collection.findOne({ username: xss(req.body.username) })
       if (checkAvailable) {
-        return res.render('username-exists.ejs', { initialDetailPageURL: req.headers.referer });
+        return res.render('username-exists.ejs', { initialDetailPageURL: req.headers.referer })
       }
     }
 
     // Update the profile in the database
     await collection.findOneAndUpdate(
-      { "_id": new ObjectId(req.session.users) },
+      { _id: new ObjectId(req.session.users) },
       { $set: updateData }
-    );
-    res.render('profile-updated.ejs', { initialDetailPageURL: req.headers.referer });
+    )
+    res.render('profile-updated.ejs', { initialDetailPageURL: req.headers.referer })
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Server error');
+    console.error(error)
+    res.status(500).send('Server error')
   }
-});
+})
 
 app.get('/movie/:name', async (req, res) => {
   if (req.session.users === undefined) {
-    res.redirect('/login');
-  }
-  else{
+    res.redirect('/login')
+  } else {
+    movieName = req.params.name
+    const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`
+    const apiKey = process.env.API_KEY
+    const options = { method: 'GET', headers: { accept: 'application/json', Authorization: `Bearer ${apiKey}` } }
 
-  movieName = req.params.name
-  const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
-  const apiKey = process.env.API_KEY;
-  const options = {method: 'GET', headers: {accept: 'application/json', Authorization: `Bearer ${apiKey}`}};
-
-
-  fetch(url, options)
-    .then(res => res.json())
-    .then(movies => {
-      const requestedMovie = movies.results[0]
-      const movieGenres = requestedMovie.genre_ids
-      const movieGenresClean = []
-      const genreMap = {
-        28: 'Action',
-        12: 'Adventure',
-        16: 'Animation',
-        35: 'Comedy',
-        80: 'Crime',
-        99: 'Documentary',
-        18: 'Drama',
-        10751: 'Family',
-        14: 'Fantasy',
-        36: 'History',
-        27: 'Horror',
-        10402: 'Music',
-        9648: 'Mystery',
-        10749: 'Romance',
-        878: 'Science Fiction',
-        10770: 'TV Movie',
-        53: 'Thriller',
-        10752: 'War',
-        37: 'Western'
-      }
-      movieGenres.forEach(genreNumber => {
-        movieGenresClean.push(genreMap[genreNumber]);
-      });
-  
-
-      const movieId = requestedMovie.id
-      const movieOverview = requestedMovie.overview
-      const moviePosterPath = requestedMovie.poster_path
-      const movieReleaseDate = requestedMovie.release_date
-      const movieTitle = requestedMovie.title
-
-      const url = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
-      const options = {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${apiKey}`
+    fetch(url, options)
+      .then(res => res.json())
+      .then(movies => {
+        const requestedMovie = movies.results[0]
+        const movieGenres = requestedMovie.genre_ids
+        const movieGenresClean = []
+        const genreMap = {
+          28: 'Action',
+          12: 'Adventure',
+          16: 'Animation',
+          35: 'Comedy',
+          80: 'Crime',
+          99: 'Documentary',
+          18: 'Drama',
+          10751: 'Family',
+          14: 'Fantasy',
+          36: 'History',
+          27: 'Horror',
+          10402: 'Music',
+          9648: 'Mystery',
+          10749: 'Romance',
+          878: 'Science Fiction',
+          10770: 'TV Movie',
+          53: 'Thriller',
+          10752: 'War',
+          37: 'Western'
         }
-      };
-      
-      fetch(url, options)
-        .then(res => res.json())
-        .then(movieDetails => {
-          const movieRuntime = movieDetails.runtime
-          const originCountry = movieDetails.production_countries[0].name
+        movieGenres.forEach(genreNumber => {
+          movieGenresClean.push(genreMap[genreNumber])
+        })
+
+        const movieId = requestedMovie.id
+        const movieOverview = requestedMovie.overview
+        const moviePosterPath = requestedMovie.poster_path
+        const movieReleaseDate = requestedMovie.release_date
+        const movieTitle = requestedMovie.title
+
+        const url = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`
+        const options = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${apiKey}`
+          }
+        }
+
+        fetch(url, options)
+          .then(res => res.json())
+          .then(movieDetails => {
+            const movieRuntime = movieDetails.runtime
+            const originCountry = movieDetails.production_countries[0].name
 
             // MAAK HIER DAT DE ORIGIN COUNTRY WORDT OMGEZET IN CUISINE
 
             const cuisines = {
-              "Algeria": "African",
-              "Angola": "African",
-              "Benin": "African",
-              "Botswana": "African",
-              "Burkina Faso": "African",
-              "Burundi": "African",
-              "Canada": "American",
-              "Central African Republic": "African",
-              "Comoros": "African",
-              "Congo": "African",
-              "Djibouti": "African",
-              "Equatorial Guinea": "African",
-              "Eritrea": "African",
-              "Ethiopia": "African",
-              "Gabon": "African",
-              "Gambia": "African",
-              "Ghana": "African",
-              "Guinea": "African",
-              "Guinea-Bissau": "African",
-              "Ivory Coast": "African",
-              "Cape Verde": "African",
-              "Cameroon": "African",
-              "Kenya": "African",
-              "Lesotho": "African",
-              "Liberia": "African",
-              "Madagascar": "African",
-              "Malawi": "African",
-              "Mali": "African",
-              "Mauritania": "African",
-              "Mauritius": "African",
-              "Mozambique": "African",
-              "Namibia": "African",
-              "Niger": "African",
-              "Nigeria": "African",
-              "Uganda": "African",
-              "Rwanda": "African",
-              "Sao Tome and Principe": "African",
-              "Senegal": "African",
-              "Seychelles": "African",
-              "Sierra Leone": "African",
-              "Somalia": "African",
-              "Sudan": "African",
-              "South Africa": "African",
-              "South Sudan": "African",
-              "Swaziland": "African",
-              "Tanzania": "African",
-              "Togo": "African",
-              "Chad": "African",
-              "Zambia": "African",
-              "Zimbabwe": "African",
-              "Indonesia": "Asian",
-              "Pakistan": "Asian",
-              "Bangladesh": "Asian",
-              "Philippines": "Asian",
-              "Afghanistan": "Asian",
-              "Saudi Arabia": "Asian",
-              "Uzbekistan": "Asian",
-              "Malaysia": "Asian",
-              "New Zealand": "Asian",
-              "Yemen": "Asian",
-              "Nepal": "Asian",
-              "Sri Lanka": "Asian",
-              "Kazakhstan": "Asian",
-              "Syria": "Asian",
-              "Cambodia": "Asian",
-              "Jordan": "Asian",
-              "Azerbaijan": "Asian",
-              "United Arab Emirates": "Asian",
-              "Tajikistan": "Asian",
-              "Laos": "Asian",
-              "Kyrgyzstan": "Asian",
-              "Turkmenistan": "Asian",
-              "Singapore": "Asian",
-              "Oman": "Asian",
-              "State of Palestine": "Asian",
-              "Kuwait": "Asian",
-              "Georgia": "Asian",
-              "Mongolia": "Asian",
-              "Armenia": "Asian",
-              "Qatar": "Asian",
-              "Bahrain": "Asian",
-              "Taiwan": "Asian",
-              "Timor-Leste": "Asian",
-              "United States of America": "American",
-              "United Kingdom": "British",
-              "Antigua and Barbuda": "Caribbean",
-              "The Bahamas": "Caribbean",
-              "Barbados": "caribbean",
-              "Cuba": "caribbean",
-              "Curaçao": "caribbean",
-              "Dominica": "caribbean",
-              "Dominican Republic": "caribbean",
-              "Grenada": "Caribbean",
-              "Haiti": "caribbean",
-              "Jamaica": "Caribbean",
-              "Saint Kitts and Nevis": "Caribbean",
-              "Saint Lucia": "Caribbean",
-              "Saint Vincent and the Grenadines": "Caribbean",
-              "Trinidad and Tobago": "Caribbean",
-              "China": "CHinese",
-              "Belarus": "Eastern European",
-              "Bulgaria": "Eastern European",
-              "Czech Republic": "Eastern European",
-              "Estonia": "Eastern European",
-              "Hungary": "Eastern European",
-              "Latvia": "Eastern European",
-              "Lithuania": "Eastern European",
-              "Moldova": "Eastern European",
-              "Poland": "Eastern European",
-              "Romania": "Eastern European",
-              "Russia": "Eastern European",
-              "Slovakia": "Eastern European",
-              "Ukraine": "Eastern European",
-              "Andorra": "European",
-              "Austria": "European",
-              "Belgium": "European",
-              "Denmark": "European",
-              "Finland": "European",
-              "Iceland": "European",
-              "Luxembourg": "European",
-              "Malta": "European",
-              "Monaco": "European",
-              "Netherlands": "European",
-              "Norway": "European",
-              "Portugal": "European",
-              "San Marino": "European",
-              "Sweden": "European",
-              "Switzerland": "European",
-              "Vatican City": "European",
-              "France": "French",
-              "Germany": "German",
-              "Greece": "Greek",
-              "India": "Indian",
-              "Ireland": "Irish",
-              "Italy": "Italian",
-              "Japan": "Japanese",
-              "Israel": "Jewish",
-              "South Korea": "Korean",
-              "North Korea": "Korean",
-              "Argentina": "Latin American",
-              "Belize": "Latin American",
-              "Bolivia": "Latin American",
-              "Brazil": "Latin American",
-              "Chile": "Latin American",
-              "Colombia": "Latin American",
-              "Costa Rica": "Latin American",
-              "Ecuador": "Latin American",
-              "El Salvador": "Latin American",
-              "Guatemala": "Latin American",
-              "Guyana": "Latin American",
-              "Honduras": "Latin American",
-              "Mexico": "Latin American",
-              "Nicaragua": "Latin American",
-              "Panama": "Latin American",
-              "Paraguay": "Latin American",
-              "Peru": "Latin American",
-              "Suriname": "Latin American",
-              "Uruguay": "Latin American",
-              "Venezuela": "Latin American",
-              "Vietnam": "Vietnamese",
-              "Spain": "Spanish",
-              "Australia": "European"
+              Algeria: 'African',
+              Angola: 'African',
+              Benin: 'African',
+              Botswana: 'African',
+              'Burkina Faso': 'African',
+              Burundi: 'African',
+              Canada: 'American',
+              'Central African Republic': 'African',
+              Comoros: 'African',
+              Congo: 'African',
+              Djibouti: 'African',
+              'Equatorial Guinea': 'African',
+              Eritrea: 'African',
+              Ethiopia: 'African',
+              Gabon: 'African',
+              Gambia: 'African',
+              Ghana: 'African',
+              Guinea: 'African',
+              'Guinea-Bissau': 'African',
+              'Ivory Coast': 'African',
+              'Cape Verde': 'African',
+              Cameroon: 'African',
+              Kenya: 'African',
+              Lesotho: 'African',
+              Liberia: 'African',
+              Madagascar: 'African',
+              Malawi: 'African',
+              Mali: 'African',
+              Mauritania: 'African',
+              Mauritius: 'African',
+              Mozambique: 'African',
+              Namibia: 'African',
+              Niger: 'African',
+              Nigeria: 'African',
+              Uganda: 'African',
+              Rwanda: 'African',
+              'Sao Tome and Principe': 'African',
+              Senegal: 'African',
+              Seychelles: 'African',
+              'Sierra Leone': 'African',
+              Somalia: 'African',
+              Sudan: 'African',
+              'South Africa': 'African',
+              'South Sudan': 'African',
+              Swaziland: 'African',
+              Tanzania: 'African',
+              Togo: 'African',
+              Chad: 'African',
+              Zambia: 'African',
+              Zimbabwe: 'African',
+              Indonesia: 'Asian',
+              Pakistan: 'Asian',
+              Bangladesh: 'Asian',
+              Philippines: 'Asian',
+              Afghanistan: 'Asian',
+              'Saudi Arabia': 'Asian',
+              Uzbekistan: 'Asian',
+              Malaysia: 'Asian',
+              'New Zealand': 'Asian',
+              Yemen: 'Asian',
+              Nepal: 'Asian',
+              'Sri Lanka': 'Asian',
+              Kazakhstan: 'Asian',
+              Syria: 'Asian',
+              Cambodia: 'Asian',
+              Jordan: 'Asian',
+              Azerbaijan: 'Asian',
+              'United Arab Emirates': 'Asian',
+              Tajikistan: 'Asian',
+              Laos: 'Asian',
+              Kyrgyzstan: 'Asian',
+              Turkmenistan: 'Asian',
+              Singapore: 'Asian',
+              Oman: 'Asian',
+              'State of Palestine': 'Asian',
+              Kuwait: 'Asian',
+              Georgia: 'Asian',
+              Mongolia: 'Asian',
+              Armenia: 'Asian',
+              Qatar: 'Asian',
+              Bahrain: 'Asian',
+              Taiwan: 'Asian',
+              'Timor-Leste': 'Asian',
+              'United States of America': 'American',
+              'United Kingdom': 'British',
+              'Antigua and Barbuda': 'Caribbean',
+              'The Bahamas': 'Caribbean',
+              Barbados: 'caribbean',
+              Cuba: 'caribbean',
+              Curaçao: 'caribbean',
+              Dominica: 'caribbean',
+              'Dominican Republic': 'caribbean',
+              Grenada: 'Caribbean',
+              Haiti: 'caribbean',
+              Jamaica: 'Caribbean',
+              'Saint Kitts and Nevis': 'Caribbean',
+              'Saint Lucia': 'Caribbean',
+              'Saint Vincent and the Grenadines': 'Caribbean',
+              'Trinidad and Tobago': 'Caribbean',
+              China: 'CHinese',
+              Belarus: 'Eastern European',
+              Bulgaria: 'Eastern European',
+              'Czech Republic': 'Eastern European',
+              Estonia: 'Eastern European',
+              Hungary: 'Eastern European',
+              Latvia: 'Eastern European',
+              Lithuania: 'Eastern European',
+              Moldova: 'Eastern European',
+              Poland: 'Eastern European',
+              Romania: 'Eastern European',
+              Russia: 'Eastern European',
+              Slovakia: 'Eastern European',
+              Ukraine: 'Eastern European',
+              Andorra: 'European',
+              Austria: 'European',
+              Belgium: 'European',
+              Denmark: 'European',
+              Finland: 'European',
+              Iceland: 'European',
+              Luxembourg: 'European',
+              Malta: 'European',
+              Monaco: 'European',
+              Netherlands: 'European',
+              Norway: 'European',
+              Portugal: 'European',
+              'San Marino': 'European',
+              Sweden: 'European',
+              Switzerland: 'European',
+              'Vatican City': 'European',
+              France: 'French',
+              Germany: 'German',
+              Greece: 'Greek',
+              India: 'Indian',
+              Ireland: 'Irish',
+              Italy: 'Italian',
+              Japan: 'Japanese',
+              Israel: 'Jewish',
+              'South Korea': 'Korean',
+              'North Korea': 'Korean',
+              Argentina: 'Latin American',
+              Belize: 'Latin American',
+              Bolivia: 'Latin American',
+              Brazil: 'Latin American',
+              Chile: 'Latin American',
+              Colombia: 'Latin American',
+              'Costa Rica': 'Latin American',
+              Ecuador: 'Latin American',
+              'El Salvador': 'Latin American',
+              Guatemala: 'Latin American',
+              Guyana: 'Latin American',
+              Honduras: 'Latin American',
+              Mexico: 'Latin American',
+              Nicaragua: 'Latin American',
+              Panama: 'Latin American',
+              Paraguay: 'Latin American',
+              Peru: 'Latin American',
+              Suriname: 'Latin American',
+              Uruguay: 'Latin American',
+              Venezuela: 'Latin American',
+              Vietnam: 'Vietnamese'
             }
             if (cuisines.hasOwnProperty(originCountry)) {
-              const cuisine = cuisines[originCountry];
+              const cuisine = cuisines[originCountry]
               const apiKeyFood = process.env.FOOD_API_KEY
               const randomOffset = Math.floor(Math.random() * 100)
               // Moeten we de cuisine koppelen aan de request voor spoonacular
@@ -813,120 +801,113 @@ app.get('/movie/:name', async (req, res) => {
               fetch(apiUrlFood)
                 .then(response => {
                   if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.status}`);
+                    throw new Error(`Network response was not ok: ${response.status}`)
                   }
-                  return response.json();
+                  return response.json()
                 })
                 .then(data => {
                   const recipeId = data.results[0].id
                   const recipeTitle = data.results[0].title
 
                   const apiKeyFood2 = process.env.FOOD_API_KEY
-                  const instructionUrl  = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?apiKey=${apiKeyFood}`
-                  
-                  fetch(instructionUrl)
-                  .then(response => {
-                    if (!response.ok) {
-                      throw new Error(`Network response was not ok: ${response.status}`);
-                    }
-                    return response.json();
-                  })
-                  .then(data => {
-                    const stepNumberArray = []
-                    const stepOverviewArray = [] 
-                    const resultsOfRecipeArray = data[0].steps
-                    resultsOfRecipeArray.forEach(step => {
-                      stepNumberArray.push(step.number)
-                      stepOverviewArray.push(step.step)
-                    })
-                
+                  const instructionUrl = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?apiKey=${apiKeyFood}`
 
-                    const ingredientURL = `https://api.spoonacular.com/recipes/${recipeId}/ingredientWidget.json?apiKey=${apiKeyFood2}`
-                    fetch(ingredientURL)
+                  fetch(instructionUrl)
                     .then(response => {
                       if (!response.ok) {
-                        throw new Error(`Network response was not ok: ${response.status}`);
+                        throw new Error(`Network response was not ok: ${response.status}`)
                       }
-                      return response.json();
+                      return response.json()
                     })
-                    .then(data => { 
-                      const ingredientsArray = data.ingredients
-                      const ingredientNameArray = []
-                      const ingredientValueArray = []
-                      const ingredientUnitArray = []
-                      ingredientsArray.forEach(ingredient => {
-                        ingredientNameArray.push(ingredient.name)
-                        ingredientValueArray.push(ingredient.amount.metric.value)
-                        ingredientUnitArray.push(ingredient.amount.metric.unit)
+                    .then(data => {
+                      const stepNumberArray = []
+                      const stepOverviewArray = []
+                      const resultsOfRecipeArray = data[0].steps
+                      resultsOfRecipeArray.forEach(step => {
+                        stepNumberArray.push(step.number)
+                        stepOverviewArray.push(step.step)
                       })
 
-                     const favFunction = async () => {   
-                        const userIdSession = req.session.users
-                        const db = client.db(process.env.MONGODB_NAME);
-                        const collection = db.collection(process.env.MONGODB_COLLECTION);
-                        try {
-                          const userMongo = await collection.findOne(
-                            { "_id": new ObjectId(userIdSession) }
-                          );
-                          const favoritesArray = userMongo.favorites;
-                          const cleanArray = favoritesArray.map(str => parseInt(str, 10));
-                          let inList
-                          if (cleanArray.includes(movieId)) {
-                            inList = true
-                            res.render('filmdescription.ejs', { movieGenres, movieId, movieOverview, moviePosterPath, movieReleaseDate, movieTitle, inList, recipeTitle, stepNumberArray, stepOverviewArray, ingredientNameArray, ingredientValueArray, ingredientUnitArray, movieGenresClean, movieRuntime});
+                      const ingredientURL = `https://api.spoonacular.com/recipes/${recipeId}/ingredientWidget.json?apiKey=${apiKeyFood2}`
+                      fetch(ingredientURL)
+                        .then(response => {
+                          if (!response.ok) {
+                            throw new Error(`Network response was not ok: ${response.status}`)
                           }
-                          else{
-                            inList = false
-                            res.render('filmdescription.ejs', { movieGenres, movieId, movieOverview, moviePosterPath, movieReleaseDate, movieTitle, inList, recipeTitle, stepNumberArray, stepOverviewArray, ingredientNameArray, ingredientValueArray, ingredientUnitArray, movieGenresClean, movieRuntime});
+                          return response.json()
+                        })
+                        .then(data => {
+                          const ingredientsArray = data.ingredients
+                          const ingredientNameArray = []
+                          const ingredientValueArray = []
+                          const ingredientUnitArray = []
+                          ingredientsArray.forEach(ingredient => {
+                            ingredientNameArray.push(ingredient.name)
+                            ingredientValueArray.push(ingredient.amount.metric.value)
+                            ingredientUnitArray.push(ingredient.amount.metric.unit)
+                          })
+
+                          const favFunction = async () => {
+                            const userIdSession = req.session.users
+                            const db = client.db(process.env.MONGODB_NAME)
+                            const collection = db.collection(process.env.MONGODB_COLLECTION)
+                            try {
+                              const userMongo = await collection.findOne(
+                                { _id: new ObjectId(userIdSession) }
+                              )
+                              const favoritesArray = userMongo.favorites
+                              const cleanArray = favoritesArray.map(str => parseInt(str, 10))
+                              let inList
+                              if (cleanArray.includes(movieId)) {
+                                inList = true
+                                res.render('filmdescription.ejs', { movieGenres, movieId, movieOverview, moviePosterPath, movieReleaseDate, movieTitle, inList, recipeTitle, stepNumberArray, stepOverviewArray, ingredientNameArray, ingredientValueArray, ingredientUnitArray, movieGenresClean, movieRuntime })
+                              } else {
+                                inList = false
+                                res.render('filmdescription.ejs', { movieGenres, movieId, movieOverview, moviePosterPath, movieReleaseDate, movieTitle, inList, recipeTitle, stepNumberArray, stepOverviewArray, ingredientNameArray, ingredientValueArray, ingredientUnitArray, movieGenresClean, movieRuntime })
+                              }
+                            } catch (error) {
+                              // Handle the error
+                              console.error('Failed to retrieve favorites:', error)
+                            }
                           }
-                        } catch (error) {
-                          // Handle the error
-                          console.error("Failed to retrieve favorites:", error);
+
+                          favFunction()
                         }
-                      }
-                      
-                      favFunction()
-                    }
-                    )
-
-                  })
+                        )
+                    })
                 }
-              )}
-            else {
-              console.log(`Er is geen keukeninformatie beschikbaar voor ${originCountry}.`);
+                )
+            } else {
+              console.log(`Er is geen keukeninformatie beschikbaar voor ${originCountry}.`)
             }
-
-        })
-        .catch(err => console.error('error:' + err));
-
-        
-    }  
+          })
+          .catch(err => console.error('error:' + err))
+      }
       )
-    .catch(err => console.error('error:' + err));
+      .catch(err => console.error('error:' + err))
   }
 })
 
 app.post('/favorite-deleted', (req, res) => {
   const userIdSession = req.session.users
   const movieIdDetail = req.body.favoriteBtn
-  const db = client.db(process.env.MONGODB_NAME);
-  const collection = db.collection(process.env.MONGODB_COLLECTION);
+  const db = client.db(process.env.MONGODB_NAME)
+  const collection = db.collection(process.env.MONGODB_COLLECTION)
 
   const favDeleteFunction = async () => {
     try {
       const userMongo = await collection.findOne(
-        { "_id": new ObjectId(userIdSession) }
-      );
-      const favoritesArray = userMongo.favorites;
-      const newArray = favoritesArray.filter(str => String(str) !== String(movieIdDetail));
+        { _id: new ObjectId(userIdSession) }
+      )
+      const favoritesArray = userMongo.favorites
+      const newArray = favoritesArray.filter(str => String(str) !== String(movieIdDetail))
       await collection.updateOne(
-        { "_id": new ObjectId(userIdSession) },
-        { $set: { "favorites": newArray } }
-      );
-
+        { _id: new ObjectId(userIdSession) },
+        { $set: { favorites: newArray } }
+      )
     } catch (error) {
       // Handle the error
-      console.error("Failed to retrieve favorites:", error);
+      console.error('Failed to retrieve favorites:', error)
     }
   }
 
@@ -939,20 +920,20 @@ app.post('/favorite-deleted', (req, res) => {
 app.post('/favorite-added', (req, res) => {
   const userIdSession = req.session.users
   const movieIdDetail = req.body.favoriteBtn
-  const db = client.db(process.env.MONGODB_NAME);
-  const collection = db.collection(process.env.MONGODB_COLLECTION);
+  const db = client.db(process.env.MONGODB_NAME)
+  const collection = db.collection(process.env.MONGODB_COLLECTION)
 
   const favAddFunction = async () => {
     try {
       const userMongo = await collection.findOneAndUpdate(
-        { "_id": new ObjectId(userIdSession) },
-        { $push: { "favorites": movieIdDetail } },
+        { _id: new ObjectId(userIdSession) },
+        { $push: { favorites: movieIdDetail } },
         { returnOriginal: false } // Ensure to return the updated document
-      );
+      )
       // Continue with your code logic here
     } catch (error) {
       // Handle the error
-      console.error("Failed to retrieve favorites:", error);
+      console.error('Failed to retrieve favorites:', error)
     }
   }
 
@@ -961,78 +942,75 @@ app.post('/favorite-added', (req, res) => {
   res.render('add-confirmation.ejs', { initialDetailPageURL: req.headers.referer })
 })
 
-
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Session destroy failed');
+      console.error(err)
+      res.status(500).send('Session destroy failed')
     } else {
-      res.redirect('/login');
+      res.redirect('/login')
     }
-  });
-});
+  })
+})
 
 // CREATE NEW USER
 app.post('/new-user', async (req, res) => {
-  const db = client.db(process.env.MONGODB_NAME);
-  const collection = db.collection(process.env.MONGODB_COLLECTION);
+  const db = client.db(process.env.MONGODB_NAME)
+  const collection = db.collection(process.env.MONGODB_COLLECTION)
   try {
-    const checkAvailable = await collection.findOne({ username: xss(req.body.username) });
+    const checkAvailable = await collection.findOne({ username: xss(req.body.username) })
     if (!checkAvailable) {
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+      const saltRounds = 10
+      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
 
       const result = await collection.insertOne({
 
         username: xss(req.body.username),
         password: xss(hashedPassword),
 
-        // adult, genres, release date, average vote count 
+        // adult, genres, release date, average vote count
         genre: req.body.genre,
         rating: req.body.rating,
 
         creationDate: new Date(),
-        fileName: "defaultAvatar.jpeg",
+        fileName: 'defaultAvatar.jpeg',
         favorites: []
-      });
+      })
 
-      const existingUser = await collection.findOne({ username: xss(req.body.username) });
-      req.session.users = existingUser._id;
-      res.redirect('/overview');
-
+      const existingUser = await collection.findOne({ username: xss(req.body.username) })
+      req.session.users = existingUser._id
+      res.redirect('/overview')
     } else {
-      res.render('username-exists.ejs', { initialDetailPageURL: req.headers.referer });
+      res.render('username-exists.ejs', { initialDetailPageURL: req.headers.referer })
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Server error');
+    console.error(error)
+    res.status(500).send('Server error')
   }
-});
-
+})
 
 app.post('/login-confirmation', async (req, res) => {
   try {
-    const db = client.db(process.env.MONGODB_NAME);
-    const collection = db.collection(process.env.MONGODB_COLLECTION);
+    const db = client.db(process.env.MONGODB_NAME)
+    const collection = db.collection(process.env.MONGODB_COLLECTION)
 
-    const existingUser = await collection.findOne({ username: xss(req.body.username) });
+    const existingUser = await collection.findOne({ username: xss(req.body.username) })
 
     if (existingUser) {
-      const passwordMatch = await bcrypt.compare(req.body.password, existingUser.password);
+      const passwordMatch = await bcrypt.compare(req.body.password, existingUser.password)
 
       if (passwordMatch) {
-        req.session.users = existingUser._id;
-        res.redirect('/overview');
-        console.log(req.session.users);
+        req.session.users = existingUser._id
+        res.redirect('/overview')
+        console.log(req.session.users)
       } else {
-        res.render('invalid-password.ejs', { initialDetailPageURL: req.headers.referer });
+        res.render('invalid-password.ejs', { initialDetailPageURL: req.headers.referer })
       }
     } else {
-      res.render('user-doenst-exist.ejs', { initialDetailPageURL: req.headers.referer });
+      res.render('user-doenst-exist.ejs', { initialDetailPageURL: req.headers.referer })
     }
   } catch (error) {
-    console.error(error);
+    console.error(error)
     res.status(500).send('Server error')
   }
 })
@@ -1041,86 +1019,82 @@ app.post('/login-confirmation', async (req, res) => {
 
 app.get('/search', (req, res) => {
   if (req.session.users === undefined) {
-    res.redirect('/login');
-  }
-  else{
-  const query = req.query.q;
-  const apiKey = process.env.API_KEY;
+    res.redirect('/login')
+  } else {
+    const query = req.query.q
+    const apiKey = process.env.API_KEY
 
-  const url = `https://api.themoviedb.org/3/search/movie?query=${query}`
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${apiKey}`
+    const url = `https://api.themoviedb.org/3/search/movie?query=${query}`
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${apiKey}`
+      }
     }
-  };
 
-  fetch(url, options)
-    .then(response => response.json())
-    .then(json => {
+    fetch(url, options)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json.results)
 
-      console.log(json.results)
+        const movies = json.results
+        const adultArray = []
+        const backdropPathArray = []
+        const movieGenreIds = []
+        const idArray = []
+        const originalTitleArray = []
+        const posterPathArray = []
+        const urlTitleArray = []
 
-      const movies = json.results;
-      const adultArray = []
-      const backdropPathArray = []
-      const movieGenreIds = []
-      const idArray = []
-      const originalTitleArray = []
-      const posterPathArray = []
-      const urlTitleArray = []
+        movies.forEach(movie => {
+          const movieAdult = movie.adult
+          adultArray.push(movieAdult)
 
-      movies.forEach(movie => {
-        const movieAdult = movie.adult
-        adultArray.push(movieAdult)
+          const movieBackdropPath = movie.backdrop_path
+          backdropPathArray.push(movieBackdropPath)
 
-        const movieBackdropPath = movie.backdrop_path
-        backdropPathArray.push(movieBackdropPath)
+          const movieGenreId = movie.genre_ids
+          movieGenreIds.push(movieGenreId)
 
-        const movieGenreId = movie.genre_ids
-        movieGenreIds.push(movieGenreId)
+          const movieId = movie.id
+          idArray.push(movieId)
 
-        const movieId = movie.id
-        idArray.push(movieId)
+          const originalTitle = movie.original_title
+          originalTitleArray.push(originalTitle)
 
-        const originalTitle = movie.original_title
-        originalTitleArray.push(originalTitle)
+          const moviePosterPath = movie.poster_path
+          posterPathArray.push(moviePosterPath)
 
-        const moviePosterPath = movie.poster_path
-        posterPathArray.push(moviePosterPath)
-
-        const slugifiedTitle = slugify(movie.title, {
-          replacement: '-',  
-          remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
-          lower: true,      // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
-          strict: false,     // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
-          locale: 'en',      // Taalcode voor Engels, maar dit heeft geen invloed op het resultaat
-          trim: true         // Verwijder eventuele extra spaties aan het begin of einde
+          const slugifiedTitle = slugify(movie.title, {
+            replacement: '-',
+            remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
+            lower: true, // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
+            strict: false, // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
+            locale: 'en', // Taalcode voor Engels, maar dit heeft geen invloed op het resultaat
+            trim: true // Verwijder eventuele extra spaties aan het begin of einde
+          })
+          urlTitleArray.push(slugifiedTitle)
         })
-        urlTitleArray.push(slugifiedTitle)
-
-      });
-      res.render('searchresults.ejs', { adultArray, backdropPathArray, movieGenreIds, idArray, originalTitleArray, posterPathArray, urlTitleArray})
-
-    })
-    .catch(err => {
-      console.error('error:', err);
-      res.status(500).send('Er is een fout opgetreden bij het verwerken van uw verzoek.');
-    });
+        res.render('searchresults.ejs', { adultArray, backdropPathArray, movieGenreIds, idArray, originalTitleArray, posterPathArray, urlTitleArray })
+      })
+      .catch(err => {
+        console.error('error:', err)
+        res.status(500).send('Er is een fout opgetreden bij het verwerken van uw verzoek.')
+      })
   }
-});
+})
 
 app.use((req, res) => {
-  console.error('404 error at URL: ' + req.url);
-  res.status(404).send('404 error at URL: ' + req.url);
-});
+  console.error('404 error at URL: ' + req.url)
+  res.status(404).send('404 error at URL: ' + req.url)
+})
 
 app.use((err, req, res) => {
-  console.error(err.stack);
-  res.status(500).send('500: server error');
-});
+  console.error(err.stack)
+  res.status(500).send('500: server error')
+})
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server is listening at port ${process.env.PORT}`);
-});
+  console.log(`Server is listening at port ${process.env.PORT}`)
+})
