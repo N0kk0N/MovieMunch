@@ -376,6 +376,10 @@ app.get('/profile', (req, res) => {
   console.log(req.session.users);
 });
 
+app.get('/searchmovie', (req, res) => {
+  res.render('searchmovie.ejs');
+});
+
 app.get('/profile/settings', (req, res) => {
   res.render('profile-settings.ejs');
   console.log(req.session.users);
