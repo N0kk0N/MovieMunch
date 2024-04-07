@@ -806,3 +806,47 @@ main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
     border-radius: 11px;
     text-transform: uppercase;
 }
+
+/* css search page */
+
+.centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.search-movie {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+}
+
+.search-movie form{
+  position: absolute;
+  top: 0;
+  width: 90%;
+  margin: 1em auto 0 auto;
+}
+ 
+.search-movie input[type="text"] {
+    box-sizing: border-box;
+    border: none;
+    background-color: #D9D9D9;
+    height: 48px;
+    border-radius: 30px;
+    padding-left: 35px;
+    background-image: url('../images/search.svg');
+    background-position: 7px center;
+    background-repeat: no-repeat;
+}
+ 
+.search-movie input[type="text"]::placeholder {
+    font-family: 'Archivo', sans-serif;
+}
+
+.search-movie h2{
+  font-family: 'clash-bold', sans-serif;
+  text-transform: uppercase;
+  font-size: 2em;
+}
