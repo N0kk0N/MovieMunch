@@ -1,81 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup testpage</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup testpage</title>
+  <link rel="stylesheet" href="../static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
-<body>
-    <h1>Signup</h1>
-    <form action="/new-user" method="POST">
-        <label for="">Username</label>
-        <input type="text" name="username" required>
 
-        <br>
+<body class="signup">
+  <form > 
+    <label id="username" class="register is-visible">
+      <label class="label-heading" for="username">What's will be your username?</label>
+      <input name="username" type="text" placeholder="username" required />
 
-        <label for="">Password</label>
-        <input type="password" name="password" required>
-        
-        <!-- ADULT PREFERENCE -->
-        <p>Adult?</p>
-        <input type="radio" value="true" name="adult" id="true">
-        <label for="true">True</label>
-        
-        <input type="radio" value="false" name="adult" id="false">
-        <label for="false">False</label>
-
-        <!-- GENRE PREFERENCE -->
-        <p>Genre?</p>
-        <input type="checkbox" id="action" name="genre" value="28">
-        <label for="action">Action</label>
-        <input type="checkbox" id="adventure" name="genre" value="12">
-        <label for="adventure">Adventure</label>
-        <input type="checkbox" id="animation" name="genre" value="16">
-        <label for="animation">Action</label>
-        <input type="checkbox" id="comedy" name="genre" value="35">
-        <label for="comedy">Adventure</label>
-        <input type="checkbox" id="crime" name="genre" value="80">
-        <label for="crime">Crime</label>
-        <input type="checkbox" id="documentary" name="genre" value="99">
-        <label for="documentary">Documentary</label>
-        <input type="checkbox" id="drama" name="genre" value="18">
-        <label for="drama">Drama</label>
-        <input type="checkbox" id="family" name="genre" value="10751">
-        <label for="family">Family</label>
-        <input type="checkbox" id="fantasy" name="genre" value="14">
-        <label for="fantasy">Fantasy</label>
-        <input type="checkbox" id="history" name="genre" value="36">
-        <label for="history">History</label>
-        <input type="checkbox" id="horror" name="genre" value="27">
-        <label for="horror">Horror</label>
-        <input type="checkbox" id="music" name="genre" value="10402">
-        <label for="music">Music</label>
-        <input type="checkbox" id="mystery" name="genre" value="9648">
-        <label for="mystery">Mystery</label>
-        <input type="checkbox" id="romance" name="genre" value="10749">
-        <label for="romance">Romance</label>
-        <input type="checkbox" id="sciencefiction" name="genre" value="878">
-        <label for="sciencefiction">Science Fiction</label>
-        <input type="checkbox" id="tvmovie" name="genre" value="10770">
-        <label for="tvmovie">Tv Movie</label>
-        <input type="checkbox" id="thriller" name="genre" value="53">
-        <label for="thriller">Thriller</label>
-        <input type="checkbox" id="war" name="genre" value="10752">
-        <label for="war">War</label>
-        <input type="checkbox" id="western" name="genre" value="37">
-        <label for="western">Western</label>
-
-        <p>Minimum rating</p>
-        <input type="range" min="1" max="10" value="5" name="rating">
-        
-        <p>Release date</p>
-        <input type="range" min="1800" max="2024" value="2024" name="date">
-        <!-- Moeten er voor zorgen dat "max" altijd up to date is. Dus dat er in het jaar 2025 niet nog steeds 2024 staat. -->
-
-
-
-        <input type="submit" value="Sign up">
-    </form>
+      <div class="input-btn">
+        <button type="button" class="form-button" value="next" onclick="next('username','email')">OK <i
+            class="fa fa-check" aria-hidden="true"></i></button>
+        Press <strong>Enter ↵</strong>
+      </div>
+      <div class="input-btn">
+        <i class="fa fa-arrow-down" style="font-size:24px" onclick="next('username','email')"></i>
+      </div>
+    </label>
+    <label id="email" class="register">
+      <label class="label-heading" for="email">Your email address</label>
+      <input type="email" name="email" placeholder="email" required />
+      <div class="input-btn">
+        <button type="button" class="form-button" value="next" onclick="next('email','password')">OK</button>
+        Press <strong>Enter ↵</strong>
+      </div>
+      <div class="input-btn">
+        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('email', 'username')"></i>
+        <i class="fa fa-arrow-down" style="font-size:2em" onclick="next('email','password')"></i>
+      </div>
+    </label>
+    <label id="password" class="register">
+      <label class="label-heading" for="password">Password</label>
+      <input type="password" name="password" placeholder="password" required />
+      <div class="input-btn">
+        <button type="button" class="form-button" value="next" onclick="next('password','genre')">OK <i
+            class="fa fa-check" aria-hidden="true"></i></button>
+        Press <strong>Enter ↵</strong>
+      </div>
+      <div class="input-btn">
+        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('password', 'email')"></i>
+        <i class="fa fa-arrow-down" style="font-size:2em" onclick="next('password','genre')"></i>
+      </div>
+    </label>
+    <label id="genre" class="register">
+      <label class="label-heading" for="genre">What genre's do you like</label>
+      <!-- Need to make this optimized to pickup all genre's not hardcoded! (for each)-->
+      <ul class="genre-grid">
+        <li>
+          <input type="checkbox" id="action" value="action">
+          <label for="action">Action</label>
+        </li>
+        <li>
+          <input type="checkbox" id="adventure" value="adventure">
+          <label for="adventure">Adventure</label>
+        </li>
+        <li>
+          <input type="checkbox" id="animation" value="animation">
+          <label for="animation">Animation</label>
+        </li>
+        <li>
+          <input type="checkbox" id="comedy" value="comedy">
+          <label for="comedy">Comedy</label>
+        </li>
+        <li>
+          <input type="checkbox" id="crime" value="crime">
+          <label for="crime">Crime</label>
+        </li>
+        <li>
+          <input type="checkbox" id="documentary" value="documentary">
+          <label for="documentary">Documentary</label>
+        </li>
+        <li>
+          <input type="checkbox" id="drama" value="drama">
+          <label for="drama">Drama</label>
+        </li>
+        <li>
+          <input type="checkbox" id="family" value="family">
+          <label for="family">Family</label>
+        </li>
+        <li>
+          <input type="checkbox" id="fantasy" value="fantasy">
+          <label for="fantasy">Fantasy</label>
+        </li>
+        <li>
+          <input type="checkbox" id="history" value="history">
+          <label for="history">History</label>
+        </li>
+        <li>
+          <input type="checkbox" id="horror" value="horror">
+          <label for="horror">Horror</label>
+        </li>
+        <li>
+          <input type="checkbox" id="music" value="music">
+          <label for="music">Music</label>
+        </li>
+        <li>
+          <input type="checkbox" id="mystery" value="mystery">
+          <label for="mystery">Mystery</label>
+        </li>
+        <li>
+          <input type="checkbox" id="romance" value="romance">
+          <label for="romance">Romance</label>
+        </li>
+      </ul>
+      <div class="input-btn">
+        <button type="button" class="form-button" value="next" onclick="next('genre','imdbRating')">OK <i
+            class="fa fa-check" aria-hidden="true"></i></button>
+        Press <strong>Enter ↵</strong>
+      </div>
+      <div class="input-btn">
+        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('genre', 'password')"></i>
+        <i class="fa fa-arrow-down" style="font-size:2em" onclick="next('genre','imdbRating')"></i>
+      </div>
+    </label>
+    <label id="imdbRating" class="register">
+      <label class="label-heading" for="imdbRating">IMDB Rating</label>
+      <div class="slidecontainer">
+        <input type="range" min="1" max="10" value="5" class="slider" id="myRange">
+        <p>Value: <span id="rating"></span></p>
+      </div>
+      <div class="input-btn">
+        <button type="button" class="form-button" value="next" onclick="next('genre','imdbRating')">OK <i
+            class="fa fa-check" aria-hidden="true"></i></button>
+        Press <strong>Enter ↵</strong>
+      </div>
+      <div class="input-btn">
+        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('imdbRating', 'genre')"></i>
+      </div>
+    </label>
+    <p id="validate"></p>
+  </form>
 </body>
+<script>
+// Checkbox event listeners
+var slider = document.getElementById("myRange");
+var output = document.getElementById("rating");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+
+document.querySelectorAll('.genre-grid input[type="checkbox"]').forEach((checkbox) => {
+    checkbox.addEventListener('change', (event) => {
+      event.target.closest('li').querySelector('label').classList.toggle('checked', checkbox.checked);
+    });
+  });
+
+  let error = document.getElementById('validate');
+
+  // Event listeners for keyup events
+  document.getElementById("username").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next("username", "email");
+    }
+  });
+
+  document.getElementById("email").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next('email', 'password');
+    }
+  });
+
+  document.getElementById("password").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next('password', 'genre');
+    }
+  });
+
+  document.getElementById("genre").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next('genre', 'imdbRating');
+    }
+  });
+
+  document.getElementById("imdbRating").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next('imdbRating');
+    }
+  });
+
+  // Functions for navigating between sections
+  function next(from, to) {
+    error.innerHTML = "";
+    let value = document.getElementById(from).querySelector('input').value;
+    if (!value || value === "") {
+      error.innerHTML = "Please enter a value";
+    } else {
+      error.innerHTML = "";
+      document.getElementById(from).classList.remove('is-visible');
+      document.getElementById(to).classList.add('is-visible');
+    }
+  }
+
+  function previous(from, to) {
+
+    
+    error.innerHTML = "";
+    document.getElementById(from).classList.remove('is-visible');
+    document.getElementById(to).classList.add('is-visible');
+  }
+
+</script>
 </html>
