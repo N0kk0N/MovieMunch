@@ -2,51 +2,46 @@
     font-family: archivo-regular;
     src: url(../fonts/Archivo-Regular.ttf);
   }
-
+ 
   @font-face {
     font-family: archivo-light;
     src: url(../fonts/Archivo-Light.ttf);
   }
-
+ 
   @font-face {
     font-family: archivo-bold;
     src: url(../fonts/Archivo-Bold.ttf);
   }
-
+ 
   @font-face {
     font-family: clash-regular;
     src: url(../fonts/ClashDisplay-Regular.ttf);
   }
-
+ 
   @font-face {
     font-family: clash-medium;
     src: url(../fonts/ClashDisplay-Medium.ttf);
   }
-
+ 
   @font-face {
     font-family: clash-light;
     src: url(../fonts/ClashDisplay-Light.ttf);
   }
-
+ 
   @font-face {
     font-family: clash-bold;
     src: url(../fonts/ClashDisplay-Bold.ttf);
   }
-
-
-
 
 body{
     padding: 0;
     margin: 0;
 }
 
-/* css nav component */
-
 .nav {
     display: flex;
-    padding-left: 3em;
-    padding-right: 3em;
+    padding-left: 4em;
+    padding-right: 4em;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -98,6 +93,11 @@ body{
     flex-direction: column;
 }
 
+.swiper-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
 
 .overview-film-hero {
     flex-shrink: 0;
@@ -106,7 +106,7 @@ body{
     background-color: blue;
     position: relative;
 }
-
+ 
 .overview-film-hero::after {
     content: "";
     position: absolute;
@@ -117,13 +117,13 @@ body{
     background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(33,33,33,0.41222426470588236) 53%, rgba(120,120,120,0) 63%, rgba(255,255,255,0) 100%);
     z-index: 1;
 }
-
+ 
 .overview-film-hero img{
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-
+ 
 .overlay-content {
     position: absolute;
     top: 55%;
@@ -195,18 +195,18 @@ body{
     flex: 0 0 auto;
     margin-right: 10px;
 }
-
+ 
 .film-slider-container-items{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
-
+ 
+ 
 .film-slider-container-items form{
     width: 90%;
 }
-
+ 
 .search-form input[type="text"] {
     width: 100%;
     box-sizing: border-box;
@@ -219,11 +219,11 @@ body{
     background-position: 7px center;
     background-repeat: no-repeat;
 }
-
+ 
 .search-form input[type="text"]::placeholder {
     font-family: 'Archivo', sans-serif;
 }
-
+ 
 .inline-items {
     display: flex;
     justify-content: space-between;
@@ -244,13 +244,417 @@ body{
     color: black;
 }
 
-
 .movie-card img{
     height: 100%;
     width: 11em;
     object-fit: cover;
 }
 
+/* FILMDETAIL */
+/* Filmdetail - movie poster */
+.filmdetail-poster {
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1.5em;
+    position: relative;
+}
+
+.filmdetail-cursor {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 100%;
+    left: 100%;
+    margin: -25px 0 0 -25px;
+    background: rgb(255, 103, 63);
+    border-radius: 2em;
+    backface-visibility: hidden;
+    z-index: -1;
+}
+
+.filmdetail-poster-img {
+    height: 100%;
+    width: 100vw;
+    position: absolute;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.filmdetail-poster div:first-of-type {
+    display: flex;
+    justify-content: space-between;
+}
+
+.filmdetail-poster div button {
+    margin: 1em;
+    padding: 0.5em;
+    height: 3em;
+    width: 6em;
+    border: none;
+    border-radius: 10px;
+    background-color:  rgb(255, 103, 63);
+    box-shadow: 0px 1px 10px rgb(0, 0, 0, 0.5);
+    color: white;
+    text-transform: capitalize;
+}
+
+.filmdetail-poster div button:hover {
+    background-color: black
+
+}
+
+.filmdetail-poster div button:nth-of-type(2) {
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+}
+
+.filmdetail-poster div h1 {
+    font-family: clash-bold;
+    text-transform: uppercase;
+    margin: 0;
+    font-size: 2.5em;
+    color: white;
+}
+
+.filmdetail-poster div p {
+    font-family: archivo-light;
+    color: white;
+    font-size: 0.9em;
+    margin: 0;
+    margin-bottom: 1em
+}
+
+.filmdetail-poster-gradient {
+    background: linear-gradient(to bottom, transparent, black);
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 20em;
+    z-index: -1;
+    opacity: 50%;
+}
+
+.filmdetail-favorite-icon {
+    max-width: 100%;
+    max-height: 100%;
+    width: 2.5em;
+}
+
+
+
+/* filmdetail - description */
+.filmdetail-description {
+    text-align: center;
+    margin: 0.5em;
+    margin-bottom: 2em;
+}
+
+.filmdetail-description p:first-of-type{
+    margin-bottom: 3em;
+    font-family: archivo-bold;
+    font-size: 0.8em;
+}
+
+.filmdetail-description p:nth-of-type(2){
+    font-family: archivo-regular;
+    font-size: 0.9em;
+}
+
+.filmdetail-description p:nth-of-type(3){
+    font-family: archivo-light;
+    margin: 0;
+    font-size: 0.75em;
+    margin-bottom: 7em;
+}
+
+.filmdetail-watchnow {
+    padding: 0.5em;
+    width: 80vw;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 10px;
+    background-color: rgb(255, 103, 63);
+    font-family: archivo-bold;
+    animation: filmdetail-glow 2s ease-in-out infinite alternate;
+}
+
+.filmdetail-watchnow:hover {
+    background-color: black;
+    color: white;
+}
+
+.filmdetail-recepten-button{
+    font-family: clash-bold;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 2em;
+    font-size: 1.5em;
+    animation: filmdetail-showup 2s ease-in-out;
+}
+/* Recipe */
+.filmdetail-recipe {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.filmdetail-recipe h2{
+    margin: 0;
+    font-family: clash-light;
+    text-transform: capitalize;
+    font-size: 2em;
+}
+
+.filmdetail-recipe-lists {
+    margin: 0;
+    margin-bottom: 2em;
+    animation: filmdetail-showup 1s ease-in-out;
+}
+
+
+/* first recipe */
+.filmdetail-recipe1 {
+    padding: 0;
+    list-style-type: none;
+}
+
+.filmdetail-recipe .filmdetail-active {
+    display: none;
+}
+
+.filmdetail-recipe2 {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.filmdetail-recipe-options {
+    margin: 0;
+    padding: 0.5em;
+    list-style-type: none;
+    background-color: gray;
+}
+
+.filmdetail-recipe-buttons {
+    background-color: transparent;
+    border: solid;
+    border-color: rgb(255, 103, 63);
+    border-width: 0.2em;
+    border-radius: 10px;
+    width: 100%;
+    padding: 0.5em;
+    margin-bottom: 3em;
+}
+
+.filmdetail-recipe-buttons:hover {
+    animation: filmdetail-border 2s ease-in-out;
+}
+
+.filmdetail-space {
+    width: 100%;
+    height: 6em;
+    opacity: 0;
+    background-color: white;
+}
+
+/* ingredients */
+.filmdetail-ingredients-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.filmdetail-ingredients-section h3 {
+    font-family: archivo-bold;
+    font-size: 1em;
+    text-transform: uppercase;
+}
+
+.filmdetail-ingredients {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 2em 2em 2em 2em;
+    margin-bottom: 3em;
+    list-style-type: disc;
+}
+
+.filmdetail-ingredients li  {
+    text-transform:capitalize;
+    font-family: archivo-medium;
+    font-size: 0.9em;
+}
+
+/* Swiper function / instructions */
+main .filmdetail-swiper {
+    position: relative;
+}
+
+main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
+    display: flex;
+    margin-bottom: 3em;
+}
+
+.filmdetail-instructies-titel {
+    font-family: archivo-bold;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1em;
+}
+
+.filmdetail-swiper {
+    color: white;
+    justify-content: space-between;
+    align-items: center;
+    height: 15em;
+    border-radius: 25px;
+}
+
+.filmdetail-wrapper {
+    width: 70vw;
+    padding: 0;
+    margin: 0;
+    text-align: center
+}
+
+.filmdetail-swiper .filmdetail-slide {
+    width: 50vw;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filmdetail-slide p {
+    margin-left: 1em;
+    width: 50vw;
+    max-width: 80%;
+    margin-right: 1em;
+    font-family: archivo-medium;
+}
+
+.filmdetail-recipe .filmdetail-button-prev, 
+.filmdetail-recipe .filmdetail-button-next {
+    background: none;
+    width: 44px;
+    height: 20px;
+    padding: 0;
+    color: white !important;
+    border-radius: 1em;
+    border: none;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #ffffff !important;
+}
+
+.swiper-pagination-bullet {
+    background-color: #ffffff !important;
+}
+
+.filmdetail-swiper .filmdetail-recipe-lists .filmdetail-pagination {
+    background-color: white;
+    width: 20em;
+}
+
+/* Animations */
+.filmdetail-hidden {
+    opacity: 0;
+    transition: all 1s;
+}
+
+.filmdetail-show {
+    opacity: 1;
+    transition: 2s;
+}
+
+@keyframes filmdetail-glow {
+    from {
+      box-shadow: 0 0 10px rgb(0, 0, 0, 0.1);
+    }
+    to {
+      box-shadow: 0 0 30px rgb(0, 0, 0, 0.5), 0 0 10px rgb(0, 0, 0, 0.5)
+    }
+  }
+
+
+
+  @keyframes filmdetail-showup {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+
+
+/* Responsive */
+@media (max-width: 1300px) {
+    .filmdetail-cursor {
+        display: none;
+    }
+}
+
+
+@media (min-width: 870px) {
+    .filmdetail-watchnow {
+        width: 50vw;
+    }
+    .filmdetail-recipe-lists {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2em;
+        border: solid;
+        border-color:  rgb(194, 194, 194);
+        border-width: 0.5em;
+        padding: 2em;
+        border-radius: 10px;
+        min-width: 90vw;
+        height: 25em;
+    }
+    .filmdetail-recipe-buttons {
+        width: 50%;
+    }
+    .filmdetail-recipe {
+        margin-left: 1em;
+        margin-right: 1em;
+        display: flex;
+        flex-direction: column;
+        align-items: center
+    }
+    .filmdetail-ingredients li  {
+        font-size: 1em;
+    }
+    .filmdetail-swiper {
+        width: 50vw;
+    }
+    .filmdetail-slide p {
+        font-size: 1.1em;
+    }
+}
+
+@media (min-width: 1300px) {
+    .filmdetail-description p:nth-of-type(2) {
+        font-family: archivo-regular;
+        font-size: 1em;
+    }
+    .filmdetail-ingredients li  {
+        font-size: 1em;
+        padding: 2em;
+        padding-left: 0;
+    }
+    .filmdetail-swiper {
+        width: 50vw;
+        height: 40vh;
+    }
+    .filmdetail-slide p {
+        font-size: 1.20em;
+        max-width: 60%;
+    }
+}
 
 /* css favourites page */
 

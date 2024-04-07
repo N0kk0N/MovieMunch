@@ -4,6 +4,7 @@ require('dotenv').config()
 const express = require('express')
 const request = require('request');
 const session = require('express-session')
+const slugify = require('slugify')
 const xss = require('xss')
 const bcrypt = require('bcrypt')
 const multer = require('multer')
@@ -37,6 +38,7 @@ app
   .listen(3000, () => console.log('Server is running on port 3000'));
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const e = require('express');
 const uri = `${process.env.MONGODB_URL}`;
 const client = new MongoClient(uri, {
   serverApi: {
@@ -62,6 +64,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/overview', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
   const request = require('request');
   const { json } = require('express')
   const apiKey = process.env.API_KEY;
@@ -136,6 +142,7 @@ app.get('/overview', (req, res) => {
       const posterPathArray = []
       const releaseDateArray = []
       const titleArray = []
+      const urlTitleArray = []
       const videoArray = []
       const voteAverageArray = []
       const voteCountArray = []
@@ -174,6 +181,16 @@ app.get('/overview', (req, res) => {
         const title = movie.title
         titleArray.push(title)
 
+        const slugifiedTitle = slugify(movie.title, {
+          replacement: '-',  
+          remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
+          lower: true,      // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
+          strict: false,     // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
+          locale: 'vi',      // Taalcode voor Vietnamees, maar dit heeft geen invloed op het resultaat
+          trim: true         // Verwijder eventuele extra spaties aan het begin of einde
+        })
+        urlTitleArray.push(slugifiedTitle)
+
         const video = movie.video
         videoArray.push(video)
 
@@ -183,16 +200,21 @@ app.get('/overview', (req, res) => {
         const voteCount = movie.vote_count
         voteCountArray.push(voteCount)
       });
-      res.render('overview.ejs', { adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray });
+
+      res.render('overview.ejs', { adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray, urlTitleArray });
     });
-  });
+  });}
 });
 
 app.get('/overview/all', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else {
   const request = require('request');
   const { json } = require('express');
   const apiKey = process.env.API_KEY;
-
+    
   const userIdSession = req.session.users
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
@@ -214,8 +236,7 @@ app.get('/overview/all', (req, res) => {
 
   findGenreFunction().then(({ genreArray, userRating }) => {
 
-
-
+    
   // Arrays om gegevens van films op te slaan
   const adultArray = [];
   const backdropPathArray = [];
@@ -308,10 +329,13 @@ app.get('/overview/all', (req, res) => {
 
   // Start het ophalen van films
   fetchMovies();
-});})
-
+}});
 
 app.get('/favourites', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
 
   /// VIND DE ARRAY MET FAVORITE ID's
 
@@ -389,7 +413,8 @@ app.get('/favourites', (req, res) => {
       })
     })
   })
-})
+}})
+
   
 
 app.get('/signup', (req, res) => {
@@ -408,6 +433,10 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
   const userIdSession = req.session.users
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
@@ -465,9 +494,15 @@ app.get('/profile', (req, res) => {
   )
 
   console.log(req.session.users);
+}
 });
 
 app.get('/profile/settings', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
+
   const userIdSession = req.session.users
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
@@ -498,6 +533,7 @@ app.get('/profile/settings', (req, res) => {
   )
 
   console.log(req.session.users);
+}
 });
 
 app.post('/profile-picture', upload.single('avatar'), async function (req, res, next) {
@@ -550,8 +586,11 @@ app.post('/profile-picture', upload.single('avatar'), async function (req, res, 
   }
 });
 
-
 app.get('/movie/:name', async (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
 
   movieName = req.params.name
   const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
@@ -614,7 +653,6 @@ app.get('/movie/:name', async (req, res) => {
 
             // MAAK HIER DAT DE ORIGIN COUNTRY WORDT OMGEZET IN CUISINE
 
-
             const cuisines = {
               "Algeria": "African",
               "Angola": "African",
@@ -622,6 +660,7 @@ app.get('/movie/:name', async (req, res) => {
               "Botswana": "African",
               "Burkina Faso": "African",
               "Burundi": "African",
+              "Canada": "American",
               "Central African Republic": "African",
               "Comoros": "African",
               "Congo": "African",
@@ -695,6 +734,7 @@ app.get('/movie/:name', async (req, res) => {
               "Armenia": "Asian",
               "Qatar": "Asian",
               "Bahrain": "Asian",
+              "Taiwan": "Asian",
               "Timor-Leste": "Asian",
               "United States of America": "American",
               "United Kingdom": "British",
@@ -771,7 +811,8 @@ app.get('/movie/:name', async (req, res) => {
               "Peru": "Latin American",
               "Suriname": "Latin American",
               "Uruguay": "Latin American",
-              "Venezuela": "Latin American"
+              "Venezuela": "Latin American",
+              "Vietnam": "Vietnamese"
             }
             if (cuisines.hasOwnProperty(originCountry)) {
               const cuisine = cuisines[originCountry];
@@ -873,13 +914,12 @@ app.get('/movie/:name', async (req, res) => {
     }  
       )
     .catch(err => console.error('error:' + err));
-    
+  }
 })
 
 app.post('/favorite-deleted', (req, res) => {
   const userIdSession = req.session.users
   const movieIdDetail = req.body.favoriteBtn
-
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 
@@ -910,7 +950,6 @@ app.post('/favorite-deleted', (req, res) => {
 app.post('/favorite-added', (req, res) => {
   const userIdSession = req.session.users
   const movieIdDetail = req.body.favoriteBtn
-
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 
@@ -1007,14 +1046,13 @@ app.post('/login-confirmation', async (req, res) => {
   }
 })
 
-app.get('/filmlijst', (req, res) => {
-  res.send('test');
-})
-
-
 // WORKING ON SEARCH BAR
 
 app.get('/search', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
   const query = req.query.q;
   const apiKey = process.env.API_KEY;
 
@@ -1069,6 +1107,7 @@ app.get('/search', (req, res) => {
       console.error('error:', err);
       res.status(500).send('Er is een fout opgetreden bij het verwerken van uw verzoek.');
     });
+  }
 });
 
 app.use((req, res) => {
