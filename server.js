@@ -200,6 +200,7 @@ app.get('/overview', (req, res) => {
         const voteCount = movie.vote_count
         voteCountArray.push(voteCount)
       });
+
       res.render('overview.ejs', { adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray, urlTitleArray });
     });
   });}
@@ -213,7 +214,29 @@ app.get('/overview/all', (req, res) => {
   const request = require('request');
   const { json } = require('express');
   const apiKey = process.env.API_KEY;
+    
+  const userIdSession = req.session.users
+  const db = client.db(process.env.MONGODB_NAME);
+  const collection = db.collection(process.env.MONGODB_COLLECTION);
 
+  const findGenreFunction = async () => {
+    try {
+      const userMongo = await collection.findOne(
+        { "_id": new ObjectId(userIdSession) }
+      );
+      const genreArray = userMongo.genre
+      const userRating = userMongo.rating
+      return { genreArray, userRating };
+      // Continue with your code logic here
+    } catch (error) {
+      // Handle the error
+      console.error("Failed to retrieve favorites:", error);
+    }
+  }
+
+  findGenreFunction().then(({ genreArray, userRating }) => {
+
+    
   // Arrays om gegevens van films op te slaan
   const adultArray = [];
   const backdropPathArray = [];
@@ -236,7 +259,7 @@ app.get('/overview/all', (req, res) => {
   function fetchMovies() {
     const options = {
       method: 'GET',
-      url: 'https://api.themoviedb.org/3/movie/popular',
+      url: `https://api.themoviedb.org/3/discover/movie?api_key=process.env.API_KEY&language=en-US&sort_by=popularity.desc&vote_average.gte=${userRating}&with_genres=${genreArray}`,
       qs: {
         language: 'en-US',
         page: page,
@@ -282,7 +305,7 @@ app.get('/overview/all', (req, res) => {
       }
     });
   }
-
+  
   // Functie om de overzichtspagina te renderen
   function renderOverviewPage() {
     // Render de pagina met de verzamelde gegevens
@@ -391,6 +414,7 @@ app.get('/favourites', (req, res) => {
     })
   })
 }})
+
   
 
 app.get('/signup', (req, res) => {
@@ -478,6 +502,7 @@ app.get('/profile/settings', (req, res) => {
     res.redirect('/login');
   }
   else{
+
   const userIdSession = req.session.users
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
@@ -561,12 +586,12 @@ app.post('/profile-picture', upload.single('avatar'), async function (req, res, 
   }
 });
 
-
 app.get('/movie/:name', async (req, res) => {
   if (req.session.users === undefined) {
     res.redirect('/login');
   }
   else{
+
   movieName = req.params.name
   const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
   const apiKey = process.env.API_KEY;
@@ -627,7 +652,6 @@ app.get('/movie/:name', async (req, res) => {
           const originCountry = movieDetails.production_countries[0].name
 
             // MAAK HIER DAT DE ORIGIN COUNTRY WORDT OMGEZET IN CUISINE
-
 
             const cuisines = {
               "Algeria": "African",
@@ -787,7 +811,8 @@ app.get('/movie/:name', async (req, res) => {
               "Peru": "Latin American",
               "Suriname": "Latin American",
               "Uruguay": "Latin American",
-              "Venezuela": "Latin American"
+              "Venezuela": "Latin American",
+              "Vietnam": "Vietnamese"
             }
             if (cuisines.hasOwnProperty(originCountry)) {
               const cuisine = cuisines[originCountry];
@@ -895,7 +920,6 @@ app.get('/movie/:name', async (req, res) => {
 app.post('/favorite-deleted', (req, res) => {
   const userIdSession = req.session.users
   const movieIdDetail = req.body.favoriteBtn
-
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 
@@ -926,7 +950,6 @@ app.post('/favorite-deleted', (req, res) => {
 app.post('/favorite-added', (req, res) => {
   const userIdSession = req.session.users
   const movieIdDetail = req.body.favoriteBtn
-
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
 

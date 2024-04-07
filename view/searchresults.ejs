@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Search Results</title>
 </head>
 <body>
-    <%= adultArray %>
-    <%= backdropPathArray %>
-    <%= movieGenreIds %>
-    <%= idArray %>
-    <%= originalTitleArray %>
-    <%= posterPathArray %>
+    <ul>
+        <% for(let i = 0; i < originalTitleArray.length; i++) { %>
+            <li>
+                <h2><%= originalTitleArray[i] %></h2>
+                <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="<%= originalTitleArray[i] %>">
+                <p>Genre IDs: <%= movieGenreIds[i] %></p>
+                <p>ID: <%= idArray[i] %></p>
+            </li>
+        <% } %>
+    </ul>
 </body>
 </html>
