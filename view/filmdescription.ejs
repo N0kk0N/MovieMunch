@@ -1,79 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
+
 <body>
-    <!----HEADER------->
+   
+    <!-- HEADER -->
     <header>
-        <button></button>
-        <button></button>
+        <nav>
+            <ul class="nav">
+                <li><a href="/overview"><img src="../static/images/film.svg" alt="description1"></a></li>
+                <li><a href="/search"><img src="../static/images/search.svg" alt="description2"></a></li>
+                <li><a href="/favourites"><img src="../static/images/ticket.svg" alt="description3"></a></li>
+                <li><a href="/profile"><img src="../static/images/user.svg" alt="description3"></a></li>
+            </ul>
+        </nav>
+        <section class="filmdetail-poster">
+            <img class="filmdetail-poster-img" src="https://image.tmdb.org/t/p/w500<%= moviePosterPath %>" alt="poster of movie">
+
+            <div>
+                <button>go back</button>
+                <button><img class="filmdetail-favorite-icon" src="../static/images/favorite.png" alt="svg icon"></button>
+            </div>
+            <div>
+                <h1><%= movieTitle %></h1>
+                <p><%= movieGenresClean %></p>
+            </div>
+            <div class="filmdetail-poster-gradient"></div>
+            <div class="filmdetail-cursor"></div>
+        </section>
     </header>
+    <!----MAIN----->
+    <main>
+        <!-- Film description -->
+        <section class="filmdetail-description filmdetail-hidden">
+            <button class="filmdetail-watchnow">watch now</button>
+            <p><%= movieRuntime %> minutes</p>
+            <p><%= movieOverview %>
+            </p>
+            <p><%= movieReleaseDate %></p>
+        </section>
+
         
-    
-    
-    <!----MAIN------->
-    <main></main>
-  
-            <!-- recept -->
-        <article class="recipe">
-            <p>aangeboden recept</p>
-            <h2>american burger</h2>
 
-            <!-- ingrediënten -->
-            <section class="ingredienten">
-                <h2></h2>
-                <ul>
-                    <li>salad</li>
-                    <li>bread</li>
-                    <li>cheese</li>
-                    <li>meat</li>
-                    <li>pickle</li>
-                    <li>mayonaise</li>
-                    <li>onion</li>
-                    <li>olive oil</li>
-                    <li>egg</li>
-                    <li>mixed dried herbs</li>
+        <!-- recipe -->
+        <p class="filmdetail-recepten-button">recipes</p>
+
+        <article class="filmdetail-recipe">
+                <!-- ******** American burger recipe *******-->
+                <button class="filmdetail-recipe-button filmdetail-recipe-buttons"><h2>american burger</h2></button>
+                <!-- ingrediënts -->
+                <ul class="filmdetail-recipe1 filmdetail-active filmdetail-recipe-lists">
+                    <li>
+                        <section class="filmdetail-ingredients-section">
+                            <h3>ingrediënts</h3>
+                            <ul class="filmdetail-ingredients">
+                                <li>salad</li>
+                                <li>bread</li>
+                                <li>cheese</li>
+                                <li>meat</li>
+                                <li>pickle</li>
+                                <li>mayonaise</li>
+                                <li>onion</li>
+                                <li>olive oil</li>
+                                <li>egg</li>
+                                <li>mixed dried herbs</li>
+                            </ul>
+                        </section>
+                    </li>
+             
+                        <!-- instructions -->
+                    <li>
+                        <h3 class="filmdetail-instructies-titel">instructions</h3>
+                        <section class="swiper filmdetail-swiper">
+                                <ul class="swiper-wrapper filmdetail-wrapper">
+                                    <li class="swiper-slide filmdetail-slide">
+                                        <p>Heat the olive oil in a frying pan, add the onion and cook for 5minutes.
+                                        </p>
+                                    </li>
+                                    <li class="swiper-slide filmdetail-slide">
+                                        <p>In a bowl, combine the beef with the herbs and the egg.
+                                            Season, add the onions and mix well.</p>
+                                    </li>
+                                    <li class="swiper-slide filmdetail-slide">
+                                        <p>Cook the burger on a preheated pan for 5-6 minutes on each side.</p>
+                                    </li>
+                                    <li class="swiper-slide filmdetail-slide">
+                                        <p>Meanwhile, lightly toast the cut-side of the buns on the hot pan.</p>
+                                    </li>
+                                </ul>
+                                <div class="swiper-pagination filmdetail-pagination"></div>
+                                <button class="swiper-button-prev filmdetail-button-prev"></button>
+                                <button class="swiper-button-next filmdetail-button-next"></button>
+                        </section>
+                    </li>
                 </ul>
-            </section>
-                <!-- instructies -->
-            <section class="instructies">
-                <h3>instructies</h3>
-                <button></button>
-                <button></button>
-
-                <ul>
-                    <!-- 1 -->
+                <!-- *****Recipe 2********* -->
+                <button class="filmdetail-recipe-button2 filmdetail-recipe-buttons"><h2>pancakes</h2></button>
+                <ul class="filmdetail-recipe2 filmdetail-active filmdetail-recipe-lists">
                     <li>
-                        <p>heat the olive oil in a frying pan, add the onion and cook for 5minutes.</p>
+                        <section class="filmdetail-ingredients-section">
+                            <h3>ingrediënts</h3>
+                            <ul class="filmdetail-ingredients">
+                                <li>salad</li>
+                                <li>bread</li>
+                                <li>cheese</li>
+                                <li>meat</li>
+                                <li>pickle</li>
+                                <li>mayonaise</li>
+                                <li>onion</li>
+                                <li>olive oil</li>
+                                <li>egg</li>
+                                <li>mixed dried herbs</li>
+                            </ul>
+                        </section>
                     </li>
-
+             
+                        <!-- instructions -->
                     <li>
-                        <p>in a bowl, combine the beef with the herbs and the egg.
-                            Season, add the onions and mix well.
-                        </p>
-                    </li>
-
-                    <li>
-                        <p>cook the burger on a preheated pan for 5-6 minutes on each side.</p>
-                    </li>
-
-                    <li>
-                        <p>meanwhile, lightly toast the cut-side of the buns on the hot pan.</p>
+                        <h3 class="filmdetail-instructies-titel">instructies</h3>
+                        <section class="swiper filmdetail-swiper">
+                                <ul class="swiper-wrapper filmdetail-wrapper">
+                                    <li class="swiper-slide filmdetail-slide">
+                                        <p>Heat the olive oil in a frying pan, add the onion and cook for 5minutes.
+                                        </p>
+                                    </li>
+                                    <li class="swiper-slide filmdetail-slide">
+                                        <p>In a bowl, combine the beef with the herbs and the egg.
+                                            Season, add the onions and mix well.</p>
+                                    </li>
+                                    <li class="swiper-slide filmdetail-slide">
+                                        <p>Cook the burger on a preheated pan for 5-6 minutes on each side.</p>
+                                    </li>
+                                    <li class="swiper-slide filmdetail-slide">
+                                        <p>Meanwhile, lightly toast the cut-side of the buns on the hot pan.</p>
+                                    </li>
+                                </ul>
+                                <div class="swiper-pagination filmdetail-pagination"></div>
+                                <button class="swiper-button-prev filmdetail-button-prev"></button>
+                                <button class="swiper-button-next filmdetail-button-next"></button>
+                        </section>
                     </li>
                 </ul>
-            </section>
-
+                <div class="filmdetail-space"></div>
         </article>
-  
-  
-<!----FOOTER------->
-    <footer>
-        <nav></nav>
-    </footer>
-    
+
+        <% if(inList){ %>
+            <form action="/favorite-deleted" method="POST">
+                <button style="background-color: red; color: white; font-size: x-large;" type="submit" name="favoriteBtn" value="<%= movieId %>">Delete from favorites</button>
+                </form>
+          <% } else{ %>  
+            <form action="/favorite-added" method="POST">
+                <button style="background-color: green; color: white; font-size: x-large;" type="submit" name="favoriteBtn" value="<%= movieId %>">Add to favorites</button>
+                </form>
+         <% } %>
+
+         <%= recipeTitle %>
+         <%= stepNumberArray %>
+         <%= stepOverviewArray %>
+         <%= ingredientNameArray %>
+         <%= ingredientValueArray %>
+         <%= ingredientUnitArray %>
+    </main>
+
+    <!-- FOOTER -->
+    <footer></footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script type="module" src="../static/js/filmdetail.js"></script>
+    <!-- <script src="js/TweenMax.min.js"></script> -->
+
 </body>
+
 </html>

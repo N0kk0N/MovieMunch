@@ -16,12 +16,11 @@
         <section class="overview-film-hero">
             <img src="https://image.tmdb.org/t/p/w500<%= backdropPathArray[0] %>">
             <div class="overlay-content">
-                <h2 class="stagger"><%= titleArray[0] %></h2>
-                <h3 class="stagger2"><%=genreIdsArray[0] %></h3>
+                <h2><%= titleArray[0] %></h2>
+                <h3><%=genreIdsArray[0] %></h3>
                 <button>Watch now</button>
             </div>
         </section>
-
         <main class="film-slider-container">
             <section class="film-slider-container-items">
                 <form class="search-form" action="/search" method="get">
@@ -29,13 +28,16 @@
                 </form>
                 <div class="inline-items">
                     <h2>Your picks</h2>
-                    <a href="/film/:id">see all</a>
+                    <a href="/overview/all">see all</a>
                 </div>
             </section>
+
             <section class="gsap-wrapper">
                 <% for(let i = 0; i < posterPathArray.length; i++) { %>
                     <article class="gsap-slide movie-card">
                         <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="Image <%= i + 1 %>">
+                        <a href="/movie/<%= urlTitleArray[i] %>"><%= titleArray[i] %></a>
+
                     </article>
                 <% } %>
             </section>
