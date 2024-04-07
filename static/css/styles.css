@@ -674,7 +674,7 @@ main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
     text-align: center;
     font-family: clash-bold;
   }
-   
+
   .logo {
     color: #000;
     font-size: 2rem;
@@ -697,12 +697,12 @@ main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
     font-family: clash-bold;
     text-transform: uppercase;
   }
-  
+/*   
   .swiper-container {
     width: 90vw;
     padding-top: 4em;
     padding-bottom: 3em;
-    /* background-color: white; */
+    background-color: white;
     z-index: 100;
     overflow: hidden;
   }
@@ -716,5 +716,5 @@ main .filmdetail-swiper .filmdetail-wrapper .filmdetail-slide {
     width: 100%;
     border-radius: 1rem;
     height: 15rem;
-  }
+  } */
 
