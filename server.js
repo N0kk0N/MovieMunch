@@ -556,7 +556,7 @@ app.post('/profile-picture', upload.single('avatar'), async function (req, res, 
     if (username && username !== existingProfile.username) {
       const checkAvailable = await collection.findOne({ username: xss(req.body.username) });
       if (checkAvailable) {
-        return res.send('User with this username already exists.');
+        return res.render('username-exists.ejs', { initialDetailPageURL: req.headers.referer });
       }
     }
 
@@ -565,7 +565,7 @@ app.post('/profile-picture', upload.single('avatar'), async function (req, res, 
       { "_id": new ObjectId(req.session.users) },
       { $set: updateData }
     );
-    res.send("Profile updated");
+    res.render('profile-updated.ejs', { initialDetailPageURL: req.headers.referer });
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
@@ -1000,7 +1000,7 @@ app.post('/new-user', async (req, res) => {
       res.redirect('/overview');
 
     } else {
-      res.send('User with this username already exists.');
+      res.render('username-exists.ejs', { initialDetailPageURL: req.headers.referer });
     }
   } catch (error) {
     console.error(error);
@@ -1024,10 +1024,10 @@ app.post('/login-confirmation', async (req, res) => {
         res.redirect('/overview');
         console.log(req.session.users);
       } else {
-        res.send('Invalid password.');
+        res.render('invalid-password.ejs', { initialDetailPageURL: req.headers.referer });
       }
     } else {
-      res.send('User does not exist.');
+      res.render('user-doenst-exist.ejs', { initialDetailPageURL: req.headers.referer });
     }
   } catch (error) {
     console.error(error);
