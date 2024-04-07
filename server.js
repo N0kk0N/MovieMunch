@@ -38,6 +38,7 @@ app
   .listen(3000, () => console.log('Server is running on port 3000'));
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const e = require('express');
 const uri = `${process.env.MONGODB_URL}`;
 const client = new MongoClient(uri, {
   serverApi: {
@@ -63,6 +64,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/overview', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
   const request = require('request');
   const { json } = require('express')
   const apiKey = process.env.API_KEY;
@@ -185,7 +190,7 @@ app.get('/overview', (req, res) => {
           trim: true         // Verwijder eventuele extra spaties aan het begin of einde
         })
         urlTitleArray.push(slugifiedTitle)
-        
+
         const video = movie.video
         videoArray.push(video)
 
@@ -197,10 +202,14 @@ app.get('/overview', (req, res) => {
       });
       res.render('overview.ejs', { adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray, urlTitleArray });
     });
-  });
+  });}
 });
 
 app.get('/overview/all', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else {
   const request = require('request');
   const { json } = require('express');
   const apiKey = process.env.API_KEY;
@@ -297,9 +306,13 @@ app.get('/overview/all', (req, res) => {
 
   // Start het ophalen van films
   fetchMovies();
-});
+}});
 
 app.get('/favourites', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
 
   /// VIND DE ARRAY MET FAVORITE ID's
 
@@ -377,7 +390,7 @@ app.get('/favourites', (req, res) => {
       })
     })
   })
-})
+}})
   
 
 app.get('/signup', (req, res) => {
@@ -396,6 +409,10 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
   const userIdSession = req.session.users
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
@@ -453,9 +470,14 @@ app.get('/profile', (req, res) => {
   )
 
   console.log(req.session.users);
+}
 });
 
 app.get('/profile/settings', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
   const userIdSession = req.session.users
   const db = client.db(process.env.MONGODB_NAME);
   const collection = db.collection(process.env.MONGODB_COLLECTION);
@@ -486,6 +508,7 @@ app.get('/profile/settings', (req, res) => {
   )
 
   console.log(req.session.users);
+}
 });
 
 app.post('/profile-picture', upload.single('avatar'), async function (req, res, next) {
@@ -540,7 +563,10 @@ app.post('/profile-picture', upload.single('avatar'), async function (req, res, 
 
 
 app.get('/movie/:name', async (req, res) => {
-
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
   movieName = req.params.name
   const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&language=en-US`;
   const apiKey = process.env.API_KEY;
@@ -863,7 +889,7 @@ app.get('/movie/:name', async (req, res) => {
     }  
       )
     .catch(err => console.error('error:' + err));
-    
+  }
 })
 
 app.post('/favorite-deleted', (req, res) => {
@@ -997,14 +1023,13 @@ app.post('/login-confirmation', async (req, res) => {
   }
 })
 
-app.get('/filmlijst', (req, res) => {
-  res.send('test');
-})
-
-
 // WORKING ON SEARCH BAR
 
 app.get('/search', (req, res) => {
+  if (req.session.users === undefined) {
+    res.redirect('/login');
+  }
+  else{
   const query = req.query.q;
   const apiKey = process.env.API_KEY;
 
@@ -1059,6 +1084,7 @@ app.get('/search', (req, res) => {
       console.error('error:', err);
       res.status(500).send('Er is een fout opgetreden bij het verwerken van uw verzoek.');
     });
+  }
 });
 
 app.use((req, res) => {
