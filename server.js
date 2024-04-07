@@ -4,6 +4,7 @@ require('dotenv').config()
 const express = require('express')
 const request = require('request');
 const session = require('express-session')
+const slugify = require('slugify')
 const xss = require('xss')
 const bcrypt = require('bcrypt')
 const multer = require('multer')
@@ -136,6 +137,7 @@ app.get('/overview', (req, res) => {
       const posterPathArray = []
       const releaseDateArray = []
       const titleArray = []
+      const urlTitleArray = []
       const videoArray = []
       const voteAverageArray = []
       const voteCountArray = []
@@ -174,6 +176,16 @@ app.get('/overview', (req, res) => {
         const title = movie.title
         titleArray.push(title)
 
+        const slugifiedTitle = slugify(movie.title, {
+          replacement: '-',  
+          remove: /[*+~.,()'"!:@]/g, // Verwijder specifieke tekens die niet compatibel zijn met de TMDB API
+          lower: true,      // Zet alles in kleine letters om, aangezien URL's hoofdlettergevoelig zijn
+          strict: false,     // Laat speciale tekens toe, behalve de vervangingskarakter ('-')
+          locale: 'vi',      // Taalcode voor Vietnamees, maar dit heeft geen invloed op het resultaat
+          trim: true         // Verwijder eventuele extra spaties aan het begin of einde
+        })
+        urlTitleArray.push(slugifiedTitle)
+        
         const video = movie.video
         videoArray.push(video)
 
@@ -183,7 +195,7 @@ app.get('/overview', (req, res) => {
         const voteCount = movie.vote_count
         voteCountArray.push(voteCount)
       });
-      res.render('overview.ejs', { adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray });
+      res.render('overview.ejs', { adultArray, backdropPathArray, genreIdsArray, idArray, originalLanguageArray, originalTitleArray, overviewArray, popularityArray, posterPathArray, releaseDateArray, titleArray, videoArray, voteAverageArray, voteCountArray, urlTitleArray });
     });
   });
 });
@@ -598,6 +610,7 @@ app.get('/movie/:name', async (req, res) => {
               "Botswana": "African",
               "Burkina Faso": "African",
               "Burundi": "African",
+              "Canada": "American",
               "Central African Republic": "African",
               "Comoros": "African",
               "Congo": "African",
@@ -671,6 +684,7 @@ app.get('/movie/:name', async (req, res) => {
               "Armenia": "Asian",
               "Qatar": "Asian",
               "Bahrain": "Asian",
+              "Taiwan": "Asian",
               "Timor-Leste": "Asian",
               "United States of America": "American",
               "United Kingdom": "British",
