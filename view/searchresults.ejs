@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Search Results</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+<body>
+    <%- include('nav') %>
+    <main class="search-results">
+    <h2>Your results</h2>
+    <section class="gsap-wrapper">
+        <% for(let i = 0; i < posterPathArray.length; i++) { %>
+            <% if(posterPathArray[i]) { %>
+                <article class="gsap-slide movie-card">
+                    <a href="/movie/<%= urlTitleArray[i] %>">
+                        <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="<%= originalTitleArray[i] %>">
+                    </a>
+                </article>
+            <% } %>
+        <% } %>
+    </section>
+</main>
+    <script src="../static/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+</body>
+</html>
