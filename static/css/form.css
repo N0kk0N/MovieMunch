@@ -5,9 +5,7 @@
 }
 
 body {
-  background-color: #000;
   height: 100vh;
-  font-family: 'Montserrat', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +14,6 @@ body {
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: white;
-  opacity: 1; /* Firefox */
 }
 
 label.register{
@@ -31,12 +28,12 @@ label.is-visible {
 
 label.label-heading p {
   font-size: 1em;
-  color: white;
+  color: #000;
 }
 
 /* error popup */
 label .label-text {
-  color: #fff;
+  color: #000;
   cursor: text;
   font-size: 2em;
   line-height: 20px;
@@ -50,10 +47,10 @@ label .label-text {
 
 /* input box styling*/
 label input {
-  background-color: transparent;
+  background-color: #c3c3c3;
   border: 0;
-  border-bottom: 2px solid #fff;
-  color: white;
+  border-bottom: 2px solid #000;
+  color: #000;
   font-size: 1.2em;
   letter-spacing: .05em;
   padding: .1rem 1.3rem;
@@ -68,7 +65,7 @@ button:focus {
 }
 
 #validate {
-  color: #f3f3f3;
+  color: #;
   font-weight: 700;
   text-align: center;
 }
@@ -77,30 +74,23 @@ label.label-heading {
   display: block;
   padding: .2rem 1.1rem;
   font-size: 1.3em;
-  color: #f0f0f0;
   text-align: center;
 }
 
 .is-visible input:checked{
-  color: #ffffff;
+  color: #717171;
   text-shadow: 0 0  6px rgba(0, 0, 0, 0.8)
 }
 
 .input-btn {
   margin-top: 2rem;
-  color: #ffffff;
-}
-
-.input-btn ::selection,
-.input-btn :hover {
-  background-color: #ffffff;
-  color: #000;
+  color: #717171;
 }
 
 .form-button {
   background: transparent;
-  color: #f0f0f0;
-  border: 2px solid #f0f0f0;
+  color: #000;
+  border: 2px solid #000;
   font-size: 1em;
   letter-spacing: 2px;
   padding: 5px 25px;
@@ -111,6 +101,7 @@ label.label-heading {
   -webkit-transition: all 0.4s;
   -moz-transition: all 0.4s;
   transition: all 0.4s;
+  border-radius: .1rem;
 }
 
 /* Genre Checkboxxes */
@@ -118,20 +109,56 @@ label.label-heading {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  color: white;
 }
 
 .genre-grid li {
   margin: 4px;
-  background-color: #000;
+  background-color: #FF673E;
   border-radius: 4px;
-  border: 1px solid #fff;
+  /* border: 1px solid #000; */
   overflow: hidden;
   justify-content: center;
+  color: #fff;
 }
 
+/* IMDB Rating slider */
 
+.slidecontainer {
+  width: 100%;
+  margin-top: 1rem;
+}
 
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
 
+.slider:hover {
+  opacity: 1;
+}
 
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #FF673E;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #FF673E;
+  cursor: pointer;
+}
 

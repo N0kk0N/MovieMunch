@@ -6,13 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Signup testpage</title>
-  <link rel="stylesheet" href="../static/css/form.css">
+  <link rel="stylesheet" href="../static/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 
-<body>
-  <form>
+<body class="signup">
+  <form > 
     <label id="username" class="register is-visible">
       <label class="label-heading" for="username">What's will be your username?</label>
       <input name="username" type="text" placeholder="username" required />
@@ -34,7 +34,7 @@
         Press <strong>Enter ↵</strong>
       </div>
       <div class="input-btn">
-        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('email', 'email')"></i>
+        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('email', 'username')"></i>
         <i class="fa fa-arrow-down" style="font-size:2em" onclick="next('email','password')"></i>
       </div>
     </label>
@@ -112,78 +112,95 @@
           <label for="romance">Romance</label>
         </li>
       </ul>
-
       <div class="input-btn">
-        <button type="button" class="form-button" value="next" onclick="next('age','address')">OK <i class="fa fa-check"
-            aria-hidden="true"></i></button>
+        <button type="button" class="form-button" value="next" onclick="next('genre','imdbRating')">OK <i
+            class="fa fa-check" aria-hidden="true"></i></button>
         Press <strong>Enter ↵</strong>
       </div>
       <div class="input-btn">
         <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('genre', 'password')"></i>
+        <i class="fa fa-arrow-down" style="font-size:2em" onclick="next('genre','imdbRating')"></i>
+      </div>
+    </label>
+    <label id="imdbRating" class="register">
+      <label class="label-heading" for="imdbRating">IMDB Rating</label>
+      <div class="slidecontainer">
+        <input type="range" min="1" max="10" value="5" class="slider" id="myRange">
+        <p>Value: <span id="rating"></span></p>
+      </div>
+      <div class="input-btn">
+        <button type="button" class="form-button" value="next" onclick="next('genre','imdbRating')">OK <i
+            class="fa fa-check" aria-hidden="true"></i></button>
+        Press <strong>Enter ↵</strong>
+      </div>
+      <div class="input-btn">
+        <i class="fa fa-arrow-up" style="font-size:2em" onclick="previous('imdbRating', 'genre')"></i>
       </div>
     </label>
     <p id="validate"></p>
   </form>
 </body>
 <script>
+// Checkbox event listeners
+var slider = document.getElementById("myRange");
+var output = document.getElementById("rating");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+
 document.querySelectorAll('.genre-grid input[type="checkbox"]').forEach((checkbox) => {
     checkbox.addEventListener('change', (event) => {
-        event.target.nextElementSibling.classList.toggle('checked', checkbox.checked);
+      event.target.closest('li').querySelector('label').classList.toggle('checked', checkbox.checked);
     });
-});
+  });
 
   let error = document.getElementById('validate');
-  let label = document.getElementsByTagName("label");
 
+  // Event listeners for keyup events
+  document.getElementById("username").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next("username", "email");
+    }
+  });
 
-  document.getElementById("username")
-    .addEventListener("keyup", function (e) {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        next("username", "email");
-      }
-    });
+  document.getElementById("email").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next('email', 'password');
+    }
+  });
 
-  document.getElementById("email")
-    .addEventListener("keyup", function (e) {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        next('email', 'password');
-      }
-    });
+  document.getElementById("password").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next('password', 'genre');
+    }
+  });
 
-  document.getElementById("password")
-    .addEventListener("keyup", function (e) {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        next('password', 'genre');
-      }
-    });
+  document.getElementById("genre").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next('genre', 'imdbRating');
+    }
+  });
 
-  document.getElementById("genres")
-    .addEventListener("keyup", function (e) {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        next('genres', 'rating');
-      }
-    });
+  document.getElementById("imdbRating").addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      next('imdbRating');
+    }
+  });
 
-  document.getElementById("rating")
-    .addEventListener("keyup", function (e) {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        next('rating');
-      }
-    });
-
-
+  // Functions for navigating between sections
   function next(from, to) {
     error.innerHTML = "";
-    let value = document.getElementById(from).children[1].value;
+    let value = document.getElementById(from).querySelector('input').value;
     if (!value || value === "") {
       error.innerHTML = "Please enter a value";
-    }
-    else {
+    } else {
       error.innerHTML = "";
       document.getElementById(from).classList.remove('is-visible');
       document.getElementById(to).classList.add('is-visible');
@@ -191,16 +208,12 @@ document.querySelectorAll('.genre-grid input[type="checkbox"]').forEach((checkbo
   }
 
   function previous(from, to) {
+
+    
     error.innerHTML = "";
-    console.log();
     document.getElementById(from).classList.remove('is-visible');
     document.getElementById(to).classList.add('is-visible');
   }
 
-
 </script>
-
-
-
-
 </html>
