@@ -13,6 +13,7 @@
                 <img src="https://image.tmdb.org/t/p/w500<%= posterPathArray[i] %>" alt="<%= originalTitleArray[i] %>">
                 <p>Genre IDs: <%= movieGenreIds[i] %></p>
                 <p>ID: <%= idArray[i] %></p>
+                <a href="/movie/<%= urlTitleArray[i] %>">see movie</a>
             </li>
         <% } %>
     </ul>
