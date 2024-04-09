@@ -19,7 +19,7 @@
             <div class="overlay-content">
                 <h2 class="reveal-animation delay"><%= titleArray[0] %></h2>
                 <h3 class="reveal-animation delay"><%= genreIdsArray[0].join(' - ') %></h3>
-                <button onclick="window.location.href='/movie/' + '<%= urlTitleArray[0] %>'">Watch now</button>
+                <button onclick="window.location.href='/movie/' + encodeURIComponent('<%= urlTitleArray[0] %>')">Watch now</button>
             </div>
         </section>
         <main class="film-slider-container">
